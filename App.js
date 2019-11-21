@@ -2,17 +2,95 @@ import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import * as Haptics from "expo-haptics";
+// import { Audio } from "expo-av";
+import tick from './assets/Tick.mp3'
+// import Sound from 'react-native-sound';
 
-const goalCadence = 80;
+const goalCadence = 120;
+const intervals = [
+  {
+    cadence: 120, // in bpm
+    duration: 10, // in seconds
+    exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
+    location: "forearm", // 'leg', 'chest'
+    hapticOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
+      }
+    },
+    soundOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "tick" // different alert sounds available on phone
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "tick" // different alert sounds available on phone
+      }
+    },
+    visualOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "black" // different color to flash
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "green" // different color to flash
+      }
+    }
+  },
+  {
+    cadence: 80, // in bpm
+    duration: 10, // in seconds
+    exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
+    location: "forearm", // 'leg', 'chest'
+    hapticOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "heartbeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "heartbeata" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
+      }
+    },
+    soundOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "tick" // different alert sounds available on phone
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "tick" // different alert sounds available on phone
+      }
+    },
+    visualOptions: {
+      cadence: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "black" // different color to flash
+      },
+      step: {
+        when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
+        what: "green" // different color to flash
+      }
+    }
+  }
+];
 
 export default class AccelerometerSensor extends React.Component {
   constructor() {
     super();
     this.state = {
-      prevStepClearInterval: setInterval(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-        (60 / goalCadence) * 1000
-      ),
+      clearCadence: null,
+      // prevStepClearInterval: setInterval(
+      //   () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+      //   (60 / goalCadence) * 1000
+      // ),
       cadence: 0,
       cadence5: [],
       avgCadence5: 0,
@@ -21,11 +99,22 @@ export default class AccelerometerSensor extends React.Component {
       accelerometerData: {},
       stepCount: 0,
       stepTimeOut: false,
-      hapticStyle: 'Heavy'
+      hapticStyle: "Heavy",
+      intervalTime: 0,
+      totalTimeElapsed: 0,
+      totalTime: intervals.reduce(
+        (sum, interval) => sum + interval.duration,
+        0
+      ),
+      currentInterval: 0,
+      intervals,
+      pauseTime: null,
+      visualColor: "",
+      // soundObject: null
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this._toggle();
   }
 
@@ -47,6 +136,89 @@ export default class AccelerometerSensor extends React.Component {
 
   _fast = () => {
     Accelerometer.setUpdateInterval(16);
+  };
+
+  _subscribe = () => {};
+
+  _startWorkout = async () => {
+    // const soundObject = new Audio.Sound();
+    //   try {
+    //     await soundObject.loadAsync(tick)
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    const clearCadence = setInterval(async () => {
+      // soundObject.stopAsync().then(()=>soundObject.playFromPositionAsync(0))
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      this.setState({ visualColor: "blue" });
+      setTimeout(
+        () => this.setState({ visualColor: "white" }),
+        (30 / this.state.intervals[this.state.currentInterval].cadence) * 1000
+      );
+    }, (60 / this.state.intervals[this.state.currentInterval].cadence) * 1000);
+    const pauseTime = setInterval(async () => {
+      let {
+        totalTimeElapsed,
+        intervalTime,
+        intervals,
+        currentInterval,
+        clearCadence,
+        pauseTime
+      } = this.state;
+      totalTimeElapsed++;
+      intervalTime++;
+      if (intervalTime > intervals[currentInterval].duration - 1) {
+        if (currentInterval < intervals.length - 1) {
+          currentInterval++;
+          intervalTime = 0;
+          clearInterval(clearCadence);
+          // await soundObject.stopAsync(async () => {
+          //   await soundObject.setPositionAsync(0)
+          //   await soundObject.playAsync()
+          // })
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            this.setState({ visualColor: "blue" });
+            setTimeout(
+              () => this.setState({ visualColor: "white" }),
+              (30 / this.state.intervals[this.state.currentInterval].cadence) *
+                1000
+            );
+          clearCadence = setInterval(async () => {
+            // await soundObject.stopAsync(async () => {
+            //   await soundObject.setPositionAsync(0)
+            //   await soundObject.playAsync()
+            // })
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            this.setState({ visualColor: "blue" });
+            setTimeout(
+              () => this.setState({ visualColor: "white" }),
+              (30 / this.state.intervals[this.state.currentInterval].cadence) *
+                1000
+            );
+          }, (60 / intervals[currentInterval].cadence) * 1000);
+        } else {
+          clearInterval(clearCadence);
+          clearInterval(pauseTime);
+        }
+      }
+      this.setState({
+        totalTimeElapsed,
+        intervalTime,
+        currentInterval,
+        clearCadence
+      });
+    }, 1000);
+    this.setState({ pauseTime, clearCadence });
+  };
+
+  _pauseWorkout = () => {
+    clearInterval(this.state.pauseTime);
+    clearInterval(this.state.clearCadence);
+  };
+
+  _restartWorkout = () => {
+    this._pauseWorkout();
+    this.setState({ currentInterval: 0, totalTimeElapsed: 0, intervalTime: 0 });
   };
 
   // _subscribe = () => {
@@ -114,104 +286,104 @@ export default class AccelerometerSensor extends React.Component {
   //   });
   // };
 
-  _subscribe = () => {
-    this._subscription = Accelerometer.addListener(accelerometerData => {
-      this.setState(prevState => {
-        let { x, y, z } = accelerometerData;
-        let { x: prevX, y: prevY, z: prevZ } = prevState.accelerometerData;
-        let stepCount;
-        let stepTime;
-        let cadence5;
-        let avgCadence5;
-        let stepTimeOut;
-        let prevStepClearInterval;
-        let hapticStyle;
-        // if (prevZ>0 && z<0.1) {
-        //   console.log('Took a step', prevState.stepCount+1)
-        //   stepCount = prevState.stepCount+1
-        //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-        // } else {
-        //   stepCount = prevState.stepCount
-        // }
-        // if ((Math.sqrt(x*x+y*y)<0.5*Math.sqrt(prevX*prevX+prevY*prevY) || (prevZ>0 && z<0.1)) && !this.state.stepTimeOut) {
-        // if ((Math.sqrt(x*x+z*z)<0.75*Math.sqrt(prevX*prevX+prevZ*prevZ) &&  Math.sqrt(prevX*prevX+prevZ*prevZ)>0.1 || (prevY<0.8 && y>-0.05 && y<0.05)) && !this.state.stepTimeOut) {
-        if ((y > 0.02 || (Math.sqrt(x*x+z*z)<0.75*Math.sqrt(prevX*prevX+prevZ*prevZ) &&  Math.sqrt(prevX*prevX+prevZ*prevZ)>0.1)) && !this.state.stepTimeOut) {
-          // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          stepCount = prevState.stepCount+1;
-          stepTime = Date.now();
-          const stepInterval = (stepTime - prevState.stepTime) / 1000;
-          cadence = 60 / stepInterval;
-          cadence5=prevState.cadence5
-          cadence5.push(cadence)
-          if (cadence5.length>10) {
-            cadence5.shift()
-          }
-          avgCadence5 = cadence5.reduce((sum, cadence) => sum+cadence/cadence5.length, 0)
-          
-          if (avgCadence5<goalCadence*1.05 && avgCadence5>goalCadence*0.95) {
-            hapticStyle = 'None'
-          } else if (avgCadence5<goalCadence*1.2 && avgCadence5>goalCadence*0.8) {
-            hapticStyle='Light'
-          } else if (avgCadence5<goalCadence*1.3 && avgCadence5>goalCadence*0.7) {
-            hapticStyle='Medium'
-          } else {
-            hapticStyle='Heavy'
-          }
+  // _subscribe = () => {
+  //   this._subscription = Accelerometer.addListener(accelerometerData => {
+  //     this.setState(prevState => {
+  //       let { x, y, z } = accelerometerData;
+  //       let { x: prevX, y: prevY, z: prevZ } = prevState.accelerometerData;
+  //       let stepCount;
+  //       let stepTime;
+  //       let cadence5;
+  //       let avgCadence5;
+  //       let stepTimeOut;
+  //       let prevStepClearInterval;
+  //       let hapticStyle;
+  //       // if (prevZ>0 && z<0.1) {
+  //       //   console.log('Took a step', prevState.stepCount+1)
+  //       //   stepCount = prevState.stepCount+1
+  //       //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+  //       // } else {
+  //       //   stepCount = prevState.stepCount
+  //       // }
+  //       // if ((Math.sqrt(x*x+y*y)<0.5*Math.sqrt(prevX*prevX+prevY*prevY) || (prevZ>0 && z<0.1)) && !this.state.stepTimeOut) {
+  //       // if ((Math.sqrt(x*x+z*z)<0.75*Math.sqrt(prevX*prevX+prevZ*prevZ) &&  Math.sqrt(prevX*prevX+prevZ*prevZ)>0.1 || (prevY<0.8 && y>-0.05 && y<0.05)) && !this.state.stepTimeOut) {
+  //       if ((y > 0.02 || (Math.sqrt(x*x+z*z)<0.75*Math.sqrt(prevX*prevX+prevZ*prevZ) &&  Math.sqrt(prevX*prevX+prevZ*prevZ)>0.1)) && !this.state.stepTimeOut) {
+  //         // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  //         stepCount = prevState.stepCount+1;
+  //         stepTime = Date.now();
+  //         const stepInterval = (stepTime - prevState.stepTime) / 1000;
+  //         cadence = 60 / stepInterval;
+  //         cadence5=prevState.cadence5
+  //         cadence5.push(cadence)
+  //         if (cadence5.length>5) {
+  //           cadence5.shift()
+  //         }
+  //         avgCadence5 = cadence5.reduce((sum, cadence) => sum+cadence/cadence5.length, 0)
 
-          if (hapticStyle!==prevState.hapticStyle) {
-            clearInterval(this.state.prevStepClearInterval);
-            if (hapticStyle!=='None') {
-              prevStepClearInterval = setInterval(
-                () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle[hapticStyle]),
-                (60 / goalCadence) * 1000
-              );
-            } else {
-              prevStepClearInterval = prevState.prevStepClearInterval
-            }
-          } else {
-            prevStepClearInterval = prevState.prevStepClearInterval
-          }
-          stepTimeOut = true;
-          console.log(
-            "Took step #",
-            prevState.stepCount + 1,
-            "at time",
-            stepTime
-          );
-          console.log(
-            "stepInterval (s)",
-            stepInterval,
-            "cadence (steps/min)",
-            cadence,
-            'avgCadence', 
-            avgCadence5
-          );
-          setTimeout(() => this.setState({ stepTimeOut: false }), 300);
-        } else {
-          stepCount = prevState.stepCount;
-          stepTime = prevState.stepTime;
-          cadence = prevState.cadence;
-          cadence5 = prevState.cadence5;
-          avgCadence5 = prevState.avgCadence5;
-          prevStepClearInterval = prevState.prevStepClearInterval;
-          stepTimeOut = prevState.stepTimeOut;
-          hapticStyle = prevState.hapticStyle
-        }
-        return {
-          prevAccelerometerData: prevState.accelerometerData,
-          accelerometerData,
-          stepCount,
-          stepTime,
-          cadence,
-          cadence5,
-          avgCadence5,
-          prevStepClearInterval,
-          stepTimeOut,
-          hapticStyle
-        };
-      });
-    });
-  };
+  //         if (avgCadence5<goalCadence*1.05 && avgCadence5>goalCadence*0.95) {
+  //           hapticStyle = 'None'
+  //         } else if (avgCadence5<goalCadence*1.2 && avgCadence5>goalCadence*0.8) {
+  //           hapticStyle='Heavy'
+  //         } else if (avgCadence5<goalCadence*1.3 && avgCadence5>goalCadence*0.7) {
+  //           hapticStyle='Heavy'
+  //         } else {
+  //           hapticStyle='Heavy'
+  //         }
+
+  //         if (hapticStyle!==prevState.hapticStyle) {
+  //           clearInterval(this.state.prevStepClearInterval);
+  //           if (hapticStyle!=='None') {
+  //             prevStepClearInterval = setInterval(
+  //               () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle[hapticStyle]),
+  //               (60 / goalCadence) * 1000
+  //             );
+  //           } else {
+  //             prevStepClearInterval = prevState.prevStepClearInterval
+  //           }
+  //         } else {
+  //           prevStepClearInterval = prevState.prevStepClearInterval
+  //         }
+  //         stepTimeOut = true;
+  //         console.log(
+  //           "Took step #",
+  //           prevState.stepCount + 1,
+  //           "at time",
+  //           stepTime
+  //         );
+  //         console.log(
+  //           "stepInterval (s)",
+  //           stepInterval,
+  //           "cadence (steps/min)",
+  //           cadence,
+  //           'avgCadence',
+  //           avgCadence5
+  //         );
+  //         setTimeout(() => this.setState({ stepTimeOut: false }), 300);
+  //       } else {
+  //         stepCount = prevState.stepCount;
+  //         stepTime = prevState.stepTime;
+  //         cadence = prevState.cadence;
+  //         cadence5 = prevState.cadence5;
+  //         avgCadence5 = prevState.avgCadence5;
+  //         prevStepClearInterval = prevState.prevStepClearInterval;
+  //         stepTimeOut = prevState.stepTimeOut;
+  //         hapticStyle = prevState.hapticStyle
+  //       }
+  //       return {
+  //         prevAccelerometerData: prevState.accelerometerData,
+  //         accelerometerData,
+  //         stepCount,
+  //         stepTime,
+  //         cadence,
+  //         cadence5,
+  //         avgCadence5,
+  //         prevStepClearInterval,
+  //         stepTimeOut,
+  //         hapticStyle
+  //       };
+  //     });
+  //   });
+  // };
 
   // _subscribe = () => {
   //   this._subscription = Accelerometer.addListener(accelerometerData => {
@@ -245,7 +417,7 @@ export default class AccelerometerSensor extends React.Component {
     let { x: prevX, y: prevY, z: prevZ } = this.state.prevAccelerometerData;
     return (
       <View style={styles.sensor}>
-        <Text style={styles.text}>
+        {/* <Text style={styles.text}>
           Accelerometer: (in Gs where 1 G = 9.81 m s^-2)
         </Text>
         <Text style={styles.text}>
@@ -271,10 +443,24 @@ export default class AccelerometerSensor extends React.Component {
           {round(Math.sqrt(prevX * prevX + prevY * prevY))}
         </Text>
         <Text style={styles.text}>Step Timeout</Text>
-        <Text style={styles.text}>{this.state.stepTimeOut}</Text>
-        {prevZ < 0 && z > 0 ? <Text>Took a step</Text> : null}
+        <Text style={styles.text}>{this.state.stepTimeOut}</Text> */}
+        <Text style={styles.text}>Total Time Elapsed</Text>
+        <Text style={styles.text}>{this.state.totalTimeElapsed}</Text>
+        <Text style={styles.text}>Total Time Left</Text>
+        <Text style={styles.text}>
+          {this.state.totalTime - this.state.totalTimeElapsed}
+        </Text>
+        <Text style={styles.text}>Time Left in Interval</Text>
+        <Text style={styles.text}>
+          {this.state.intervals[this.state.currentInterval].duration -
+            this.state.intervalTime}
+        </Text>
+        <Text style={styles.text}>Target Cadence</Text>
+        <Text style={styles.text}>
+          {this.state.intervals[this.state.currentInterval].cadence}
+        </Text>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={this._toggle} style={styles.button}>
+          {/* <TouchableOpacity onPress={this._toggle} style={styles.button}>
             <Text>Toggle</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -285,8 +471,26 @@ export default class AccelerometerSensor extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._fast} style={styles.button}>
             <Text>Fast</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={this._startWorkout} style={styles.button}>
+            <Text>Start workout</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pauseWorkout} style={styles.button}>
+            <Text>Pause workout</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._restartWorkout}
+            style={styles.button}
+          >
+            <Text>Restart workout</Text>
           </TouchableOpacity>
         </View>
+          <View
+            style={{
+              ...styles.visual,
+              backgroundColor: this.state.visualColor
+            }}
+          ></View>
       </View>
     );
   }
@@ -324,5 +528,9 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center"
+  },
+  visual: {
+    width: '100%',
+    height: 200,
   }
 });
