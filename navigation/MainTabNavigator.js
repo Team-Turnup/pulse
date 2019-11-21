@@ -96,12 +96,12 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = "";
 
 const AccelerometerStack = createStackNavigator(
- { Settings: 'Accelerometer',}, config
-
-)
+  { Settings: Accelerometer },
+  config
+);
 
 AccelerometerStack.navigationOptions = {
-  tabBarLabel: "Settings",
+  tabBarLabel: "Accelerometer",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
