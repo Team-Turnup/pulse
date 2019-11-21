@@ -41,7 +41,6 @@ HomeStack.navigationOptions = {
 HomeStack.path = "";
 
 
-
 const CommunityStack = createStackNavigator(
   { Settings: CommunityScreen },
   config
@@ -75,6 +74,8 @@ HistoryStack.navigationOptions = {
     />
   )
 }
+
+HistoryStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
@@ -114,7 +115,7 @@ AccelerometerStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  HistoryScreen,
+  HistoryStack,
   CommunityStack,
   SettingsStack,
   AccelerometerStack
