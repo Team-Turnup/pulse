@@ -10,26 +10,25 @@ import {
   View,
 } from 'react-native';
 
-import {VictoryLine, VictoryBar} from 'victory-native'
-
+import { VictoryLine, VictoryBar } from 'victory-native';
 import { MonoText } from '../components/StyledText';
 
 export default function HomeScreen() {
-
   const data = [
     { quarter: 1, earnings: 13000 },
     { quarter: 2, earnings: 16500 },
     { quarter: 3, earnings: 14250 },
-    { quarter: 4, earnings: 19000 }
+    { quarter: 4, earnings: 19000 },
   ];
 
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.welcomeContainer}>
-           {/* <Image
+          {/* <Image
             source={
               __DEV__
                 ? require('../assets/images/robot-dev.png')
@@ -45,11 +44,19 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>Get started by opening</Text>
 
           <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
+          >
             <MonoText>screens/HomeScreen.js</MonoText>
-            <VictoryLine data={data} x={data=> data.quarter} y={data => data.earnings}/>
-            <VictoryBar data={data} x={data=> data.quarter} y={data => data.earnings}/>
-
+            <VictoryLine
+              data={data}
+              x={data => data.quarter}
+              y={data => data.earnings}
+            />
+            <VictoryBar
+              data={data}
+              x={data => data.quarter}
+              y={data => data.earnings}
+            />
           </View>
 
           <Text style={styles.getStartedText}>
@@ -72,7 +79,8 @@ export default function HomeScreen() {
         </Text>
 
         <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
+          style={[styles.codeHighlightContainer, styles.navigationFilename]}
+        >
           <MonoText style={styles.codeHighlightText}>
             navigation/MainTabNavigator.js
           </MonoText>
@@ -83,7 +91,7 @@ export default function HomeScreen() {
 }
 
 HomeScreen.navigationOptions = {
-  header:null
+  header: null,
 };
 
 function DevelopmentModeNotice() {
