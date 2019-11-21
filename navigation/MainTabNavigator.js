@@ -41,7 +41,12 @@ HomeStack.navigationOptions = {
   ),
 };
 
+<<<<<<< HEAD
 HomeStack.path = '';
+=======
+HomeStack.path = "";
+
+>>>>>>> 8d72056155b469da33e4d78590283cdd1e9263f1
 
 const CommunityStack = createStackNavigator(
   { Settings: CommunityScreen },
@@ -76,6 +81,8 @@ HistoryStack.navigationOptions = {
     />
   ),
 };
+
+HistoryStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
@@ -136,7 +143,7 @@ SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  HistoryScreen,
+  HistoryStack,
   CommunityStack,
   SettingsStack,
   AccelerometerStack,

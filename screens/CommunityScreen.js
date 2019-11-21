@@ -3,8 +3,8 @@ import { ScrollView, StyleSheet } from "react-native";
 import { ExpoLinksView } from "@expo/samples";
 import { VictoryLine, VictoryBar } from "victory-native";
 
-export default class CommunityScreen extends React.Component {
-  render() {
+export default function CommunityScreen (){
+
     const data = [
       { quarter: 1, earnings: 13000 },
       { quarter: 2, earnings: 16500 },
@@ -21,7 +21,7 @@ export default class CommunityScreen extends React.Component {
         />
       </ScrollView>
     );
-  }
+
 }
 
 CommunityScreen.navigationOptions = {
