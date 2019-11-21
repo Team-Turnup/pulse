@@ -1,45 +1,52 @@
-import React from "react";
-import { Platform } from "react-native";
+import React from 'react';
+import { Platform } from 'react-native';
 import {
   createStackNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
+  createBottomTabNavigator,
+} from 'react-navigation';
 
-import TabBarIcon from "../components/TabBarIcon";
-import HomeScreen from "../screens/HomeScreen";
-import SettingsScreen from "../screens/SettingsScreen";
-import CommunityScreen from "../screens/CommunityScreen";
-import HistoryScreen from "../screens/HistoryScreen"
-import Accelerometer from '../Accelerometer'
+import TabBarIcon from '../components/TabBarIcon';
+import HomeScreen from '../screens/HomeScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import CommunityScreen from '../screens/CommunityScreen';
+import HistoryScreen from '../screens/HistoryScreen';
+import Accelerometer from '../Accelerometer';
+import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
+//delete the select workout screen after development.
+import PreviousWorkout from '../components/PreviousWorkout';
 
 const config = Platform.select({
-  web: { headerMode: "screen" },
-  default: {}
+  web: { headerMode: 'screen' },
+  default: {},
 });
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen
+    Home: HomeScreen,
   },
   config
 );
 
 HomeStack.navigationOptions = {
-  tabBarLabel: "Home",
+  tabBarLabel: 'Home',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === "ios"
-          ? `ios-information-circle${focused ? "" : "-outline"}`
-          : "md-information-circle"
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
       }
     />
-  )
+  ),
 };
 
+<<<<<<< HEAD
+HomeStack.path = '';
+=======
 HomeStack.path = "";
 
+>>>>>>> 8d72056155b469da33e4d78590283cdd1e9263f1
 
 const CommunityStack = createStackNavigator(
   { Settings: CommunityScreen },
@@ -47,54 +54,54 @@ const CommunityStack = createStackNavigator(
 );
 
 CommunityStack.navigationOptions = {
-  tabBarLabel: "Community",
+  tabBarLabel: 'Community',
   TabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
     />
-  )
+  ),
 };
 
-CommunityStack.path = "";
+CommunityStack.path = '';
 
 const HistoryStack = createStackNavigator(
   {
-    Settings: HistoryScreen
+    Settings: HistoryScreen,
   },
   config
-)
+);
 
 HistoryStack.navigationOptions = {
-  tabBarLabel: "History",
+  tabBarLabel: 'History',
   TabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
     />
-  )
-}
+  ),
+};
 
 HistoryStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: SettingsScreen
+    Settings: SettingsScreen,
   },
   config
 );
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: "Settings",
+  tabBarLabel: 'Settings',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
     />
-  )
+  ),
 };
 
-SettingsStack.path = "";
+SettingsStack.path = '';
 
 const AccelerometerStack = createStackNavigator(
   { Settings: Accelerometer },
@@ -102,25 +109,47 @@ const AccelerometerStack = createStackNavigator(
 );
 
 AccelerometerStack.navigationOptions = {
-  tabBarLabel: "Accelerometer",
+  tabBarLabel: 'Accelerometer',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
     />
-  )
+  ),
 };
 
 AccelerometerStack.path = '';
+
+const SelectWorkoutStack = createStackNavigator(
+  //{ Settings: PreviousWorkout },
+  { Settings: SelectWorkoutScreen },
+
+  config
+);
+
+SelectWorkoutStack.navigationOptions = {
+  //tabBarLabel: 'PreviousWorkout',
+  tabBarLabel: 'SelectWorkout',
+
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+    />
+  ),
+};
+
+SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   HistoryStack,
   CommunityStack,
   SettingsStack,
-  AccelerometerStack
+  AccelerometerStack,
+  SelectWorkoutStack,
 });
 
-tabNavigator.path = "";
+tabNavigator.path = '';
 
 export default tabNavigator;

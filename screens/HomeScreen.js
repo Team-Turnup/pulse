@@ -15,11 +15,11 @@ import {
 export default class HomeScreen extends Component {
   render() {
     let dummyData = [
-      {name:'Beginner Workout', duration: '1 Hour', date:'Sept.15.2019' },
-      {name:'Intermediate Workout', duration: '1 Hour', date:'Oct.4.2019' },
-      {name:'Advanced Workout', duration: '1 Hour', date:'Nov.21.2019' },
-      {name:' Athlete Workout', duration: '1 Hour', date:'Dec.13.2019' }
-    ]
+      { name: "Beginner Workout", duration: "1 Hour", date: "Sept.15.2019" },
+      { name: "Intermediate Workout", duration: "1 Hour", date: "Oct.4.2019" },
+      { name: "Advanced Workout", duration: "1 Hour", date: "Nov.21.2019" },
+      { name: " Athlete Workout", duration: "1 Hour", date: "Dec.13.2019" }
+    ];
     return (
       <Container style={{ backgroundColor: "pink" }}>
         {/* <Header style={{ backgroundColor: "blue" }}></Header> */}
@@ -28,12 +28,13 @@ export default class HomeScreen extends Component {
             <CardItem header>
               <Text>Recent Workouts</Text>
             </CardItem>
-            {dummyData.map(workout =>{
-              return (<CardItem>
-            <Text header>{workout.name}</Text>
-              </CardItem>)
+            {dummyData.map(workout => {
+              return (
+                <CardItem>
+                  <Text header>{workout.name}</Text>
+                </CardItem>
+              );
             })}
-
           </Card>
         </Content>
       </Container>
