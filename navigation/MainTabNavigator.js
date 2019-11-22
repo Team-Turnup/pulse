@@ -41,12 +41,7 @@ HomeStack.navigationOptions = {
   ),
 };
 
-<<<<<<< HEAD
 HomeStack.path = '';
-=======
-HomeStack.path = "";
-
->>>>>>> 8d72056155b469da33e4d78590283cdd1e9263f1
 
 const CommunityStack = createStackNavigator(
   { Settings: CommunityScreen },
