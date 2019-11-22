@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Pedometer } from "expo-sensors";
-import {haptic} from './hapticOptions'
-import {intervals} from './dummyIntervals'
+import {haptic} from '../assets/options/haptics'
+import {intervals} from '../dummyIntervals'
 // import { Audio } from "expo-av";
-import tick from './assets/Tick.mp3'
+import tick from '../assets/audio/Tick.mp3'
 // import Sound from 'react-native-sound';
 
-export default class AccelerometerSensor extends Component {
+export default class WorkoutLogic extends Component {
   constructor() {
     super();
     this.state = {
@@ -23,6 +23,7 @@ export default class AccelerometerSensor extends Component {
         (sum, interval) => sum + interval.duration,
         0
       ),
+      intervalTime: 0,
       currentInterval: 0,
       intervals,
       pauseTime: null,
@@ -52,13 +53,13 @@ export default class AccelerometerSensor extends Component {
     }
   };
 
-  _slow = () => {
-    Accelerometer.setUpdateInterval(200);
-  };
+  // _slow = () => {
+  //   Accelerometer.setUpdateInterval(200);
+  // };
 
-  _fast = () => {
-    Accelerometer.setUpdateInterval(16);
-  };
+  // _fast = () => {
+  //   Accelerometer.setUpdateInterval(16);
+  // };
 
   _subscribe = () => {
     this._subscription = Pedometer.watchStepCount(result => {
@@ -184,8 +185,6 @@ export default class AccelerometerSensor extends Component {
   };
 
   render() {
-    let { x, y, z } = this.state.accelerometerData;
-    let { x: prevX, y: prevY, z: prevZ } = this.state.prevAccelerometerData;
     return (
       <View style={styles.sensor}>
         <Text style={styles.text}>Total Time Elapsed</Text>
