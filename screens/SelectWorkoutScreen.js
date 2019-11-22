@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
+//import { connect } from 'react-redux';
 import {
   Image,
   Platform,
@@ -27,7 +28,6 @@ import {
   Text,
 } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
-import { VictoryLine, VictoryBar } from 'victory-native';
 import { MonoText } from '../components/StyledText';
 import PreviousWorkout from '../components/PreviousWorkout';
 
@@ -37,6 +37,7 @@ export default class SelectWorkoutScreen extends Component {
     this.state = {
       selectedExercise: '',
     };
+    this.onValueChange.bind(this);
   }
   onValueChange(value) {
     this.setState({
@@ -52,43 +53,20 @@ export default class SelectWorkoutScreen extends Component {
         <Content>
           <Form>
             <RNPickerSelect
-              onValueChange={this.onValueChange.bind(this)}
+              onValueChange={value => this.onValueChange(value)}
               items={[
-                { label: 'Walking', value: 'key0' },
-                { label: 'Running', value: 'key1' },
-                { label: 'Cycling', value: 'key2' },
+                { label: 'Walking', value: 'walking' },
+                { label: 'Running', value: 'running' },
+                { label: 'Cycling', value: 'cycling' },
               ]}
             />
-            {/*
-              <Item picker>
-              <Picker
-                mode="dropdown"
-                selectedValue={this.state.selectedExercise}
-                onValueChange={this.onValueChange.bind(this)}
-              >
-                <Picker.Item label="Walking" value="key0" />
-                <Picker.Item label="Running" value="key1" />
-                <Picker.Item label="Cycling" value="key2" />
-                <Picker.Item label="Sleepwalking" value="key3" />
-                <Picker.Item label="Speed-Eating" value="key4" />
-                <Picker.Item label="Air-Punching" value="key5" />
-              </Picker>
-                </Item>
-               */}
           </Form>
-
           <Button
             onPress={() => this.props.navigation.navigate('BuildWorkoutScreen')}
           >
             <Text>Create New Workout</Text>
           </Button>
-
-          {/* <Button
-          //onPress={() => this.props.navigation.navigate('Previous Workout')}
-          >
-            <Text>Use Previous Workout: </Text>
-          </Button> */}
-          <PreviousWorkout />
+          <PreviousWorkout selectedExercise={this.state.selectedExercise} />
         </Content>
       </Container>
     );
@@ -99,6 +77,7 @@ const styles = StyleSheet.create({
   headerStyle: {
     fontSize: 20,
     textAlign: 'center',
+    color: 'white',
   },
   container: {
     flex: 1,

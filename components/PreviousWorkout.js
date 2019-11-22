@@ -110,7 +110,7 @@ export default class PreviousWorkout extends Component {
         >
           <View style={{ marginTop: 22 }}>
             <View>
-              <Text>Hello World!</Text>
+              <Text>Select From Your Previous Workouts</Text>
               {/* <List>
                 <ListItem selected>
                   <Left>
@@ -152,7 +152,6 @@ export default class PreviousWorkout extends Component {
               >
                 <Text>Finalize Selection</Text>
               </Button>
-
               <TouchableHighlight
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);

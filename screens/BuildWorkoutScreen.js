@@ -29,12 +29,12 @@ import {
   Icon,
 } from 'native-base';
 //import thunk from store
+import dummyRoutines from '../dummyRoutines';
 
 export default class BuildWorkoutScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedExercise: '',
       routineName: '',
       cadence: '',
       duration: '',
@@ -74,10 +74,10 @@ export default class BuildWorkoutScreen extends Component {
               <Label>Selected Exercise</Label>
               <Input
                 //pre-populate the selected exercise field with the chosen exercise
-                placeholder=""
+                //placeholder={this.state.selectedExercise}
                 autoCapitalize="none"
                 autoCorrect={false}
-                value={this.state.selectedExercise}
+                value={this.props.selectedExercise}
                 //onChangeText={routineName => this.setState({ routineName })}
               />
             </Item>
