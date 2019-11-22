@@ -10,7 +10,6 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-import Accelerometer from '../Accelerometer';
 import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
 //delete the select workout screen after development.
 import PreviousWorkout from '../components/PreviousWorkout';
@@ -99,22 +98,22 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = '';
 
-const AccelerometerStack = createStackNavigator(
-  { Settings: Accelerometer },
-  config
-);
+// const AccelerometerStack = createStackNavigator(
+//   { Settings: Accelerometer },
+//   config
+// );
 
-AccelerometerStack.navigationOptions = {
-  tabBarLabel: 'Accelerometer',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  ),
-};
+// AccelerometerStack.navigationOptions = {
+//   tabBarLabel: 'Accelerometer',
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   ),
+// };
 
-AccelerometerStack.path = '';
+// AccelerometerStack.path = '';
 
 const SelectWorkoutStack = createStackNavigator(
   //{ Settings: PreviousWorkout },
@@ -142,7 +141,7 @@ const tabNavigator = createBottomTabNavigator({
   HistoryStack,
   CommunityStack,
   SettingsStack,
-  AccelerometerStack,
+  // AccelerometerStack,
   SelectWorkoutStack,
   BuildWorkoutScreen: BuildWorkoutScreen,
 });

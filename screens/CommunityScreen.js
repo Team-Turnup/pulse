@@ -1,7 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { ExpoLinksView } from "@expo/samples";
-import { VictoryLine, VictoryBar } from "victory-native";
+import WorkoutLogic from "../components/WorkoutLogic";
 
 export default function CommunityScreen (){
 
@@ -13,13 +11,7 @@ export default function CommunityScreen (){
     ];
 
     return (
-      <ScrollView>
-        <VictoryLine
-        data={data}
-        y={data => data.earnings}
-        x={data => data.quarter}
-        />
-      </ScrollView>
+     <WorkoutLogic />
     );
 
 }
@@ -27,11 +19,3 @@ export default function CommunityScreen (){
 CommunityScreen.navigationOptions = {
   title: "Community",
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  }
-});
