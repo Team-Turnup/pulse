@@ -14,6 +14,7 @@ import Accelerometer from '../Accelerometer';
 import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
 //delete the select workout screen after development.
 import PreviousWorkout from '../components/PreviousWorkout';
+import BuildWorkoutScreen from '../screens/BuildWorkoutScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -143,6 +144,7 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
   AccelerometerStack,
   SelectWorkoutStack,
+  BuildWorkoutScreen: BuildWorkoutScreen,
 });
 
 tabNavigator.path = '';

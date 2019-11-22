@@ -26,7 +26,7 @@ import {
   Icon,
   Text,
 } from 'native-base';
-
+import RNPickerSelect from 'react-native-picker-select';
 import { VictoryLine, VictoryBar } from 'victory-native';
 import { MonoText } from '../components/StyledText';
 import PreviousWorkout from '../components/PreviousWorkout';
@@ -51,7 +51,16 @@ export default class SelectWorkoutScreen extends Component {
         </Header>
         <Content>
           <Form>
-            <Item picker>
+            <RNPickerSelect
+              onValueChange={this.onValueChange.bind(this)}
+              items={[
+                { label: 'Walking', value: 'key0' },
+                { label: 'Running', value: 'key1' },
+                { label: 'Cycling', value: 'key2' },
+              ]}
+            />
+            {/*
+              <Item picker>
               <Picker
                 mode="dropdown"
                 selectedValue={this.state.selectedExercise}
@@ -64,11 +73,12 @@ export default class SelectWorkoutScreen extends Component {
                 <Picker.Item label="Speed-Eating" value="key4" />
                 <Picker.Item label="Air-Punching" value="key5" />
               </Picker>
-            </Item>
+                </Item>
+               */}
           </Form>
 
           <Button
-          //onPress={()=>this.props.navigation.navigate('Create New Workout')}
+            onPress={() => this.props.navigation.navigate('BuildWorkoutScreen')}
           >
             <Text>Create New Workout</Text>
           </Button>

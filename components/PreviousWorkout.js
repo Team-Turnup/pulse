@@ -25,6 +25,7 @@ import {
   Right,
   Icon,
 } from 'native-base';
+import RNPickerSelect from 'react-native-picker-select';
 
 const yesterday = { name: yesterday };
 const thursday = { name: thursday };
@@ -48,7 +49,18 @@ const sunday = { name: sunday };
 //       <Container>
 //         <Content>
 //           <Form>
-//             <Item picker>
+//             <Header>
+//               <Text styles={styles.headerStyle}> Use Previous Workout: </Text>
+//             </Header>
+//             <RNPickerSelect
+//               onValueChange={this.onValueChange.bind(this)}
+//               items={[
+//                 { label: 'Yesterday', value: 'yesterday' },
+//                 { label: 'Thursday', value: 'thursday' },
+//                 { label: 'Sunday', value: 'sunday' },
+//               ]}
+//             />
+//             {/* <Item picker>
 //               <Picker
 //                 mode="dropdown"
 //                 selectedValue={this.state.selectedWorkout}
@@ -59,10 +71,8 @@ const sunday = { name: sunday };
 //                   label={this.state.previousWorkout[0]}
 //                   value="key0"
 //                 />
-//                 {/* <Picker.Item label="thursday" value="key1" />
-//                 <Picker.Item label="sunday" value="key2" /> */}
 //               </Picker>
-//             </Item>
+//             </Item> */}
 //           </Form>
 //         </Content>
 //       </Container>
@@ -71,12 +81,14 @@ const sunday = { name: sunday };
 // }
 
 export default class PreviousWorkout extends Component {
-  state = {
-    modalVisible: false,
-    previousWorkout: [yesterday, thursday, sunday],
-    selectedWorkout: {},
-  };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+      previousWorkout: [yesterday, thursday, sunday],
+      selectedWorkout: {},
+    };
+  }
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -99,11 +111,7 @@ export default class PreviousWorkout extends Component {
           <View style={{ marginTop: 22 }}>
             <View>
               <Text>Hello World!</Text>
-              <List
-              // mode="dropdown"
-              // selectedValue={this.state.selectedWorkout}
-              // onValueChange={this.onValueChange.bind(this)}
-              >
+              {/* <List>
                 <ListItem selected>
                   <Left>
                     <Text>Yesterday</Text>
@@ -128,7 +136,22 @@ export default class PreviousWorkout extends Component {
                     <Icon name="arrow-forward" />
                   </Right>
                 </ListItem>
-              </List>
+              </List> */}
+              <RNPickerSelect
+                onValueChange={this.onValueChange.bind(this)}
+                items={[
+                  { label: 'Yesterday', value: 'yesterday' },
+                  { label: 'Thursday', value: 'thursday' },
+                  { label: 'Sunday', value: 'sunday' },
+                ]}
+              />
+              <Button
+                onPress={() =>
+                  this.props.navigation.navigate('BuildWorkoutScreen')
+                }
+              >
+                <Text>Finalize Selection</Text>
+              </Button>
 
               <TouchableHighlight
                 onPress={() => {
