@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useReducer } from "react";
-import ReactDOM from "react-dom";
 import { VictoryLine, VictoryChart, VictoryAxis } from "victory-native";
 import { Text } from "react-native";
 import { DateTime } from "luxon";
