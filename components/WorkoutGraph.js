@@ -7,7 +7,7 @@ import useInterval from "use-interval";
 
 // using useReducer since we've got an array of DateTimes
 const initialState = [];
-// why would anyone use useReducintervals.slice(-1)[0][0]er instead of redux? idk
+// why would anyone use useReducer instead of redux? idk
 const ADD = "ADD";
 // seems kinda like redux without the benefit of getting to use react-redux
 const addInterval = payload => ({ type: ADD, payload });
