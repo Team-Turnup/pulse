@@ -12,6 +12,7 @@ import CommunityScreen from '../screens/CommunityScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
 //delete the select workout screen after development.
+import LoginScreen from '../screens/LoginScreen'
 import PreviousWorkout from '../components/PreviousWorkout';
 
 const config = Platform.select({
@@ -19,11 +20,30 @@ const config = Platform.select({
   default: {},
 });
 
+const LoginStack = createStackNavigator(
+  {Login:LoginScreen}
+)
+
+LoginStack.navigationOptions = {
+  tabBarLabel: 'Login',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  ),
+}
+
+
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
   },
-  config
+  // config
 );
 
 HomeStack.navigationOptions = {
@@ -136,6 +156,7 @@ SelectWorkoutStack.navigationOptions = {
 SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
+  LoginStack,
   HomeStack,
   HistoryStack,
   CommunityStack,
