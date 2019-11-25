@@ -78,10 +78,11 @@ export default ({domainSetting = true, timeWindow = 30}) => {
       now.minus({seconds: timeWindow}),
       now.plus({seconds: timeWindow})
     ])
-  }, 16)
+  }, 1000)
 
   return intervals && intervals.length ? (
     <VictoryChart
+      // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain, y: [80, 120]} : {}}
       domainPadding={{y: 10}}
       scale={{x: 'time'}}

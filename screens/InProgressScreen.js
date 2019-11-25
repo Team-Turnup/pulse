@@ -129,10 +129,7 @@ export default class InProgressScreen extends React.Component {
             </Col>
           </Row>
 
-          <Row
-            size={5.5}
-            style={{backgroundColor: 'salmon', justifyContent: 'center'}}
-          >
+          <Row size={5.5} style={{justifyContent: 'center'}}>
             <WorkoutGraph />
           </Row>
 
