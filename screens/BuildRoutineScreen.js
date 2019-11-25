@@ -47,27 +47,34 @@ class BuildRoutineScreen extends Component {
     this.state = {
       exerciseType: '',
       routineName: '',
-      cadence: 0,
-      duration: 0,
+      index: 0,
+      cadence: 100,
+      duration: 60,
+      routine: []
       //dirty: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addInterval = this.addInterval.bind(this)
+    this.changeIndex = this.changeIndex.bind(this)
   }
-  async componentDidMount() {
-    //await this.props.getRoutineThunk(this.props.navigation.params.id);
-    //const routine = this.props.routines.routine;
-    this.setState({
-      // exerciseType: routine.exerciseType,
-      // routineName: routine.routineName || '',
-      // cadence: routine.cadence || 0,
-      // duration: routine.duration || 0,
-    });
-  }
+
+  // async componentDidMount() {
+  //   //await this.props.getRoutineThunk(this.props.navigation.params.id);
+  //   //const routine = this.props.routines.routine;
+  //   this.setState({
+  //     // exerciseType: routine.exerciseType,
+  //     // routineName: routine.routineName || '',
+  //     // cadence: routine.cadence || 0,
+  //     // duration: routine.duration || 0,
+  //   });
+  // }
+
   onValueChange(value) {
     this.setState({
       exerciseType: value,
     });
   }
+
   handleSubmit(event) {
     //event.preventDefault();
     console.log(this.props.createRoutineThunk);
@@ -80,6 +87,18 @@ class BuildRoutineScreen extends Component {
       duration: 0,
     });
     this.props.navigation.navigate('HomeScreen');
+  }
+
+  addInterval(event) {
+    const {cadence, duration, routine, index} = this.state
+    const newRoutine = [...routine.slice(0, index), {cadence, duration}, ...routine.slice(index)]
+    console.log(newRoutine)
+    this.setState({routine: newRoutine, index: index+1})
+  }
+
+  changeIndex(event) {
+    console.log(event.target)
+    this.setState({index: Number(event.target.id)})
   }
 
   render() {
@@ -150,10 +169,12 @@ class BuildRoutineScreen extends Component {
           <Button
             bordered
             style={styles.button}
-            //onPress={() => this.handleSubmit()}
+            onPress={() => this.addInterval()}
           >
             <Text>Add to Routine</Text>
           </Button>
+
+          <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex}/>
 
           {/* display chart component here */}
           {/* <VictoryChart domainPadding={5}>
@@ -165,7 +186,6 @@ class BuildRoutineScreen extends Component {
               x={data => data.value}
             />
           </VictoryChart> */}
-          <RoutineBarGraphic />
 
           <Button
             bordered

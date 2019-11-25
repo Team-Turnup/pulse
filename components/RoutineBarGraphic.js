@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import routine from "../dummyIntervals";
 import activityTypes from '../assets/images/activityTypes'
 
 export default RoutineBarGraphic = props => {
+    const {routine, changeIndex} = props
   const totalDuration = routine.reduce(
     (sum, interval) => sum + interval.duration,
     0
@@ -14,22 +15,24 @@ export default RoutineBarGraphic = props => {
       {routine.map((interval, i) => {
         const width = (interval.duration / totalDuration) * 100;
         return (
-          <View
+          <TouchableOpacity
             key={i}
+            value={i}
             style={{
               backgroundColor: i % 2 === 0 ? "blue" : "gray",
               width: `${width}%`,
               height: "100%"
             }}
+            onPress={changeIndex}
           >
             {width > 10 ? (
               <View style={styles.intervalInfo}>
-                  <Text style={styles.text}>{activityTypes[interval.exercise]}</Text>
+                  {/* <Text style={styles.text}>{activityTypes[interval.exercise]}</Text> */}
                 <Text style={styles.text}>{Math.floor(interval.duration/60) ? `${Math.floor(interval.duration/60)}m` : ''} {interval.duration%60 ? `${interval.duration%60}s` : ''}</Text>
                 <Text style={styles.text}>{interval.cadence}bpm</Text>
               </View>
             ) : null}
-          </View>
+          </TouchableOpacity>
         );
       })}
     </View>
