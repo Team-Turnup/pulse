@@ -58,10 +58,7 @@ const fakeActuals = fakeRoutine
   )
   .flat();
 
-// params
-const timeWindow = 30; // seconds (to calc range of graph)
-
-export default () => {
+export default ({ domainSetting = true, timeWindow = 30 }) => {
   // initialize intervals with current DateTime
   const [intervals, dispatch] = useReducer(reducer, initialState);
   const [domain, setDomain] = useState([
@@ -81,12 +78,11 @@ export default () => {
       now.minus({ seconds: timeWindow }),
       now.plus({ seconds: timeWindow })
     ]);
-  }, 1000);
+  }, 16);
 
   return intervals && intervals.length ? (
     <VictoryChart
-      animate={{ duration: 1000, easing: "quadIn" }}
-      domain={{ x: domain }}
+      domain={domainSetting ? { x: domain, y: [80, 120] } : {}}
       domainPadding={{ y: 10 }}
       scale={{ x: "time" }}
     >
@@ -95,19 +91,19 @@ export default () => {
         style={{ data: { strokeDasharray: 8 } }}
         samples={1}
       />
-      {/* Including the faked actuals and trying to simulate the timing of it means that the graph doesn't render?
+      <VictoryLine data={intervals} x={0} y={1} />
       {fakeActuals.filter(([d]) => d.diffNow("seconds").toObject().seconds < 0)
         .length > 2 ? (
         <VictoryLine
+          interpolation="catmullRom"
           data={fakeActuals.filter(
             ([d]) => d.diffNow("seconds").toObject().seconds < 0
           )}
           x={0}
           y={1}
-          style={{ data: { stroke: "red" } }}
+          style={{ data: { stroke: "red", strokeWidth: 1 } }}
         />
-      ) : null} */}
-      <VictoryLine data={intervals} x={0} y={1} />
+      ) : null}
       {/* VictoryAxis gives an error re: children without a key prop when I use tickValues?
       <VictoryAxis
         domain={{ domain }}
