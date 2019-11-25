@@ -1,1 +1,0 @@
-export const ngrok = 'http://10df73ee.ngrok.io'
