@@ -10,10 +10,10 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
+import SelectRoutineScreen from '../screens/SelectRoutineScreen';
 //delete the select workout screen after development.
-import PreviousWorkout from '../components/PreviousWorkout';
-import BuildWorkoutScreen from '../screens/BuildWorkoutScreen';
+import PreviousRoutine from '../components/PreviousRoutine';
+import BuildRoutineScreen from '../screens/BuildRoutineScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -116,14 +116,14 @@ SettingsStack.path = '';
 // AccelerometerStack.path = '';
 
 const SelectWorkoutStack = createStackNavigator(
-  //{ Settings: PreviousWorkout },
-  { Settings: SelectWorkoutScreen },
+  //{ Settings: PreviousRoutine },
+  { Settings: SelectRoutineScreen },
 
   config
 );
 
 SelectWorkoutStack.navigationOptions = {
-  //tabBarLabel: 'PreviousWorkout',
+  //tabBarLabel: 'PreviousRoutine',
   tabBarLabel: 'SelectWorkout',
 
   tabBarIcon: ({ focused }) => (
@@ -143,7 +143,8 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
   // AccelerometerStack,
   SelectWorkoutStack,
-  BuildWorkoutScreen: BuildWorkoutScreen,
+  BuildRoutineScreen: BuildRoutineScreen,
+  //PreviousRoutine
 });
 
 tabNavigator.path = '';
