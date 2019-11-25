@@ -5,7 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import routines from './routines';
 
 const reducer = combineReducers({
-  routines: routines,
+  routines,
 });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))

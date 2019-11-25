@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   Image,
   Platform,
@@ -30,10 +30,10 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 import PreviousRoutine from '../components/PreviousRoutine';
 //import { getRoutineThunk } from '../store/routines';
-//import { createRoutineThunk } from '../store/routines';
+import { createRoutineThunk } from '../store/routines';
 
 //maybe rename to CreateRoutineScreen
-export default class SelectRoutineScreen extends Component {
+class SelectRoutineScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -128,16 +128,16 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = state => ({
-//   routine: state.routine,
-// });
+const mapStateToProps = state => ({
+  routines: state.routines,
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-//   createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-// });
+const mapDispatchToProps = dispatch => ({
+  //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
+  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
+});
 
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(SelectRoutineScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SelectRoutineScreen);
