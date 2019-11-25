@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   Image,
   Platform,
@@ -31,12 +31,14 @@ import {
 } from 'native-base';
 import { VictoryChart, VictoryBar } from 'victory-native';
 import NumericInput from 'react-native-numeric-input';
-//import { getRoutineThunk } from '../store/routines';
-//import { createRoutineThunk } from '../store/routines';
-//import { updateRoutineThunk } from '../store/routines';
+import {
+  getRoutineThunk,
+  createRoutineThunk,
+  updateRoutineThunk,
+} from '../store/routines';
 
 //maybe rename to UpdateRoutineScreen
-export default class BuildRoutineScreen extends Component {
+class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +51,7 @@ export default class BuildRoutineScreen extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
+    console.log(this.props.routines);
     //const routine = this.props.routines.routine;
     this.setState({
       // exerciseType: routine.exerciseType,
@@ -59,7 +62,7 @@ export default class BuildRoutineScreen extends Component {
   }
 
   handleSubmit() {
-    //this.props.navigation.navigate('NextScreen')
+    this.props.navigation.navigate('InProgressStack');
     this.setState({
       exerciseType: '',
       routineName: '',
@@ -180,13 +183,14 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = state => ({
-//   routine: state.routine
-// });
+const mapStateToProps = state => ({
+  routines: state.routines,
+});
 
-// const mapDispatchToProps = dispatch => ({}
-//   getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-//   updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
-//);
+const mapDispatchToProps = dispatch => ({
+  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
+  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
+  updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
+});
 
-// export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);

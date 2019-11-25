@@ -6,8 +6,6 @@ const CREATE_ROUTINE = 'CREATE_ROUTINE';
 //const UPDATE_ROUTINE = 'UPDATE_ROUTINE';
 const REMOVE_ROUTINE = 'REMOVE_ROUTINE';
 
-
-
 const getRoutine = routine => ({
   type: GET_ROUTINE,
   routine,
@@ -18,10 +16,10 @@ const createRoutine = routine => ({
   routine,
 });
 
-const removeRoutine = routineId =>({
-  type:REMOVE_ROUTINE,
-  routineId
-})
+const removeRoutine = routineId => ({
+  type: REMOVE_ROUTINE,
+  routineId,
+});
 
 // const updateRoutine = routine => ({
 //   type: UPDATE_ROUTINE,
@@ -46,16 +44,16 @@ export const createRoutineThunk = routine => async dispatch => {
   }
 };
 
-export const deleteRoutineThunk = routineId = async dispatch =>{
-  try{
-    const respone = await axios.delete(`api/routines/${routineId}`)
-    dispatch(removeRoutine(routineId))
-  } catch (error){
-    console.error(error)
+export const deleteRoutineThunk = (routineId = async dispatch => {
+  try {
+    const respone = await axios.delete(`api/routines/${routineId}`);
+    dispatch(removeRoutine(routineId));
+  } catch (error) {
+    console.error(error);
   }
-}
+});
 
-initialState = []
+initialState = [];
 
 //should be a GET_ROUTINES probably
 const routinesReducer = (state = initialState, action) => {
@@ -65,7 +63,7 @@ const routinesReducer = (state = initialState, action) => {
     case CREATE_ROUTINE:
       return [...state, action.routine];
     case REMOVE_ROUTINE:
-      return state.filter(routine => routine.id !== action.routineId )
+      return state.filter(routine => routine.id !== action.routineId);
     default:
       return state;
   }
