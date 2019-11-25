@@ -7,19 +7,11 @@ export const intervals = [
       hapticOptions: {
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singlebeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singlebeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
+          what: "singlebeat" // 'heartbeat' (duh-DUH), 'triplet' (duh-duh-DUH), 'doubleTime' (split beat - DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -28,10 +20,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash, different visualization?
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash, different visualization?
         }
       }
     },
@@ -44,18 +32,10 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "heartbeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -64,10 +44,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash
         }
       }
     },
@@ -80,18 +56,10 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "triplet" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -100,10 +68,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash, different visualization?
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash, different visualization?
         }
       }
     },
@@ -116,18 +80,10 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "doubletime" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -136,10 +92,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash, different visualization?
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash, different visualization?
         }
       }
     },
@@ -152,18 +104,10 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tripletime" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -172,10 +116,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash, different visualization?
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash, different visualization?
         }
       }
     },
@@ -188,18 +128,10 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "quadrupletime" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "singleBeat" // 'heartbeat' (duh-DUH), 'doublet' (DUH-duh), 'triplet' (DUH-duh-duh), 'doubleTime' (split beat DUH-DUH), 'tripleTime', 'quadrupleTime'
         }
       },
       soundOptions: {
         cadence: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "tick" // different alert sounds available on phone
-        },
-        step: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "tick" // different alert sounds available on phone
         }
@@ -208,10 +140,6 @@ export const intervals = [
         cadence: {
           when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
           what: "black" // different color to flash, different visualization?
-        },
-        step: {
-          when: "everyBeat", // 'muteAtGoal', 'mute', 'decreaseAtGoal'
-          what: "green" // different color to flash, different visualization?
         }
       }
     }
