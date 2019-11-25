@@ -30,12 +30,33 @@ const reducer = (state, action) => {
 };
 
 // dummy data
+const boxMueller = (mean, std) => {
+  const u1 = Math.random();
+  const u2 = Math.random();
+
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  // const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+
+  return z0 * std + mean;
+};
+
 let i = 1;
 const fakeRoutine = Array.from({ length: 5 }, () => ({
   id: i++,
   cadence: 10 * (Math.floor(Math.random() * (12 - 8 + 1)) + 8),
   duration: 60 * Math.floor(Math.random() * 5 + 1)
 }));
+
+let step = DateTime.local();
+const fakeActuals = fakeRoutine
+  .map(({ cadence, duration }) =>
+    Array.from({ length: Math.floor((cadence * duration) / 60) }, () => {
+      const actual = boxMueller(cadence, 0.75);
+      step = step.plus({ seconds: 60 / actual });
+      return [step, actual];
+    })
+  )
+  .flat();
 
 // params
 const timeWindow = 30; // seconds (to calc range of graph)
@@ -64,10 +85,28 @@ export default () => {
 
   return intervals && intervals.length ? (
     <VictoryChart
+      animate={{ duration: 1000, easing: "quadIn" }}
       domain={{ x: domain }}
       domainPadding={{ y: 10 }}
       scale={{ x: "time" }}
     >
+      <VictoryLine
+        x={() => DateTime.local()}
+        style={{ data: { strokeDasharray: 8 } }}
+        samples={1}
+      />
+      {/* Including the faked actuals and trying to simulate the timing of it means that the graph doesn't render?
+      {fakeActuals.filter(([d]) => d.diffNow("seconds").toObject().seconds < 0)
+        .length > 2 ? (
+        <VictoryLine
+          data={fakeActuals.filter(
+            ([d]) => d.diffNow("seconds").toObject().seconds < 0
+          )}
+          x={0}
+          y={1}
+          style={{ data: { stroke: "red" } }}
+        />
+      ) : null} */}
       <VictoryLine data={intervals} x={0} y={1} />
       {/* VictoryAxis gives an error re: children without a key prop when I use tickValues?
       <VictoryAxis
