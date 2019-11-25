@@ -30,6 +30,7 @@
     "expo-web-browser": "^7.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "fbjs": "^1.0.0",
     "luxon": "^1.21.2",
     "morgan": "^1.9.1",
     "native-base": "^2.13.8",
@@ -55,11 +56,13 @@
     "redux-thunk": "^2.3.0",
     "sequelize": "^5.21.2",
     "socket.io": "^2.3.0",
-    "victory-native": "^33.0.0",
-    "use-interval": "^1.1.0"
+    "use-interval": "^1.1.0",
+    "victory-native": "^33.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
     "babel-preset-expo": "^7.0.0",
+    "eslint": "^6.7.1",
     "jest-expo": "^35.0.0"
   },
   "private": true

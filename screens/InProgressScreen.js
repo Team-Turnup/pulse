@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import {
   Container,
   Button,
@@ -12,18 +12,12 @@ import {
   CardItem,
   Row,
   Col
-} from "native-base";
-import {
-  VictoryChart,
-  VictoryBar,
-  VictoryLabel,
-  VictoryAxis,
-  VictoryBrushLine
-} from "victory-native";
+} from 'native-base'
+import WorkoutGraph from './WorkoutGraph'
 
 export default class InProgressScreen extends React.Component {
   constructor() {
-    super();
+    super()
   }
 
   render() {
@@ -34,17 +28,17 @@ export default class InProgressScreen extends React.Component {
             <Col>
               <Content
                 contentContainerStyle={{
-                  justifyContent: "space-evenly",
+                  justifyContent: 'space-evenly'
                   // alignItems: "center"
                 }}
               >
-                <Card transparent style={{marginTop:15}}>
+                <Card transparent style={{marginTop: 15}}>
                   <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>0:00.00</Text>
@@ -56,9 +50,9 @@ export default class InProgressScreen extends React.Component {
                   <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>#</Text>
@@ -70,9 +64,9 @@ export default class InProgressScreen extends React.Component {
                   <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>#</Text>
@@ -83,19 +77,19 @@ export default class InProgressScreen extends React.Component {
               </Content>
             </Col>
             <Col>
-            <Content
+              <Content
                 contentContainerStyle={{
-                  justifyContent: "space-evenly",
+                  justifyContent: 'space-evenly'
                   // alignItems: "center"
                 }}
               >
-                <Card transparent style={{marginTop:15}}>
+                <Card transparent style={{marginTop: 15}}>
                   <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>0:00.00</Text>
@@ -104,12 +98,12 @@ export default class InProgressScreen extends React.Component {
                   </CardItem>
                 </Card>
                 <Card transparent>
-                  <CardItem >
+                  <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>#</Text>
@@ -121,9 +115,9 @@ export default class InProgressScreen extends React.Component {
                   <CardItem>
                     <Content
                       contentContainerStyle={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text>#</Text>
@@ -137,16 +131,16 @@ export default class InProgressScreen extends React.Component {
 
           <Row
             size={5.5}
-            style={{ backgroundColor: "salmon", justifyContent: "center" }}
+            style={{backgroundColor: 'salmon', justifyContent: 'center'}}
           >
-            <Text>DROP LVE GRAPH HERE</Text>
+            <WorkoutGraph />
           </Row>
 
           <Row
             size={1.5}
             style={{
               flex: 1,
-              justifyContent: "space-evenly"
+              justifyContent: 'space-evenly'
             }}
           >
             <Button large>
@@ -158,11 +152,11 @@ export default class InProgressScreen extends React.Component {
           </Row>
         </Grid>
       </Container>
-    );
+    )
   }
 }
 
 InProgressScreen.navigationOptions = {
   // title:'👟🏃🏽🏋🏽'
-  header:null
-};
+  header: null
+}
