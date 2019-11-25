@@ -54,6 +54,7 @@ export default () => {
   }, []);
 
   useInterval(() => {
+    // update chart domain every second to keep current time in the middle
     const now = DateTime.local();
     setDomain([
       now.minus({ seconds: timeWindow }),
@@ -68,6 +69,16 @@ export default () => {
       scale={{ x: "time" }}
     >
       <VictoryLine data={intervals} x={0} y={1} />
+      {/* VictoryAxis gives an error re: children without a key prop when I use tickValues?
+      <VictoryAxis
+        domain={{ domain }}
+        tickValues={[-30,-15,0,15,30]}
+        tickFormat={t =>
+          DateTime.fromJSDate(t)
+            .diffNow("seconds")
+            .toObject().seconds
+        }
+      /> */}
     </VictoryChart>
   ) : (
     <Text>Loading...</Text>
