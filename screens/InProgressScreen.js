@@ -82,7 +82,7 @@ export default class InProgressScreen extends React.Component {
                 </Card>
               </Content>
             </Col>
-            <Col style={{ backgroundColor: "teal" }}>
+            <Col>
             <Content
                 contentContainerStyle={{
                   justifyContent: "space-evenly",
@@ -90,7 +90,7 @@ export default class InProgressScreen extends React.Component {
                 }}
               >
                 <Card transparent style={{marginTop:15}}>
-                  <CardItem style={{backgroundColor:'teal'}}>
+                  <CardItem>
                     <Content
                       contentContainerStyle={{
                         flexDirection: "column",
@@ -104,7 +104,7 @@ export default class InProgressScreen extends React.Component {
                   </CardItem>
                 </Card>
                 <Card transparent>
-                  <CardItem style={{backgroundColor:'teal'}}>
+                  <CardItem >
                     <Content
                       contentContainerStyle={{
                         flexDirection: "column",
@@ -118,7 +118,7 @@ export default class InProgressScreen extends React.Component {
                   </CardItem>
                 </Card>
                 <Card transparent>
-                  <CardItem style={{backgroundColor:'teal'}}>
+                  <CardItem>
                     <Content
                       contentContainerStyle={{
                         flexDirection: "column",
@@ -145,7 +145,6 @@ export default class InProgressScreen extends React.Component {
           <Row
             size={1.5}
             style={{
-              backgroundColor: "mistyrose",
               flex: 1,
               justifyContent: "space-evenly"
             }}
