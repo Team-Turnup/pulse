@@ -1,5 +1,6 @@
 {
   "root": true,
+  "parser": "babel-eslint",
   "extends": ["prettier", "prettier/react"],
   "rules": {
     "semi": 0
