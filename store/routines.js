@@ -37,21 +37,22 @@ export const getRoutineThunk = id => async dispatch => {
 
 export const createRoutineThunk = routine => async dispatch => {
   try {
-    const response = await axios.create(`/api/routines/${id}`);
+    const response = await axios.post('/api/routines/');
+    console.log('running in create routine thunk');
     dispatch(createRoutine(response.data));
   } catch (err) {
     console.error(err);
   }
 };
 
-export const deleteRoutineThunk = (routineId = async dispatch => {
+export const deleteRoutineThunk = routineId => async dispatch => {
   try {
     const respone = await axios.delete(`api/routines/${routineId}`);
     dispatch(removeRoutine(routineId));
   } catch (error) {
     console.error(error);
   }
-});
+};
 
 initialState = [];
 

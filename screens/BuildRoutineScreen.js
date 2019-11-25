@@ -30,6 +30,7 @@ import {
   CheckBox,
 } from 'native-base';
 import { VictoryChart, VictoryBar } from 'victory-native';
+import RNPickerSelect from 'react-native-picker-select';
 import NumericInput from 'react-native-numeric-input';
 import {
   getRoutineThunk,
@@ -46,12 +47,12 @@ class BuildRoutineScreen extends Component {
       routineName: '',
       cadence: 0,
       duration: 0,
-      dirty: false,
+      //dirty: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  componentDidMount() {
-    console.log(this.props.routines);
+  async componentDidMount() {
+    //await this.props.getRoutineThunk(this.props.navigation.params.id);
     //const routine = this.props.routines.routine;
     this.setState({
       // exerciseType: routine.exerciseType,
@@ -60,15 +61,23 @@ class BuildRoutineScreen extends Component {
       // duration: routine.duration || 0,
     });
   }
-
-  handleSubmit() {
-    this.props.navigation.navigate('InProgressStack');
+  onValueChange(value) {
+    this.setState({
+      exerciseType: value,
+    });
+  }
+  handleSubmit(event) {
+    //event.preventDefault();
+    console.log(this.props.createRoutineThunk);
+    this.props.createRoutineThunk(this.state);
+    console.log('running handlesubmit');
     this.setState({
       exerciseType: '',
       routineName: '',
       cadence: 0,
       duration: 0,
     });
+    this.props.navigation.navigate('HomeScreen');
   }
 
   render() {
@@ -85,17 +94,6 @@ class BuildRoutineScreen extends Component {
         <Content>
           <Form>
             <Item fixedLabel>
-              <Label>Exercise Type</Label>
-              <Input
-                //pre-populate the selected exercise field with the chosen exercise
-                //placeholder={this.state.exerciseType}
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={this.props.exerciseType}
-                //onChangeText={exerciseType => this.setState({ exerciseType })}
-              />
-            </Item>
-            <Item fixedLabel>
               <Label>Routine Name</Label>
               <Input
                 placeholder=""
@@ -105,6 +103,32 @@ class BuildRoutineScreen extends Component {
                 onChangeText={routineName => this.setState({ routineName })}
               />
             </Item>
+            <RNPickerSelect
+              onValueChange={value => this.onValueChange(value)}
+              items={[
+                { label: 'Walking', value: 'walking' },
+                { label: 'Running', value: 'running' },
+                { label: 'Cycling', value: 'cycling' },
+                { label: 'Rowing', value: 'rowing' },
+                { label: 'Jumping Jacks', value: 'jumping jacks' },
+                { label: 'Pushups', value: 'pushups' },
+                { label: 'Breathing', value: 'breathing' },
+                { label: 'Dancing', value: 'dancing' },
+                { label: 'Playing Music', value: 'playing music' },
+              ]}
+            />
+            {/* <Item fixedLabel>
+              <Label>Exercise Type</Label>
+              <Input
+                //pre-populate the selected exercise field with the chosen exercise
+                //placeholder={this.state.exerciseType}
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={this.props.exerciseType}
+                //onChangeText={exerciseType => this.setState({ exerciseType })}
+              />
+            </Item> */}
+
             <Item fixedLabel>
               <Label>Cadence</Label>
               <NumericInput
@@ -124,7 +148,7 @@ class BuildRoutineScreen extends Component {
           <Button
             bordered
             style={styles.button}
-            onPress={() => this.handleSubmit()}
+            //onPress={() => this.handleSubmit()}
           >
             <Text>Add to Routine</Text>
           </Button>
@@ -151,7 +175,8 @@ class BuildRoutineScreen extends Component {
             bordered
             style={styles.button}
             //need to actually save stuff via thunk
-            onPress={() => this.navigation.navigate('HomeScreen')}
+
+            onPress={() => this.handleSubmit()}
           >
             <Text>Save Routine & Return Home</Text>
           </Button>
