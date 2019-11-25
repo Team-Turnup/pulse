@@ -4,6 +4,8 @@ import axios from "axios";
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const CHANGE_USER_INFO = 'CHANGE_USER_INFO'
+const ADD_USER = 'ADD_USER'
+
 
 
 //ACTION CREATORS
@@ -77,6 +79,10 @@ export default function(state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
+    case CHANGE_USER_INFO:
+      return state.map(user => {
+        return user
+      })
     default:
       return state
   }
