@@ -11,6 +11,7 @@ export default function HistoryScreen(){
       { quarter: 4, earnings: 19000 }
     ];
 
+
     return (
       <ScrollView>
         <VictoryLine
@@ -22,7 +23,6 @@ export default function HistoryScreen(){
     );
 
 }
-
 HistoryScreen.navigationOptions = {
   title: "History",
 }

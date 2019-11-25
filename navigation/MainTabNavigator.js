@@ -14,17 +14,51 @@ import SelectRoutineScreen from '../screens/SelectRoutineScreen';
 //delete the select workout screen after development.
 import PreviousRoutine from '../components/PreviousRoutine';
 import BuildRoutineScreen from '../screens/BuildRoutineScreen';
+import InProgressScreen from '../screens/InProgressScreen';
+import LoginScreen from '../screens/LoginScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
 
+const InProgressStack = createStackNavigator({ InProgress: InProgressScreen });
+
+InProgressStack.navigationOptions = {
+  tabBarLabel: 'InProgress',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
+const LoginStack = createStackNavigator({ Login: LoginScreen });
+
+LoginStack.navigationOptions = {
+  tabBarLabel: 'Login',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-  },
-  config
+  }
+  // config
 );
 
 HomeStack.navigationOptions = {
@@ -137,6 +171,7 @@ SelectWorkoutStack.navigationOptions = {
 SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
+  LoginStack,
   HomeStack,
   HistoryStack,
   CommunityStack,
@@ -145,6 +180,7 @@ const tabNavigator = createBottomTabNavigator({
   SelectWorkoutStack,
   BuildRoutineScreen: BuildRoutineScreen,
   //PreviousRoutine
+  InProgressStack,
 });
 
 tabNavigator.path = '';
