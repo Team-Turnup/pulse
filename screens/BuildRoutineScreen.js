@@ -32,6 +32,8 @@ import {
 import { VictoryChart, VictoryBar } from 'victory-native';
 import RNPickerSelect from 'react-native-picker-select';
 import NumericInput from 'react-native-numeric-input';
+import RoutineBarGraphic from '../components/RoutineBarGraphic';
+
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -154,7 +156,7 @@ class BuildRoutineScreen extends Component {
           </Button>
 
           {/* display chart component here */}
-          <VictoryChart domainPadding={5}>
+          {/* <VictoryChart domainPadding={5}>
             <VictoryBar
               style={{ data: { fill: 'gold', width: 20 } }}
               alignment="start"
@@ -162,7 +164,8 @@ class BuildRoutineScreen extends Component {
               y={data => data.cadence}
               x={data => data.value}
             />
-          </VictoryChart>
+          </VictoryChart> */}
+          <RoutineBarGraphic />
 
           <Button
             bordered
