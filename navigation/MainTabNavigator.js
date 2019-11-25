@@ -10,20 +10,19 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-import SelectWorkoutScreen from '../screens/SelectWorkoutScreen';
-import InProgressScreen from '../screens/InProgressScreen'
+import SelectRoutineScreen from '../screens/SelectRoutineScreen';
 //delete the select workout screen after development.
-import LoginScreen from '../screens/LoginScreen'
-import PreviousWorkout from '../components/PreviousWorkout';
+import PreviousRoutine from '../components/PreviousRoutine';
+import BuildRoutineScreen from '../screens/BuildRoutineScreen';
+import InProgressScreen from '../screens/InProgressScreen';
+import LoginScreen from '../screens/LoginScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
 
-const InProgressStack = createStackNavigator(
-{InProgress:InProgressScreen}
-)
+const InProgressStack = createStackNavigator({ InProgress: InProgressScreen });
 
 InProgressStack.navigationOptions = {
   tabBarLabel: 'InProgress',
@@ -37,11 +36,9 @@ InProgressStack.navigationOptions = {
       }
     />
   ),
-}
+};
 
-const LoginStack = createStackNavigator(
-  {Login:LoginScreen}
-)
+const LoginStack = createStackNavigator({ Login: LoginScreen });
 
 LoginStack.navigationOptions = {
   tabBarLabel: 'Login',
@@ -55,13 +52,12 @@ LoginStack.navigationOptions = {
       }
     />
   ),
-}
-
+};
 
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-  },
+  }
   // config
 );
 
@@ -154,14 +150,14 @@ SettingsStack.path = '';
 // AccelerometerStack.path = '';
 
 const SelectWorkoutStack = createStackNavigator(
-  //{ Settings: PreviousWorkout },
-  { Settings: SelectWorkoutScreen },
+  //{ Settings: PreviousRoutine },
+  { Settings: SelectRoutineScreen },
 
   config
 );
 
 SelectWorkoutStack.navigationOptions = {
-  //tabBarLabel: 'PreviousWorkout',
+  //tabBarLabel: 'PreviousRoutine',
   tabBarLabel: 'SelectWorkout',
 
   tabBarIcon: ({ focused }) => (
@@ -182,7 +178,9 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
   // AccelerometerStack,
   SelectWorkoutStack,
-  InProgressStack
+  BuildRoutineScreen: BuildRoutineScreen,
+  //PreviousRoutine
+  InProgressStack,
 });
 
 tabNavigator.path = '';
