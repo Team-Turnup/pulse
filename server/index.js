@@ -62,7 +62,7 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
-
+ 
   // auth and api routes
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
@@ -81,10 +81,10 @@ const createApp = () => {
     }
   })
 
-  // sends index.html
-  app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-  })
+//   // sends index.html
+//   app.use('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
+//   })
 
   // error handling endware
   app.use((err, req, res, next) => {

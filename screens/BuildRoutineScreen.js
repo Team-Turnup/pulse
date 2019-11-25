@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   Image,
   Platform,
@@ -30,42 +30,75 @@ import {
   CheckBox,
 } from 'native-base';
 import { VictoryChart, VictoryBar } from 'victory-native';
+import RNPickerSelect from 'react-native-picker-select';
 import NumericInput from 'react-native-numeric-input';
-//import { getRoutineThunk } from '../store/routines';
-//import { createRoutineThunk } from '../store/routines';
-//import { updateRoutineThunk } from '../store/routines';
+import RoutineBarGraphic from '../components/RoutineBarGraphic';
+
+import {
+  getRoutineThunk,
+  createRoutineThunk,
+  updateRoutineThunk,
+} from '../store/routines';
 
 //maybe rename to UpdateRoutineScreen
-export default class BuildRoutineScreen extends Component {
+class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       exerciseType: '',
       routineName: '',
-      cadence: 0,
-      duration: 0,
-      dirty: false,
+      index: 0,
+      cadence: 100,
+      duration: 60,
+      routine: []
+      //dirty: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addInterval = this.addInterval.bind(this)
+    this.changeIndex = this.changeIndex.bind(this)
   }
-  componentDidMount() {
-    //const routine = this.props.routines.routine;
+
+  // async componentDidMount() {
+  //   //await this.props.getRoutineThunk(this.props.navigation.params.id);
+  //   //const routine = this.props.routines.routine;
+  //   this.setState({
+  //     // exerciseType: routine.exerciseType,
+  //     // routineName: routine.routineName || '',
+  //     // cadence: routine.cadence || 0,
+  //     // duration: routine.duration || 0,
+  //   });
+  // }
+
+  onValueChange(value) {
     this.setState({
-      // exerciseType: routine.exerciseType,
-      // routineName: routine.routineName || '',
-      // cadence: routine.cadence || 0,
-      // duration: routine.duration || 0,
+      exerciseType: value,
     });
   }
 
-  handleSubmit() {
-    //this.props.navigation.navigate('NextScreen')
+  handleSubmit(event) {
+    //event.preventDefault();
+    console.log(this.props.createRoutineThunk);
+    this.props.createRoutineThunk(this.state);
+    console.log('running handlesubmit');
     this.setState({
       exerciseType: '',
       routineName: '',
       cadence: 0,
       duration: 0,
     });
+    this.props.navigation.navigate('HomeScreen');
+  }
+
+  addInterval(event) {
+    const {cadence, duration, routine, index} = this.state
+    const newRoutine = [...routine.slice(0, index), {cadence, duration}, ...routine.slice(index)]
+    console.log(newRoutine)
+    this.setState({routine: newRoutine, index: index+1})
+  }
+
+  changeIndex(event) {
+    console.log(event.target)
+    this.setState({index: Number(event.target.id)})
   }
 
   render() {
@@ -82,17 +115,6 @@ export default class BuildRoutineScreen extends Component {
         <Content>
           <Form>
             <Item fixedLabel>
-              <Label>Exercise Type</Label>
-              <Input
-                //pre-populate the selected exercise field with the chosen exercise
-                //placeholder={this.state.exerciseType}
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={this.props.exerciseType}
-                //onChangeText={exerciseType => this.setState({ exerciseType })}
-              />
-            </Item>
-            <Item fixedLabel>
               <Label>Routine Name</Label>
               <Input
                 placeholder=""
@@ -102,6 +124,32 @@ export default class BuildRoutineScreen extends Component {
                 onChangeText={routineName => this.setState({ routineName })}
               />
             </Item>
+            <RNPickerSelect
+              onValueChange={value => this.onValueChange(value)}
+              items={[
+                { label: 'Walking', value: 'walking' },
+                { label: 'Running', value: 'running' },
+                { label: 'Cycling', value: 'cycling' },
+                { label: 'Rowing', value: 'rowing' },
+                { label: 'Jumping Jacks', value: 'jumping jacks' },
+                { label: 'Pushups', value: 'pushups' },
+                { label: 'Breathing', value: 'breathing' },
+                { label: 'Dancing', value: 'dancing' },
+                { label: 'Playing Music', value: 'playing music' },
+              ]}
+            />
+            {/* <Item fixedLabel>
+              <Label>Exercise Type</Label>
+              <Input
+                //pre-populate the selected exercise field with the chosen exercise
+                //placeholder={this.state.exerciseType}
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={this.props.exerciseType}
+                //onChangeText={exerciseType => this.setState({ exerciseType })}
+              />
+            </Item> */}
+
             <Item fixedLabel>
               <Label>Cadence</Label>
               <NumericInput
@@ -121,13 +169,15 @@ export default class BuildRoutineScreen extends Component {
           <Button
             bordered
             style={styles.button}
-            onPress={() => this.handleSubmit()}
+            onPress={() => this.addInterval()}
           >
             <Text>Add to Routine</Text>
           </Button>
 
+          <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex}/>
+
           {/* display chart component here */}
-          <VictoryChart domainPadding={5}>
+          {/* <VictoryChart domainPadding={5}>
             <VictoryBar
               style={{ data: { fill: 'gold', width: 20 } }}
               alignment="start"
@@ -135,7 +185,7 @@ export default class BuildRoutineScreen extends Component {
               y={data => data.cadence}
               x={data => data.value}
             />
-          </VictoryChart>
+          </VictoryChart> */}
 
           <Button
             bordered
@@ -148,7 +198,8 @@ export default class BuildRoutineScreen extends Component {
             bordered
             style={styles.button}
             //need to actually save stuff via thunk
-            onPress={() => this.navigation.navigate('HomeScreen')}
+
+            onPress={() => this.handleSubmit()}
           >
             <Text>Save Routine & Return Home</Text>
           </Button>
@@ -180,13 +231,14 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = state => ({
-//   routine: state.routine
-// });
+const mapStateToProps = state => ({
+  routines: state.routines,
+});
 
-// const mapDispatchToProps = dispatch => ({}
-//   getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-//   updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
-//);
+const mapDispatchToProps = dispatch => ({
+  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
+  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
+  updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
+});
 
-// export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);
