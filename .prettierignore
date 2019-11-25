@@ -1,0 +1,4 @@
+.expo/*
+.expo_shared/*
+package-lock.json
+package.json
