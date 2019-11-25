@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Pedometer } from "expo-sensors";
 import {haptic} from '../assets/options/haptics'
-import {intervals} from '../dummyIntervals'
+import intervals from '../dummyIntervals'
 // import { Audio } from "expo-av";
 import tick from '../assets/audio/Tick.mp3'
 // import Sound from 'react-native-sound';
