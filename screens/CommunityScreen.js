@@ -1,5 +1,7 @@
 import React from "react";
 import WorkoutLogic from "../components/WorkoutLogic";
+import RoutineBarGraphic from "../components/RoutineBarGraphic";
+
 
 export default function CommunityScreen (){
 
@@ -11,7 +13,10 @@ export default function CommunityScreen (){
     ];
 
     return (
+      <>
+      <RoutineBarGraphic />
      <WorkoutLogic />
+     </>
     );
 
 }

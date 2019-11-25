@@ -1,8 +1,8 @@
-export const intervals = [
+export default [
     {
       cadence: 100, // in bpm
-      duration: 200, // in seconds
-      exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
+      duration: 20, // in seconds
+      exercise: "walking", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
       hapticOptions: {
         cadence: {
@@ -24,7 +24,7 @@ export const intervals = [
       }
     },
     {
-      cadence: 80, // in bpm
+      cadence: 160, // in bpm
       duration: 10, // in seconds
       exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
@@ -48,9 +48,9 @@ export const intervals = [
       }
     },
     {
-      cadence: 60, // in bpm
-      duration: 10, // in seconds
-      exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
+      cadence: 100, // in bpm
+      duration: 20, // in seconds
+      exercise: "walking", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
       hapticOptions: {
         cadence: {
@@ -72,7 +72,7 @@ export const intervals = [
       }
     },
     {
-      cadence: 80, // in bpm
+      cadence: 160, // in bpm
       duration: 10, // in seconds
       exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
@@ -96,9 +96,9 @@ export const intervals = [
       }
     },
     {
-      cadence: 80, // in bpm
-      duration: 10, // in seconds
-      exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
+      cadence: 100, // in bpm
+      duration: 20, // in seconds
+      exercise: "walking", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
       hapticOptions: {
         cadence: {
@@ -120,8 +120,8 @@ export const intervals = [
       }
     },
     {
-      cadence: 80, // in bpm
-      duration: 10, // in seconds
+      cadence: 140, // in bpm
+      duration: 40, // in seconds
       exercise: "running", // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: "forearm", // 'leg', 'chest'
       hapticOptions: {
