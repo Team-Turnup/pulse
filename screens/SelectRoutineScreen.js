@@ -63,12 +63,13 @@ class SelectRoutineScreen extends Component {
     });
   }
 
+  static navigationOptions = {
+    header:null
+  }
+
   render() {
     return (
       <Container>
-        <Header>
-          <Text style={styles.header}> Select Exercise </Text>
-        </Header>
         <Content>
           <Form>
             <RNPickerSelect
@@ -98,7 +99,7 @@ class SelectRoutineScreen extends Component {
           <Button
             bordered
             style={styles.button}
-            onPress={() => this.handleCreateNewRoutine()}
+            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
           >
             <Text>Create New Routine</Text>
           </Button>
@@ -113,6 +114,10 @@ class SelectRoutineScreen extends Component {
   }
 }
 
+SelectRoutineScreen.navigationOptions = {
+  // title:'Select Exercise',
+  header:null
+}
 const styles = StyleSheet.create({
   header: {
     marginTop: 15,

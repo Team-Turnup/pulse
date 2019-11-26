@@ -149,26 +149,26 @@ SettingsStack.path = '';
 
 // AccelerometerStack.path = '';
 
-const SelectWorkoutStack = createStackNavigator(
-  //{ Settings: PreviousRoutine },
-  { Settings: SelectRoutineScreen },
+// const SelectWorkoutStack = createStackNavigator(
+//   //{ Settings: PreviousRoutine },
+//   { Settings: SelectRoutineScreen },
 
-  config
-);
+//   config
+// );
 
-SelectWorkoutStack.navigationOptions = {
-  //tabBarLabel: 'PreviousRoutine',
-  tabBarLabel: 'SelectWorkout',
+// SelectWorkoutStack.navigationOptions = {
+//   //tabBarLabel: 'PreviousRoutine',
+//   tabBarLabel: 'SelectWorkout',
 
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  ),
-};
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   ),
+// };
 
-SelectWorkoutStack.path = '';
+// SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   LoginStack,
@@ -177,8 +177,8 @@ const tabNavigator = createBottomTabNavigator({
   CommunityStack,
   SettingsStack,
   // AccelerometerStack,
-  SelectWorkoutStack,
-  BuildRoutineScreen: BuildRoutineScreen,
+  // SelectWorkoutStack,
+  // BuildRoutineScreen: BuildRoutineScreen,
   //PreviousRoutine
   InProgressStack,
 });

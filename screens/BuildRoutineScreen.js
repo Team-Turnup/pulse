@@ -119,9 +119,9 @@ class BuildRoutineScreen extends Component {
 
     return (
       <Container>
-        <Header>
+        {/* <Header>
           <Text style={styles.header}>Build Routine</Text>
-        </Header>
+        </Header> */}
         <Content>
           <Form>
             <Item fixedLabel>
