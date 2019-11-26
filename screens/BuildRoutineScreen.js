@@ -171,9 +171,12 @@ class BuildRoutineScreen extends Component {
 
               </View>
 
+            <View style={styles.barGraphic}>
           {this.state.index<this.state.routine.length ? <Text style={styles.message}>Current interval is highlighted in blue</Text> : null}
 
           <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex} index={this.state.index}/>
+            </View>
+
             <View style={styles.buttons}>
           <TouchableOpacity
              style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
@@ -190,8 +193,12 @@ class BuildRoutineScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
-            onPress={() => this.state.routine.length ? this.handleSubmit() : {}}
-            //onPress={() => this.navigation.navigate('StartRoutineScreen')}
+            onPress={() => {
+              if (this.state.routine.length) {
+                this.handleSubmit()
+                this.props.navigation.navigate('StartRoutineScreen')}
+               }
+            }
           >
             <Text style={styles.buttonText}>Save and Start Routine</Text>
           </TouchableOpacity>
@@ -256,6 +263,10 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     color: "white",
     textAlign: 'center'
+  },
+  barGraphic: {
+    marginTop: 20,
+    marginBottom: 20
   }
 });
 
