@@ -6,6 +6,7 @@ import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 
+<<<<<<< HEAD
 const ScreenNavigator = createStackNavigator({
   SelectRoutineScreen,
   HomeScreen,
@@ -13,5 +14,14 @@ const ScreenNavigator = createStackNavigator({
   StartRoutineScreen,
   InProgressScreen
 },{headerMode:'none'})
+=======
+const ScreenNavigator = createStackNavigator(
+  {
+    SelectRoutineScreen,
+    BuildRoutineScreen
+  },
+  {headerMode: 'none'}
+)
+>>>>>>> master
 
 export default ScreenNavigator

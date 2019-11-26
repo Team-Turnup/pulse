@@ -19,19 +19,19 @@ import {
   Text
 } from 'native-base'
 import {tsImportEqualsDeclaration} from '@babel/types'
-class LoginScreen extends React.Component {
+class SignupScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       email: '',
       password: ''
     }
-    this.handleLogin = this.handleLogin.bind(this)
+    this.handleSignup = this.handleSignup.bind(this)
   }
 
-  handleLogin() {
-    const formName = 'login'
-    this.props.doHandleLogin(this.state, formName)
+  handleSignup() {
+    const formName = 'signup'
+    this.props.doHandleSignup(this.state, formName)
     this.setState({
       email: '',
       password: ''
@@ -40,6 +40,7 @@ class LoginScreen extends React.Component {
   }
 
   render() {
+    const {name, displayName, handleLogin, handleSignup, error} = this.props
     return (
       <Container>
         <Content>
@@ -57,7 +58,12 @@ class LoginScreen extends React.Component {
               />
             </CardItem>
           </Card>
-          <Form style={{paddingBottom: 25}} name={'login'}>
+          <Form style={{paddingBottom: 25}} name={'signup'}>
+            <Header>
+              <Text style={styles.header}>
+                Input your Information to Create an Account!
+              </Text>
+            </Header>
             <Item floatingLabel>
               <Label>Email</Label>
               <Input
@@ -79,28 +85,22 @@ class LoginScreen extends React.Component {
                 onChangeText={text => this.setState({password: text})}
               />
             </Item>
+
             <Button
-              block
               style={styles.button}
-              onPress={() => this.handleLogin()}
+              block
+              onPress={() => this.handleSignup()}
             >
-              <Text>Sign In</Text>
+              <Text>Sign Up</Text>
             </Button>
           </Form>
-          <Button
-            block
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SignupScreen')}
-          >
-            <Text>Create an Account</Text>
-          </Button>
         </Content>
       </Container>
     )
   }
 }
 
-LoginScreen.navigationOptions = {
+SignupScreen.navigationOptions = {
   header: null
 }
 
@@ -162,30 +162,30 @@ const styles = StyleSheet.create({
 /**
  * CONTAINER
  *   Note that we have two different sets of 'mapStateToProps' functions -
- *   one for Login, and one for Signup. However, they share the same 'mapDispatchToProps'
+ *   one for signup, and one for Signup. However, they share the same 'mapDispatchToProps'
  *   function, and share the same Component. This is a good example of how we
  *   can stay DRY with interfaces that are very similar to each other!
  */
 
-const mapLogin = state => {
+const mapSignup = state => {
   return {
     users: state.users,
-    name: 'login',
-    displayName: 'Login'
+    name: 'signup',
+    displayName: 'Sign Up'
     //error: state.user.error
   }
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method))
+  doHandleSignup: (user, method) => dispatch(auth(user, method))
 })
 
-export default connect(mapLogin, mapDispatch)(LoginScreen)
+export default connect(mapSignup, mapDispatch)(SignupScreen)
 
-LoginScreen.propTypes = {
+SignupScreen.propTypes = {
   name: PropTypes.string,
   //displayName: PropTypes.string.isRequired,
-  doHandleLogin: PropTypes.func
+  doHandleSignup: PropTypes.func
   // handleSignup: PropTypes.func,
   // error: PropTypes.object
 }
