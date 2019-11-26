@@ -35,6 +35,10 @@ class LoginScreen extends React.Component {
     const email = this.state.email.value
     const password = this.state.password.value
     this.props.doHandleLogin({email, password}, formName)
+    this.setState({
+      email: '',
+      password: ''
+    })
   }
 
   // handleLogin() {
@@ -124,7 +128,7 @@ LoginScreen.navigationOptions = {
 
 const mapLogin = state => {
   return {
-    user: state.user,
+    users: state.users,
     name: 'login',
     displayName: 'Login'
     //error: state.user.error
@@ -151,7 +155,7 @@ export default connect(mapLogin, mapDispatch)(LoginScreen)
 LoginScreen.propTypes = {
   name: PropTypes.string,
   //displayName: PropTypes.string.isRequired,
-  doHandleLogin: PropTypes.func,
-  handleSignup: PropTypes.func,
-  error: PropTypes.object
+  doHandleLogin: PropTypes.func
+  // handleSignup: PropTypes.func,
+  // error: PropTypes.object
 }

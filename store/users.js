@@ -14,15 +14,6 @@ const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
 
 //THUNKS
 
-export const changeUserInfoThunk = userId => async dispatch => {
-  try {
-    const response = await axios.put(`api/users/${userId}`, {userId})
-    dispatch(changeUserInfo(userId))
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 export const me = () => async dispatch => {
   try {
     const response = await axios.get(`auth/me`)
@@ -63,7 +54,6 @@ export const me = () => async dispatch => {
 //   } catch (authError) {
 //     return dispatch(getUser({error: authError}))
 //   }
-
 //   try {
 //     dispatch(getUser(res.data))
 //     //history.push('/home')
@@ -93,7 +83,6 @@ export const auth = (user, method) => async dispatch => {
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }
-
   try {
     dispatch(getUser(res.data))
     //history.push('/home')
@@ -109,6 +98,15 @@ export const logout = () => async dispatch => {
     history.push('/login')
   } catch (err) {
     console.error(err)
+  }
+}
+
+export const changeUserInfoThunk = userId => async dispatch => {
+  try {
+    const response = await axios.put(`api/users/${userId}`, {userId})
+    dispatch(changeUserInfo(userId))
+  } catch (error) {
+    console.error(error)
   }
 }
 
