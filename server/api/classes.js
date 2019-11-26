@@ -7,9 +7,16 @@ const {leaderValidate} = require('./authFunctions')
 // GET all classes at /api/class (for populating the class list for search)
 router.get('/', async (req, res, next) => {
   try {
+    // are we using req.query with React Native?
+    const {
+      query: {search}
+    } = req
     const classes = await Class.findAll({
       // including users for class counts -- may not need this but including it for now?
-      include: [User]
+      include: [User],
+      where: {
+        name: {[Op.iLike]: `%${search}%`}
+      }
     })
     res.status(200).json(classes)
   } catch (err) {
