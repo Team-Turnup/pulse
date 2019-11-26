@@ -18,16 +18,29 @@ router.get('/', async (req, res, next) => {
 })
 
 // GET single class /api/class/:classId (for populating class data)
+// Currently assuming live class and that attendees and leaders don't need different data
 router.get('/:classId', async (req, res, next) => {
   try {
     const {
       params: {classId}
     } = req
     const currentClass = await Class.findByPk(classId, {
-      //
-      include: [{model: User, attributes: ['id', 'name']}, Routine, Interval]
+      // include age, sex, role of attendees?
+      // used to load up the routine/intervals for every user and class list
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name'],
+          through: {
+            /* I want the attendees not the owner */
+          }
+        },
+        Routine,
+        Interval
+      ]
     })
-    res.status(200).json(classes)
+    if (!currentClass) throw new Error(`Class with id ${classId} not found.`)
+    res.status(200).json(currentClass)
   } catch (err) {
     next(err)
   }
