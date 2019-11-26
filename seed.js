@@ -1,5 +1,5 @@
 const db = require('./server/db')
-const faker = require("faker");
+const faker = require('faker')
 const {
   Interval,
   Routine,
@@ -7,7 +7,7 @@ const {
   Workout,
   WorkoutTimestamp,
   Class
-} = require("./server/db/models");
+} = require('./server/db/models')
 
 const userCount = 100
 const routineCount = 100
@@ -15,121 +15,159 @@ const intervalCount = 300
 const workoutCount = 100
 const WorkoutTimestampCount = 100
 
-
 const classCount = 100
 
-const createUser = async () =>{
+const createUser = async () => {
   const pass = faker.internet.password()
   return await User.create({
     role: faker.random.arrayElement(['leader', 'follower']),
     email: faker.internet.email(),
     password: pass,
-    age: faker.random.number({min:18, max:65}),
+    age: faker.random.number({min: 18, max: 65}),
     sex: faker.random.arrayElement(['male', 'female', 'non-binary'])
   })
 }
 
-const createRoutine = async () =>{
+const createRoutine = async () => {
   return await Routine.create({
-    name:faker.name.firstName(),
-    activityType:faker.random.arrayElement(['running', 'walking', 'jumping jacks', 'push-ups', 'stairs', 'rowing', 'swimming', 'dancing', 'playing music', 'breathing', 'combo']),
-    public:faker.random.boolean()
+    name: faker.name.firstName(),
+    activityType: faker.random.arrayElement([
+      'running',
+      'walking',
+      'jumping jacks',
+      'push-ups',
+      'stairs',
+      'rowing',
+      'swimming',
+      'dancing',
+      'playing music',
+      'breathing',
+      'combo'
+    ]),
+    public: faker.random.boolean()
   })
 }
 
-const createInterval = async () =>{
+const createInterval = async () => {
   return await Interval.create({
-    activityType: faker.random.arrayElement(['running', 'walking', 'jumping jacks', 'push-ups', 'stairs', 'rowing', 'swimming', 'dancing', 'playing music', 'breathing']),
-    cadence:faker.random.number({'min':1, 'max':999}),
-    duration:faker.random.arrayElement([5, 10, 15, 20,25,30])
+    activityType: faker.random.arrayElement([
+      'running',
+      'walking',
+      'jumping jacks',
+      'push-ups',
+      'stairs',
+      'rowing',
+      'swimming',
+      'dancing',
+      'playing music',
+      'breathing'
+    ]),
+    cadence: faker.random.number({min: 1, max: 999}),
+    duration: faker.random.arrayElement([5, 10, 15, 20, 25, 30])
   })
 }
 
 const createWorkout = async () => {
   return await Workout.create({
     timestamp: new Date(),
-    duration:faker.random.arrayElement([30,60,90])
+    duration: faker.random.arrayElement([30, 60, 90])
   })
 }
 
-const createWorkoutstamp = async () =>{
+const createWorkoutstamp = async () => {
   return await WorkoutTimestamp.create({
-    cadence:faker.random.number({'min':-1, 'max':999}),
-    timestamp: new Date(),
+    cadence: faker.random.number({min: -1, max: 999}),
+    timestamp: new Date()
   })
 }
 const createClass = async () => {
   return await Class.create({
     name: `Class # ${faker.random.number()}`,
-    canEnroll:true,
-    live:true
+    canEnroll: true,
+    live: true
   })
 }
 
-async function seed(){
-  await db.sync({force:true})
+async function seed() {
+  await db.sync({force: true})
   console.log('db synced!')
 
-  for(let i = 1; i <= userCount; i++){
+  const users = await Promise.all([
+    User.create({
+      email: 'cody@email.com',
+      password: '123',
+      //username: 'MrCody',
+      role: 'leader'
+    })
+  ])
+
+  for (let i = 1; i <= userCount; i++) {
     await createUser()
   }
 
-  for(let i = 1; i <= routineCount; i++){
+  for (let i = 1; i <= routineCount; i++) {
     let currentRoutine = await createRoutine()
-    await currentRoutine.setUser(Math.ceil(Math.random()*(userCount-1)))
-
+    await currentRoutine.setUser(Math.ceil(Math.random() * (userCount - 1)))
   }
 
-  for(let i = 1; i<= intervalCount; i++){
+  for (let i = 1; i <= intervalCount; i++) {
     let currentInterval = await createInterval()
-    await currentInterval.setRoutine(Math.ceil(Math.random()*(routineCount-1)))
+    await currentInterval.setRoutine(
+      Math.ceil(Math.random() * (routineCount - 1))
+    )
   }
 
-  for(let i = 1; i <= classCount; i++){
+  for (let i = 1; i <= classCount; i++) {
     let currentClass = await createClass()
-    await currentClass.setRoutine(Math.ceil(Math.random()*(routineCount-1)))
+    await currentClass.setRoutine(Math.ceil(Math.random() * (routineCount - 1)))
     let randomLeaders = await User.findAll({
-      where:{
-        role:'leader'
+      where: {
+        role: 'leader'
       }
     })
-    .filter(leader => leader.id > 0).map(leader => leader.id)
-    await currentClass.setUser(randomLeaders[Math.floor(Math.random()*randomLeaders.length)])
+      .filter(leader => leader.id > 0)
+      .map(leader => leader.id)
+    await currentClass.setUser(
+      randomLeaders[Math.floor(Math.random() * randomLeaders.length)]
+    )
   }
 
-  for(let i = 1; i < workoutCount; i++){
-    let currentWorkout  = await createWorkout()
-    await currentWorkout.setClass(Math.ceil(Math.random()*(classCount-1)))
-    await currentWorkout.setRoutine(Math.ceil(Math.random()*(routineCount-1)))
-    await currentWorkout.setUser(Math.ceil(Math.random()*(userCount-1)))
+  for (let i = 1; i < workoutCount; i++) {
+    let currentWorkout = await createWorkout()
+    await currentWorkout.setClass(Math.ceil(Math.random() * (classCount - 1)))
+    await currentWorkout.setRoutine(
+      Math.ceil(Math.random() * (routineCount - 1))
+    )
+    await currentWorkout.setUser(Math.ceil(Math.random() * (userCount - 1)))
   }
 
-  for(let i = 1; i<= WorkoutTimestampCount; i++){
+  for (let i = 1; i <= WorkoutTimestampCount; i++) {
     let currentTimeStap = await createWorkoutstamp()
-    await currentTimeStap.setWorkout(Math.ceil(Math.random()*(workoutCount-1)))
+    await currentTimeStap.setWorkout(
+      Math.ceil(Math.random() * (workoutCount - 1))
+    )
   }
 
   await User.create({
-    role:'leader',
-    email:'leader@gmail.com',
-    password:'123',
+    role: 'leader',
+    email: 'leader@gmail.com',
+    password: '123'
   })
 
   await User.create({
-    role:'follower',
-    email:'follower@gmail.com',
-    password:'123',
+    role: 'follower',
+    email: 'follower@gmail.com',
+    password: '123'
   })
-
 }
 
-async function runSeed(){
+async function runSeed() {
   console.log('Seeding...')
-  try{
+  try {
     await seed()
-  } catch(error){
+  } catch (error) {
     console.error(error)
-  } finally{
+  } finally {
     console.log('closing db connection')
     await db.close()
     console.log('db connection closed')
