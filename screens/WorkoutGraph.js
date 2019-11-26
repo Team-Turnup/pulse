@@ -15,7 +15,8 @@ const reducer = (state, action) => {
         startTime
       } = action
       // initialize to provided startTime or peek back at previous interval
-      const lastInterval = [startTime] || state.slice(-1)[0]
+      const lastInterval =
+        (startTime && [DateTime.fromJSDate(startTime)]) || state.slice(-1)[0]
       // calculate beginning and end from last interval
       const begin = lastInterval[0].plus({milliseconds: 1})
       const end = begin.plus({seconds: duration})
@@ -29,13 +30,13 @@ const reducer = (state, action) => {
 export default ({
   domainSetting = true,
   timeWindow = 30,
-  routine = [],
+  intervals = [],
   workoutData = [],
   startTime
 }) => {
   // maybe instead of receiving a routine, we receive a workout?
-  // initialize intervals with current DateTime
-  const [intervals, dispatch] = useReducer(reducer, initialState)
+  // initialize tsIntervals with current DateTime
+  const [tsIntervals, dispatch] = useReducer(reducer, initialState)
   const [domain, setDomain] = useState([
     DateTime.local().minus({seconds: timeWindow}),
     DateTime.local().plus({seconds: timeWindow})
@@ -43,7 +44,7 @@ export default ({
 
   useEffect(() => {
     // on mount, convert interval duration data into timestamps for graph
-    routine.forEach(d, i =>
+    intervals.forEach((d, i) =>
       dispatch(addInterval(d, i === 0 ? startTime : undefined))
     )
   }, [])
@@ -57,7 +58,7 @@ export default ({
     ])
   }, 1000)
 
-  return intervals && intervals.length ? (
+  return tsIntervals && tsIntervals.length > 2 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain, y: [80, 120]} : {}}
@@ -69,13 +70,13 @@ export default ({
         style={{data: {strokeDasharray: 8}}}
         samples={1}
       />
-      <VictoryLine data={intervals} x={0} y={1} />
+      <VictoryLine data={tsIntervals} x={0} y={1} />
       {workoutData.length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
           data={workoutData}
-          x={0}
-          y={1}
+          x={d => d.timestamp}
+          y={d => d.cadence}
           style={{data: {stroke: 'red', strokeWidth: 1}}}
         />
       ) : null}
