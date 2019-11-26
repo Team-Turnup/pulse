@@ -10,9 +10,8 @@ const Class = db.define('class', {
         type: Sequelize.BOOLEAN,
         defaultValue: true
     },
-    live: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+    when: {
+        type: Sequelize.DATE,
     }
 })
 
