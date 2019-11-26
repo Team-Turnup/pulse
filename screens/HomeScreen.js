@@ -19,6 +19,9 @@ import {
 } from "victory-native";
 
 export default class HomeScreen extends Component {
+  static navigationOptions ={
+    header: <Header>⚡️ Stride ⚡️</Header>
+  }
   render() {
     let dummyData = [
       { name: "First Workout", duration: 60, date: "Sept.15.2019" },
@@ -49,7 +52,7 @@ export default class HomeScreen extends Component {
               );
             })}
           </Card>
-          <Button block danger onPress={() => alert("New Workout Added")}>
+          <Button block danger onPress={() => this.props.navigation.navigate('SelectRoutineScreen')}>
             <Text>Add New Workout</Text>
           </Button>
           <Card>
@@ -76,5 +79,6 @@ export default class HomeScreen extends Component {
 }
 
 HomeScreen.navigationOptions = {
-  title: "⚡️ Stride ⚡️"
+  // title: "⚡️ Stride ⚡️",
+  header:null
 };
