@@ -57,12 +57,11 @@ class PreviousRoutine extends Component {
     })
   }
   handleSubmitPreviousRoutine() {
-    console.log('this.state', this.state)
     this.props.setRoutine(this.state.selectedRoutine)
     //this.props.updateRoutineThunk();
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
-      selectedExerciseType: {}
+      selectedRoutine: {}
     })
   }
   render() {
