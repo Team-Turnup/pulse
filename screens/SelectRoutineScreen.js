@@ -31,6 +31,7 @@ import PreviousRoutine from '../screens/PreviousRoutine'
 import CheckBox from 'react-native-check-box'
 //import { getRoutineThunk } from '../store/routines';
 import {createRoutineThunk} from '../store/routines'
+import {setRoutine} from '../store/routine'
 import activityTypes from '../assets/images/activityTypes'
 
 //maybe rename to CreateRoutineScreen
@@ -39,7 +40,10 @@ class SelectRoutineScreen extends Component {
     super(props)
     this.state = {
       routineType: '',
-      hapticCheckbox: true
+      hapticCheckbox: true,
+      selectedRoutine: {
+        routineType: ''
+      }
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleCreateNewRoutine = this.handleCreateNewRoutine.bind(this)
@@ -63,8 +67,13 @@ class SelectRoutineScreen extends Component {
     })
   }
   handleCreateNewRoutine() {
-    //atm it's not sending the selected exercise along with the created routine.
-    //this.props.createRoutineThunk();
+    //can you actually set things this way?
+    this.setState({
+      selectedRoutine: {
+        routineType: this.state.routineType
+      }
+    })
+    this.props.setRoutine(this.state.selectedRoutine)
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
       routineType: ''
@@ -196,7 +205,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine))
+  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
+  setRoutine: routine => dispatch(setRoutine(routine))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectRoutineScreen)
