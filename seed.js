@@ -120,6 +120,13 @@ async function seed() {
         d.setUser(
           faker.random.arrayElement(users.filter(d => d.role === 'leader'))
         )
+        d.addUsers(
+          ...new Set(
+            Array.from({length: faker.random.number({min: 5, max: 10})}, () =>
+              faker.random.arrayElement(users)
+            )
+          )
+        ).catch(e => console.error(e))
       })
     )
   )
@@ -145,49 +152,6 @@ async function seed() {
       createWorkoutstamp().then(d => d.setWorkout(i + 1))
     )
   )
-
-  // for (let i = 1; i <= routineCount; i++) {
-  //   let currentRoutine = await createRoutine()
-  //   await currentRoutine.setUser(Math.ceil(Math.random() * (userCount - 1)))
-  // }
-
-  // for (let i = 1; i <= intervalCount; i++) {
-  //   let currentInterval = await createInterval()
-  //   await currentInterval.setRoutine(
-  //     Math.ceil(Math.random() * (routineCount - 1))
-  //   )
-  // }
-
-  // for (let i = 1; i <= classCount; i++) {
-  //   let currentClass = await createClass()
-  //   await currentClass.setRoutine(Math.ceil(Math.random() * (routineCount - 1)))
-  //   let randomLeaders = await User.findAll({
-  //     where: {
-  //       role: 'leader'
-  //     }
-  //   })
-  //     .filter(leader => leader.id > 0)
-  //     .map(leader => leader.id)
-  //   await currentClass.setUser(
-  //     randomLeaders[Math.floor(Math.random() * randomLeaders.length)]
-  //   )
-  // }
-
-  // for (let i = 1; i < workoutCount; i++) {
-  //   let currentWorkout = await createWorkout()
-  //   await currentWorkout.setClass(Math.ceil(Math.random() * (classCount - 1)))
-  //   await currentWorkout.setRoutine(
-  //     Math.ceil(Math.random() * (routineCount - 1))
-  //   )
-  //   await currentWorkout.setUser(Math.ceil(Math.random() * (userCount - 1)))
-  // }
-
-  // for (let i = 1; i <= WorkoutTimestampCount; i++) {
-  //   let currentTimeStamp = await createWorkoutstamp()
-  //   await currentTimeStamp.setWorkout(
-  //     Math.ceil(Math.random() * (workoutCount - 1))
-  //   )
-  // }
 
   await User.create({
     role: 'leader',
