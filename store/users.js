@@ -76,7 +76,7 @@ export const auth = (user, method) => async dispatch => {
   let res
   try {
     if (method === 'signup') {
-      res = await axios.post(`/auth/${method}`, {
+      res = await axios.post(`${ngrok}/auth/${method}`, {
         email: user.email,
         password: user.password
         //role: 'follower',
@@ -85,7 +85,7 @@ export const auth = (user, method) => async dispatch => {
         //lastname: user.lastname
       })
     } else {
-      res = await axios.post(`/auth/${method}`, {
+      res = await axios.post(`${ngrok}/auth/${method}`, {
         email: user.email,
         password: user.password
       })
@@ -96,7 +96,7 @@ export const auth = (user, method) => async dispatch => {
 
   try {
     dispatch(getUser(res.data))
-    history.push('/home')
+    //history.push('/home')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
   }
