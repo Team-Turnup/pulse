@@ -43,7 +43,7 @@ export default ({
 
   useEffect(() => {
     // on mount, convert interval duration data into timestamps for graph
-    routine.forEach(d, i =>
+    intervals.forEach(d, i =>
       dispatch(addInterval(d, i === 0 ? startTime : undefined))
     )
   }, [])

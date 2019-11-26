@@ -312,7 +312,7 @@ class InProgressScreen extends React.Component {
           </Row>
 
           <Row size={5.5} style={{justifyContent: 'center'}}>
-            <WorkoutGraph />
+            <WorkoutGraph intervals={this.props.routine.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
           </Row>
 
           <Row
