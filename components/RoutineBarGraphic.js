@@ -46,8 +46,6 @@ const styles = StyleSheet.create({
     height: 50,
     display: "flex",
     flexDirection: "row",
-    marginTop: 20,
-    marginBottom: 20
   },
   text: {
     textAlign: "center",
