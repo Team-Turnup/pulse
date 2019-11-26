@@ -23,6 +23,7 @@ import activityTypes from '../assets/images/activityTypes'
 import {
   getRoutineThunk,
   createRoutineThunk,
+  createAndStartRoutineThunk,
   updateRoutineThunk,
 } from '../store/routines';
 
@@ -41,7 +42,8 @@ class BuildRoutineScreen extends Component {
       makePublic: false
       //dirty: false,
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.createRoutine = this.createRoutine.bind(this);
+    this.createAndStartRoutine = this.createAndStartRoutine.bind(this);
     this.addInterval = this.addInterval.bind(this)
     this.removeInterval = this.removeInterval.bind(this)
     this.saveInterval = this.saveInterval.bind(this)
@@ -57,10 +59,16 @@ class BuildRoutineScreen extends Component {
     }
   }
 
-  handleSubmit() {
+  createRoutine() {
     const {routineName, routineType, routine, makePublic} = this.state
     this.props.createRoutineThunk({routineName, routineType, routine, makePublic});
-    // this.props.navigation.navigate('HomeScreen');
+    this.props.navigation.navigate('HomeScreen');
+  }
+
+  async createAndStartRoutine() {
+    const {routineName, routineType, routine, makePublic} = this.state
+    await this.props.createAndStartRoutineThunk({routineName, routineType, routine, makePublic});
+    this.props.navigation.navigate('StartRoutineScreen');
   }
 
   addInterval() {
@@ -190,20 +198,15 @@ class BuildRoutineScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
-            onPress={() => this.state.routine.length ? this.handleSubmit() : {}}
+            onPress={this.state.routine.length ? this.createRoutine : null}
           >
-            <Text style={styles.buttonText}>Save Routine & Return Home</Text>
+            <Text style={styles.buttonText}>Create Routine & Return Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
-            onPress={() => {
-              if (this.state.routine.length) {
-                this.handleSubmit()
-                this.props.navigation.navigate('StartRoutineScreen')}
-               }
-            }
+            onPress={this.state.routine.length ? this.createAndStartRoutine : null}
           >
-            <Text style={styles.buttonText}>Save and Start Routine</Text>
+            <Text style={styles.buttonText}>Create and Start Routine</Text>
           </TouchableOpacity>
             </View>
 
@@ -273,14 +276,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = state => ({
-  routines: state.routines,
-});
+const mapStateToProps = ({routines}) => ({routines})
 
-const mapDispatchToProps = dispatch => ({
-  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-  updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
-});
+const mapDispatchToProps = {getRoutineThunk, createRoutineThunk, updateRoutineThunk, createAndStartRoutineThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);

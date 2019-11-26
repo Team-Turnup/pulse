@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {ngrok} from '../ngrok'
+import {setRoutine} from './routine'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const GET_ROUTINE = 'GET_ROUTINE';
@@ -38,9 +39,18 @@ export const getRoutineThunk = id => async dispatch => {
 
 export const createRoutineThunk = routine => async dispatch => {
   try {
-    console.log('running in create routine thunk');
     const response = await axios.post(`${ngrok}/api/routines/`, routine);
     dispatch(createRoutine(response.data));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const createAndStartRoutineThunk = routine => async dispatch => {
+  try {
+    const response = await axios.post(`${ngrok}/api/routines/`, routine);
+    dispatch(createRoutine(response.data));
+    dispatch(setRoutine(response.data))
   } catch (err) {
     console.error(err);
   }

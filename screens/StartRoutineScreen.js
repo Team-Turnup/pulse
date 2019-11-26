@@ -3,43 +3,42 @@ import { connect } from 'react-redux';
 import {
   StyleSheet,
   View,
-  TouchableOpacity
 } from 'react-native';
 import {
   Container,
   Content,
-  Button,
-  Item,
-  Label,
-  Input,
   Text,
 } from 'native-base';
-import RNPickerSelect from 'react-native-picker-select';
-import NumericInput from 'react-native-numeric-input';
-import CheckBox from 'react-native-check-box'
-import RoutineBarGraphic from '../components/RoutineBarGraphic';
-import activityTypes from '../assets/images/activityTypes'
-
-import {
-  getRoutineThunk,
-  createRoutineThunk,
-  updateRoutineThunk,
-} from '../store/routines';
 
 //maybe rename to UpdateRoutineScreen
 class StartRoutineScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {count: 4, clearCountdown: null}
+  }
+
+  componentDidMount() {
+      const clearCountdown = setInterval(() => {
+          let {count} = this.state
+          if (count>1) {
+              count=count-1
+          } else {
+              clearInterval(this.state.clearCountdown)
+              count='Go!'
+              this.props.navigation.navigate('InProgressScreen')
+        }
+        this.setState({count})
+      }, 60000/this.props.routine.intervals[0].cadence)
+      this.setState({clearCountdown})
   }
 
   render() {
-    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`, value: activity}))
-
     return (
       <Container>
         <Content>
-            <Text>Hello</Text>
+            <View style={styles.countdown}>
+            <Text style={styles.text}>{this.state.count}</Text>
+            </View>
         </Content>
       </Container>
     );
@@ -47,68 +46,20 @@ class StartRoutineScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 20,
-    textAlign: 'center',
+  countdown: {
+      marginTop: "60%",
     width: "100%",
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
-  },
-  buttons: {
     display: "flex",
-    flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1
   },
-  button: {
-    width: "30%",
-    margin: 5,
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  buttonText: {
-    fontSize: 12,
-    textAlign: "center",
-    color: "white"
-  },
-  message: {
-    fontSize: 10,
-    textAlign: 'center'
-  },
-  item: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: "center",
-    justifyContent: 'space-between'
-  },
-  checkBox: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: "center",
-    justifyContent: 'center'
-  },
-  name: {
-    textAlign: "right"
-  },
-  sectionHeader: {
-    width: '100%',
-    backgroundColor: "blue",
-    color: "white",
-    textAlign: 'center'
+  text: {
+    fontSize: 75,
+    color: "blue"
   }
 });
 
-const mapStateToProps = state => ({
-  routines: state.routines,
-});
+const mapStateToProps = ({routine}) => ({routine})
 
-const mapDispatchToProps = dispatch => ({
-  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-  updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(StartRoutineScreen);
+export default connect(mapStateToProps)(StartRoutineScreen);
