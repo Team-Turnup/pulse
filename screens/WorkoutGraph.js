@@ -5,21 +5,17 @@ import {DateTime} from 'luxon'
 import useInterval from 'use-interval'
 
 // using useReducer since we've got an array of DateTimes
-// why would anyone use useReducer instead of redux? idk
-// seems kinda like redux without the benefit of getting to use react-redux
-// oh well who am i to judge
-// I think we'll just convert this to redux at some point in time
-const initialState = []
 const ADD = 'ADD'
-const addInterval = payload => ({type: ADD, payload})
+const addInterval = (payload, startTime) => ({type: ADD, payload, startTime})
 const reducer = (state, action) => {
   switch (action.type) {
     case ADD:
       const {
-        payload: {duration, cadence}
+        payload: {duration, cadence},
+        startTime
       } = action
-      // peek back at last interval or initialize to current dateTime
-      const lastInterval = state.slice(-1)[0] || [DateTime.local()]
+      // initialize to provided startTime or peek back at previous interval
+      const lastInterval = [startTime] || state.slice(-1)[0]
       // calculate beginning and end from last interval
       const begin = lastInterval[0].plus({milliseconds: 1})
       const end = begin.plus({seconds: duration})
@@ -30,7 +26,13 @@ const reducer = (state, action) => {
   }
 }
 
-export default ({domainSetting = true, timeWindow = 30, routine = []}) => {
+export default ({
+  domainSetting = true,
+  timeWindow = 30,
+  routine = [],
+  workoutData = [],
+  startTime
+}) => {
   // maybe instead of receiving a routine, we receive a workout?
   // initialize intervals with current DateTime
   const [intervals, dispatch] = useReducer(reducer, initialState)
@@ -40,8 +42,10 @@ export default ({domainSetting = true, timeWindow = 30, routine = []}) => {
   ])
 
   useEffect(() => {
-    // on mount, calculate interval start and end times based off previous interval
-    routine.forEach(d => dispatch(addInterval(d)))
+    // on mount, convert interval duration data into timestamps for graph
+    routine.forEach(d, i =>
+      dispatch(addInterval(d, i === 0 ? startTime : undefined))
+    )
   }, [])
 
   useInterval(() => {
@@ -66,13 +70,10 @@ export default ({domainSetting = true, timeWindow = 30, routine = []}) => {
         samples={1}
       />
       <VictoryLine data={intervals} x={0} y={1} />
-      {fakeActuals.filter(([d]) => d.diffNow('seconds').toObject().seconds < 0)
-        .length > 2 ? (
+      {workoutData.length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
-          data={fakeActuals.filter(
-            ([d]) => d.diffNow('seconds').toObject().seconds < 0
-          )}
+          data={workoutData}
           x={0}
           y={1}
           style={{data: {stroke: 'red', strokeWidth: 1}}}
