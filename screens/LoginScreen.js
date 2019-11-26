@@ -48,7 +48,7 @@ class LoginScreen extends React.Component {
       email: '',
       password: ''
     })
-    //this.props.navigation.navigate('HomeScreen');
+    this.props.navigation.navigate('HomeScreen')
   }
 
   // handleSignup(evt) {
@@ -110,7 +110,7 @@ class LoginScreen extends React.Component {
           </Form>
           <Button
             block
-            onPress={() => this.props.navigation.navigate('SignUp')}
+            onPress={() => this.props.navigation.navigate('SignUpScreen')}
           >
             <Text>Create an Account</Text>
           </Button>

@@ -29,27 +29,27 @@ class SignupScreen extends React.Component {
     this.handleSignup = this.handleSignup.bind(this)
   }
 
-  handleSignup(evt) {
-    //evt.preventDefault()
-    const formName = 'signup'
-    const email = this.state.email.value
-    const password = this.state.password.value
-    this.props.doHandleSignup({email, password}, formName)
-    this.setState({
-      email: '',
-      password: ''
-    })
-  }
-
-  // handleSignup() {
+  // handleSignup(evt) {
+  //   //evt.preventDefault()
   //   const formName = 'signup'
-  //   this.props.doHandleSignup(this.state)
+  //   const email = this.state.email.value
+  //   const password = this.state.password.value
+  //   this.props.doHandleSignup({email, password}, formName)
   //   this.setState({
   //     email: '',
   //     password: ''
   //   })
-  //   //this.props.navigation.navigate('HomeScreen');
   // }
+
+  handleSignup() {
+    const formName = 'signup'
+    this.props.doHandleSignup(this.state, formName)
+    this.setState({
+      email: '',
+      password: ''
+    })
+    this.props.navigation.navigate('HomeScreen')
+  }
 
   // handleSignup(evt) {
   //   //evt.preventDefault()
@@ -82,6 +82,9 @@ class SignupScreen extends React.Component {
             </CardItem>
           </Card>
           <Form style={{paddingBottom: 25}} name={'signup'}>
+            <Header>
+              <Text>Input your Information to Create an Account!</Text>
+            </Header>
             <Item floatingLabel>
               <Label>Email</Label>
               <Input
@@ -126,7 +129,7 @@ SignupScreen.navigationOptions = {
  *   can stay DRY with interfaces that are very similar to each other!
  */
 
-// const mapsignup = state => {
+// const mapSignup = state => {
 //   return {
 //     users: state.users,
 //     name: 'signup',
@@ -137,16 +140,17 @@ SignupScreen.navigationOptions = {
 
 const mapSignup = state => {
   return {
+    users: state.users,
     name: 'signup',
-    displayName: 'Sign Up',
-    error: state.user.error
+    displayName: 'Sign Up'
+    //error: state.user.error
   }
 }
 
 const mapDispatch = dispatch => ({
   // doHandleSignup: ({email, password}, formName) =>
   //   dispatch(auth({email, password}, formName))
-  doHandleSignup: user => dispatch(auth(user))
+  doHandleSignup: (user, method) => dispatch(auth(user, method))
 })
 
 export default connect(mapSignup, mapDispatch)(SignupScreen)
