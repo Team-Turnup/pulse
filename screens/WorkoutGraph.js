@@ -16,7 +16,7 @@ const reducer = (state, action) => {
       } = action
       // initialize to provided startTime or peek back at previous interval
       const lastInterval =
-        (startTime && [DateTime.fromJSDate(startTime)]) || state.slice(-1)[0]
+        (startTime && [DateTime.fromMillis(startTime)]) || state.slice(-1)[0]
       // calculate beginning and end from last interval
       const begin = lastInterval[0].plus({milliseconds: 1})
       const end = begin.plus({seconds: duration})

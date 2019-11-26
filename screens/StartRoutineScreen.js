@@ -9,6 +9,7 @@ import {
   Content,
   Text,
 } from 'native-base';
+import {setWorkoutThunk} from '../store/workout';
 
 //maybe rename to UpdateRoutineScreen
 class StartRoutineScreen extends Component {
@@ -30,6 +31,7 @@ class StartRoutineScreen extends Component {
         this.setState({count})
       }, 60000/this.props.routine.intervals[0].cadence)
       this.setState({clearCountdown})
+      this.props.setWorkoutThunk(this.props.routine)
   }
 
   render() {
