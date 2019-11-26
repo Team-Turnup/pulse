@@ -41,7 +41,7 @@ const User = db.define('user', {
     type: Sequelize.ARRAY(Sequelize.STRING)
   },
   age: Sequelize.INTEGER,
-  sex: Sequelize.ENUM(['m', 'f', 'non-binary'])
+  sex: Sequelize.ENUM(['male', 'female', 'non-binary'])
 })
 
 module.exports = User
