@@ -14,6 +14,7 @@ import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
+import ClassesSearch from '../screens/ClassesScreen'
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -166,17 +167,16 @@ SettingsStack.path = ''
 // SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  LoginStack,
+  ClassesSearch,
   HomeStack,
+  LoginStack,
   HistoryStack,
-  CommunityStack,
   SettingsStack,
   // AccelerometerStack,
   // SelectWorkoutStack,
   // BuildRoutineScreen: BuildRoutineScreen,
   //PreviousRoutine
-  InProgressStack,
-  SignupScreen
+  // InProgressStack,
 })
 
 tabNavigator.path = ''

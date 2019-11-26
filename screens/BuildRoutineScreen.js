@@ -128,11 +128,11 @@ class BuildRoutineScreen extends Component {
             <CheckBox
               onClick={()=>this.setState(prevState => ({makePublic: !prevState.makePublic}))}
               isChecked={this.state.makePublic}
-              
+
               />
               <Text>Make Public</Text>
             </Item>
-            
+
             {this.state.routineName.length && this.state.routineType ? <View>
               <Text style={styles.sectionHeader}>Intervals</Text>
               {this.state.routineType==='combo' ? <Item fixedLabel style={styles.item}>
@@ -157,7 +157,7 @@ class BuildRoutineScreen extends Component {
                 onChange={value => this.handleChange('duration', value)}
               />
             </Item>
-          
+
               <View style={styles.buttons}>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.intervalType ? 'blue' : 'gray'}}
@@ -206,7 +206,7 @@ class BuildRoutineScreen extends Component {
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
             onPress={this.state.routine.length ? this.createAndStartRoutine : null}
           >
-            <Text style={styles.buttonText}>Create and Start Routine</Text>
+            <Text style={styles.buttonText} onPress={()=> this.props.navigation.navigate('InProgressScreen')}>Create and Start </Text>
           </TouchableOpacity>
             </View>
 
