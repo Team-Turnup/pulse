@@ -29,27 +29,27 @@ class LoginScreen extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
-  handleLogin(evt) {
-    //evt.preventDefault()
-    const formName = 'login'
-    const email = this.state.email.value
-    const password = this.state.password.value
-    this.props.doHandleLogin({email, password}, formName)
-    this.setState({
-      email: '',
-      password: ''
-    })
-  }
-
-  // handleLogin() {
+  // handleLogin(evt) {
+  //   //evt.preventDefault()
   //   const formName = 'login'
-  //   this.props.doHandleLogin(this.state)
+  //   const email = this.state.email.value
+  //   const password = this.state.password.value
+  //   this.props.doHandleLogin({email, password}, formName)
   //   this.setState({
   //     email: '',
   //     password: ''
   //   })
-  //   //this.props.navigation.navigate('HomeScreen');
   // }
+
+  handleLogin() {
+    const formName = 'login'
+    this.props.doHandleLogin(this.state, formName)
+    this.setState({
+      email: '',
+      password: ''
+    })
+    //this.props.navigation.navigate('HomeScreen');
+  }
 
   // handleSignup(evt) {
   //   //evt.preventDefault()
@@ -150,9 +150,9 @@ const mapLogin = state => {
 // }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: ({email, password}, formName) =>
-    dispatch(auth({email, password}, formName))
-  //doHandleLogin: user => dispatch(auth(user))
+  //doHandleLogin: ({email, password}, formName) =>
+  // dispatch(auth({email, password}, formName))
+  doHandleLogin: (user, method) => dispatch(auth(user, method))
 })
 
 export default connect(mapLogin, mapDispatch)(LoginScreen)

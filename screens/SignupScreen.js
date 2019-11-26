@@ -63,7 +63,7 @@ class SignupScreen extends React.Component {
   //}
 
   render() {
-    const {name, displayName, handleSignup, handleSignup, error} = this.props
+    const {name, displayName, handleLogin, handleSignup, error} = this.props
     return (
       <Container>
         <Content>
@@ -144,12 +144,12 @@ const mapSignup = state => {
 }
 
 const mapDispatch = dispatch => ({
-  doHandleSignup: ({email, password}, formName) =>
-    dispatch(auth({email, password}, formName))
-  //doHandleSignup: user => dispatch(auth(user))
+  // doHandleSignup: ({email, password}, formName) =>
+  //   dispatch(auth({email, password}, formName))
+  doHandleSignup: user => dispatch(auth(user))
 })
 
-export default connect(mapsignup, mapDispatch)(SignupScreen)
+export default connect(mapSignup, mapDispatch)(SignupScreen)
 //export const Signup = connect(mapSignup, mapDispatch)(SignupScreen)
 
 SignupScreen.propTypes = {
