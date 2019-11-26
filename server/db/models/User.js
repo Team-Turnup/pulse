@@ -3,14 +3,15 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
-    role: {
-        type: Sequelize.ENUM(['leader', 'follower']),
-        defaultValue: 'follower'
-    },
+  role: {
+    type: Sequelize.ENUM(['leader', 'follower']),
+    defaultValue: 'follower'
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {isEmail: true}
   },
   password: {
     type: Sequelize.STRING,
@@ -31,11 +32,11 @@ const User = db.define('user', {
   googleId: {
     type: Sequelize.STRING
   },
-    spotifyId: {
+  spotifyId: {
     type: Sequelize.STRING
   },
   playlistGenrePrefs: {
-      type: Sequelize.ARRAY(Sequelize.STRING)
+    type: Sequelize.ARRAY(Sequelize.STRING)
   },
   playlistArtistPrefs: {
     type: Sequelize.ARRAY(Sequelize.STRING)

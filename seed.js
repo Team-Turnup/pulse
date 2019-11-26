@@ -34,15 +34,17 @@ const createRoutine = async () => {
     activityType: faker.random.arrayElement([
       'running',
       'walking',
-      'jumping jacks',
-      'push-ups',
+      'jumpingJacks',
+      'pushups',
       'stairs',
       'rowing',
       'swimming',
       'dancing',
-      'playing music',
+      'playingMusic',
       'breathing',
-      'combo'
+      'combo',
+      'jumprope',
+      'cycling'
     ]),
     public: faker.random.boolean()
   })
@@ -53,14 +55,16 @@ const createInterval = async () => {
     activityType: faker.random.arrayElement([
       'running',
       'walking',
-      'jumping jacks',
-      'push-ups',
+      'jumpingJacks',
+      'pushups',
       'stairs',
       'rowing',
       'swimming',
       'dancing',
-      'playing music',
-      'breathing'
+      'playingMusic',
+      'breathing',
+      'jumprope',
+      'cycling'
     ]),
     cadence: faker.random.number({min: 1, max: 999}),
     duration: faker.random.arrayElement([5, 10, 15, 20, 25, 30])
@@ -117,10 +121,8 @@ async function seed() {
     Array.from({length: workoutCount}, () =>
       createWorkout().then(d => {
         d.setClass(faker.random.arrayElement([...classes, null]))
-        d.setRoutine(faker.random.arrayElement(routinesnm))
-        d.setUser(
-          faker.random.arrayElement(users.filter(d => d.role === 'leader'))
-        )
+        d.setRoutine(faker.random.arrayElement(routines))
+        d.setUser(faker.random.arrayElement(users))
       })
     )
   )
