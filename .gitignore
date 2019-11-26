@@ -9,4 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+<<<<<<< HEAD
 scripts/
+=======
+ngrok*
+>>>>>>> 037639a992e9c182e1f820f660e356bcc318fdab
