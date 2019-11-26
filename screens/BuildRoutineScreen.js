@@ -55,7 +55,9 @@ class BuildRoutineScreen extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addInterval = this.addInterval.bind(this)
+    this.saveInterval = this.saveInterval.bind(this)
     this.changeIndex = this.changeIndex.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   // async componentDidMount() {
@@ -75,11 +77,12 @@ class BuildRoutineScreen extends Component {
     });
   }
 
-  handleSubmit(event) {
-    //event.preventDefault();
-    console.log(this.props.createRoutineThunk);
+  handleChange(key, value) {
+    this.setState({[key]: value})
+  }
+
+  handleSubmit() {
     this.props.createRoutineThunk(this.state);
-    console.log('running handlesubmit');
     this.setState({
       exerciseType: '',
       routineName: '',
@@ -89,16 +92,21 @@ class BuildRoutineScreen extends Component {
     this.props.navigation.navigate('HomeScreen');
   }
 
-  addInterval(event) {
+  addInterval() {
     const {cadence, duration, routine, index} = this.state
     const newRoutine = [...routine.slice(0, index), {cadence, duration}, ...routine.slice(index)]
-    console.log(newRoutine)
-    this.setState({routine: newRoutine, index: index+1})
+    this.setState({routine: newRoutine, index: routine.length===0 ? index : index+1})
   }
 
-  changeIndex(event) {
-    console.log(event.target)
-    this.setState({index: Number(event.target.id)})
+  saveInterval() {
+    const {cadence, duration, routine, index} = this.state
+    const newRoutine = [...routine.slice(0, index), {cadence, duration}, ...routine.slice(index+1)]
+    this.setState({routine: newRoutine})
+  }
+
+  changeIndex(index) {
+    const interval = this.state.routine[index]
+    this.setState({index, cadence: interval.cadence, duration: interval.duration})
   }
 
   render() {
@@ -107,6 +115,8 @@ class BuildRoutineScreen extends Component {
       { label: 'Running', value: 'running', cadence: 5 },
       { label: 'Cycling', value: 'cycling', cadence: 10 },
     ];
+    console.log(this.state)
+
     return (
       <Container>
         <Header>
@@ -154,14 +164,14 @@ class BuildRoutineScreen extends Component {
               <Label>Cadence</Label>
               <NumericInput
                 value={this.state.cadence}
-                onChange={value => this.setState({ value })}
+                onChange={value => this.handleChange('cadence', value)}
               />
             </Item>
             <Item fixedLabel>
               <Label>Duration</Label>
               <NumericInput
                 value={this.state.duration}
-                onChange={value => this.setState({ value })}
+                onChange={value => this.handleChange('duration', value)}
               />
             </Item>
           </Form>
@@ -171,10 +181,20 @@ class BuildRoutineScreen extends Component {
             style={styles.button}
             onPress={() => this.addInterval()}
           >
-            <Text>Add to Routine</Text>
+            <Text>Insert Next Interval</Text>
           </Button>
 
-          <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex}/>
+          {this.state.index<this.state.routine.length ? <Button
+            bordered
+            style={styles.button}
+            onPress={() => this.saveInterval()}
+          >
+            <Text>Save Changes to Current Interval</Text>
+          </Button> : null }
+
+          {this.state.index<this.state.routine.length ? <Text style={styles.message}>Current interval is highlighted in blue</Text> : null}
+
+          <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex} index={this.state.index}/>
 
           {/* display chart component here */}
           {/* <VictoryChart domainPadding={5}>
@@ -229,6 +249,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  message: {
+    fontSize: 10,
+    textAlign: 'center'
+  }
 });
 
 const mapStateToProps = state => ({

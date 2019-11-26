@@ -4,7 +4,7 @@ import routine from "../dummyIntervals";
 import activityTypes from '../assets/images/activityTypes'
 
 export default RoutineBarGraphic = props => {
-    const {routine, changeIndex} = props
+    const {routine, changeIndex, index} = props
   const totalDuration = routine.reduce(
     (sum, interval) => sum + interval.duration,
     0
@@ -19,11 +19,11 @@ export default RoutineBarGraphic = props => {
             key={i}
             value={i}
             style={{
-              backgroundColor: i % 2 === 0 ? "blue" : "gray",
+              backgroundColor: i===index ? 'blue' : (i % 2 === 0 ? "black" : "gray"),
               width: `${width}%`,
               height: "100%"
             }}
-            onPress={changeIndex}
+            onPress={()=>changeIndex(i)}
           >
             {width > 10 ? (
               <View style={styles.intervalInfo}>
