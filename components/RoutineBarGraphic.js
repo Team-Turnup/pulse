@@ -19,7 +19,7 @@ export default RoutineBarGraphic = props => {
             key={i}
             value={i}
             style={{
-              backgroundColor: i===index ? 'blue' : (i % 2 === 0 ? "black" : "gray"),
+              backgroundColor: i===index ? 'blue' : (i % 2 === 0 ? "rgb(99, 99, 99)" : "gray"),
               width: `${width}%`,
               height: "100%"
             }}
@@ -27,7 +27,7 @@ export default RoutineBarGraphic = props => {
           >
             {width > 10 ? (
               <View style={styles.intervalInfo}>
-                  {/* <Text style={styles.text}>{activityTypes[interval.exercise]}</Text> */}
+                  <Text style={styles.text}>{activityTypes[interval.intervalType].icon}</Text>
                 <Text style={styles.text}>{Math.floor(interval.duration/60) ? `${Math.floor(interval.duration/60)}m` : ''} {interval.duration%60 ? `${interval.duration%60}s` : ''}</Text>
                 <Text style={styles.text}>{interval.cadence}bpm</Text>
               </View>
@@ -45,7 +45,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    marginTop: 20,
+    marginBottom: 20
   },
   text: {
     textAlign: "center",
