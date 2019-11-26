@@ -8,7 +8,6 @@ import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 const ScreenNavigator = createStackNavigator(
   {
     SelectRoutineScreen,
-    //HomeScreen,
     BuildRoutineScreen
   },
   {headerMode: 'none'}
