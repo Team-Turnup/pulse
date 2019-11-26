@@ -4,7 +4,7 @@ export default {
   intervals: [
     {
       cadence: 100, // in bpm
-      duration: 20, // in seconds
+      duration: 200, // in seconds
       exercise: 'walking', // 'walking', 'rowing', 'jumping jacks', 'pushups', 'cycling', 'breathing', 'dancing', 'playing music'
       location: 'forearm', // 'leg', 'chest'
       hapticOptions: {

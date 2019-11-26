@@ -50,6 +50,8 @@ class InProgressScreen extends React.Component {
 
   componentWillUnmount() {
     this._unsubscribe()
+    clearInterval(this.state.pauseTime)
+    clearInterval(this.state.clearCadence)
   }
 
   _subscribe = () => {
@@ -62,7 +64,7 @@ class InProgressScreen extends React.Component {
         60000
       cadences = [...cadences]
       cadences.push(cadence)
-      if (cadences.length > 5) {
+      if (cadences.length > 10) {
         cadences.shift()
       }
       const avgCadence = cadences.reduce(
@@ -312,7 +314,7 @@ class InProgressScreen extends React.Component {
           </Row>
 
           <Row size={5.5} style={{justifyContent: 'center'}}>
-            <WorkoutGraph intervals={this.props.routine.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
+            <WorkoutGraph intervals={routine.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
           </Row>
 
           <Row
