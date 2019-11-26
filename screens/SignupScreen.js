@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store/users'
 import {Image} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {
   Container,
   Header,
@@ -22,24 +23,11 @@ class SignupScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      //formName: 'signup',
       email: '',
       password: ''
     }
     this.handleSignup = this.handleSignup.bind(this)
   }
-
-  // handleSignup(evt) {
-  //   //evt.preventDefault()
-  //   const formName = 'signup'
-  //   const email = this.state.email.value
-  //   const password = this.state.password.value
-  //   this.props.doHandleSignup({email, password}, formName)
-  //   this.setState({
-  //     email: '',
-  //     password: ''
-  //   })
-  // }
 
   handleSignup() {
     const formName = 'signup'
@@ -48,19 +36,8 @@ class SignupScreen extends React.Component {
       email: '',
       password: ''
     })
-    this.props.navigation.navigate('HomeScreen')
+    this.props.navigation.navigate('HomeStack')
   }
-
-  // handleSignup(evt) {
-  //   //evt.preventDefault()
-  //   const formName = evt.target.name
-  //   const email = evt.target.email.value
-  //   const password = evt.target.password.value
-  //   // const firstName = evt.target.firstName.value
-  //   // const lastName = evt.target.lastName.value
-  //   // const username = evt.target.username.value
-  //   this.props.doHandleSignup({email, password}, formName)
-  //}
 
   render() {
     const {name, displayName, handleLogin, handleSignup, error} = this.props
@@ -83,7 +60,9 @@ class SignupScreen extends React.Component {
           </Card>
           <Form style={{paddingBottom: 25}} name={'signup'}>
             <Header>
-              <Text>Input your Information to Create an Account!</Text>
+              <Text style={styles.header}>
+                Input your Information to Create an Account!
+              </Text>
             </Header>
             <Item floatingLabel>
               <Label>Email</Label>
@@ -107,7 +86,11 @@ class SignupScreen extends React.Component {
               />
             </Item>
 
-            <Button block onPress={() => this.handleSignup()}>
+            <Button
+              style={styles.button}
+              block
+              onPress={() => this.handleSignup()}
+            >
               <Text>Sign Up</Text>
             </Button>
           </Form>
@@ -121,6 +104,61 @@ SignupScreen.navigationOptions = {
   header: null
 }
 
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 20,
+    textAlign: 'center',
+    width: '100%',
+    color: 'rgba(255,255,255, 0.9)',
+    backgroundColor: 'gray'
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    width: '30%',
+    margin: 5,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'white'
+  },
+  message: {
+    fontSize: 10,
+    textAlign: 'center'
+  },
+  item: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between'
+  },
+  checkBox: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
+  name: {
+    textAlign: 'right'
+  },
+  sectionHeader: {
+    width: '100%',
+    backgroundColor: 'blue',
+    color: 'white',
+    textAlign: 'center'
+  }
+})
+
 /**
  * CONTAINER
  *   Note that we have two different sets of 'mapStateToProps' functions -
@@ -128,15 +166,6 @@ SignupScreen.navigationOptions = {
  *   function, and share the same Component. This is a good example of how we
  *   can stay DRY with interfaces that are very similar to each other!
  */
-
-// const mapSignup = state => {
-//   return {
-//     users: state.users,
-//     name: 'signup',
-//     displayName: 'signup'
-//     //error: state.user.error
-//   }
-// }
 
 const mapSignup = state => {
   return {
@@ -148,13 +177,10 @@ const mapSignup = state => {
 }
 
 const mapDispatch = dispatch => ({
-  // doHandleSignup: ({email, password}, formName) =>
-  //   dispatch(auth({email, password}, formName))
   doHandleSignup: (user, method) => dispatch(auth(user, method))
 })
 
 export default connect(mapSignup, mapDispatch)(SignupScreen)
-//export const Signup = connect(mapSignup, mapDispatch)(SignupScreen)
 
 SignupScreen.propTypes = {
   name: PropTypes.string,

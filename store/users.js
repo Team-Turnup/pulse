@@ -23,15 +23,6 @@ export const me = () => async dispatch => {
   }
 }
 
-// export const auth = formData => async dispatch => {
-//   try {
-//     const {data} = await axios.put(`${ngrok}/api/users/login`, formData)
-//     dispatch(getUser(data))
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
-
 // export const auth = (
 //   email,
 //   password,
@@ -74,7 +65,7 @@ export const auth = (user, method) => async dispatch => {
         //firstname: user.firstname,
         //lastname: user.lastname
       })
-    } else {
+    } else if (method === 'login') {
       res = await axios.post(`${ngrok}/auth/${method}`, {
         email: user.email,
         password: user.password

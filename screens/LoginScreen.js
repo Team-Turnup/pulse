@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store/users'
 import {Image} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {
   Container,
   Header,
@@ -22,24 +23,11 @@ class LoginScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      //formName: 'login',
       email: '',
       password: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
   }
-
-  // handleLogin(evt) {
-  //   //evt.preventDefault()
-  //   const formName = 'login'
-  //   const email = this.state.email.value
-  //   const password = this.state.password.value
-  //   this.props.doHandleLogin({email, password}, formName)
-  //   this.setState({
-  //     email: '',
-  //     password: ''
-  //   })
-  // }
 
   handleLogin() {
     const formName = 'login'
@@ -48,22 +36,10 @@ class LoginScreen extends React.Component {
       email: '',
       password: ''
     })
-    this.props.navigation.navigate('HomeScreen')
+    this.props.navigation.navigate('HomeStack')
   }
 
-  // handleSignup(evt) {
-  //   //evt.preventDefault()
-  //   const formName = evt.target.name
-  //   const email = evt.target.email.value
-  //   const password = evt.target.password.value
-  //   // const firstName = evt.target.firstName.value
-  //   // const lastName = evt.target.lastName.value
-  //   // const username = evt.target.username.value
-  //   this.props.doHandleSignup({email, password}, formName)
-  //}
-
   render() {
-    const {name, displayName, handleLogin, handleSignup, error} = this.props
     return (
       <Container>
         <Content>
@@ -103,14 +79,18 @@ class LoginScreen extends React.Component {
                 onChangeText={text => this.setState({password: text})}
               />
             </Item>
-
-            <Button block onPress={() => this.handleLogin()}>
+            <Button
+              block
+              style={styles.button}
+              onPress={() => this.handleLogin()}
+            >
               <Text>Sign In</Text>
             </Button>
           </Form>
           <Button
             block
-            onPress={() => this.props.navigation.navigate('SignUpScreen')}
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('SignupScreen')}
           >
             <Text>Create an Account</Text>
           </Button>
@@ -123,6 +103,61 @@ class LoginScreen extends React.Component {
 LoginScreen.navigationOptions = {
   header: null
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 20,
+    textAlign: 'center',
+    width: '100%',
+    color: 'rgba(255,255,255, 0.9)',
+    backgroundColor: 'gray'
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    width: '30%',
+    margin: 5,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'white'
+  },
+  message: {
+    fontSize: 10,
+    textAlign: 'center'
+  },
+  item: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between'
+  },
+  checkBox: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
+  name: {
+    textAlign: 'right'
+  },
+  sectionHeader: {
+    width: '100%',
+    backgroundColor: 'blue',
+    color: 'white',
+    textAlign: 'center'
+  }
+})
 
 /**
  * CONTAINER
@@ -141,22 +176,11 @@ const mapLogin = state => {
   }
 }
 
-// const mapSignup = state => {
-//   return {
-//     name: 'signup',
-//     displayName: 'Sign Up',
-//     error: state.user.error
-//   }
-// }
-
 const mapDispatch = dispatch => ({
-  //doHandleLogin: ({email, password}, formName) =>
-  // dispatch(auth({email, password}, formName))
   doHandleLogin: (user, method) => dispatch(auth(user, method))
 })
 
 export default connect(mapLogin, mapDispatch)(LoginScreen)
-//export const Signup = connect(mapSignup, mapDispatch)(LoginScreen)
 
 LoginScreen.propTypes = {
   name: PropTypes.string,
