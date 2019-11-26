@@ -1,16 +1,17 @@
 import React, {useEffect, useState, useReducer} from 'react'
-import {VictoryLine, VictoryChart, VictoryAxis} from 'victory-native'
+import {VictoryLine, VictoryChart} from 'victory-native'
 import {Text} from 'react-native'
 import {DateTime} from 'luxon'
 import useInterval from 'use-interval'
 
 // using useReducer since we've got an array of DateTimes
-const initialState = []
 // why would anyone use useReducer instead of redux? idk
-const ADD = 'ADD'
 // seems kinda like redux without the benefit of getting to use react-redux
-const addInterval = payload => ({type: ADD, payload})
 // oh well who am i to judge
+// I think we'll just convert this to redux at some point in time
+const initialState = []
+const ADD = 'ADD'
+const addInterval = payload => ({type: ADD, payload})
 const reducer = (state, action) => {
   switch (action.type) {
     case ADD:
@@ -29,36 +30,8 @@ const reducer = (state, action) => {
   }
 }
 
-// dummy data
-const boxMueller = (mean, std) => {
-  const u1 = Math.random()
-  const u2 = Math.random()
-
-  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
-  // const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
-
-  return z0 * std + mean
-}
-
-let i = 1
-const fakeRoutine = Array.from({length: 5}, () => ({
-  id: i++,
-  cadence: 10 * (Math.floor(Math.random() * (12 - 8 + 1)) + 8),
-  duration: 60 * Math.floor(Math.random() * 5 + 1)
-}))
-
-let step = DateTime.local()
-const fakeActuals = fakeRoutine
-  .map(({cadence, duration}) =>
-    Array.from({length: Math.floor((cadence * duration) / 60)}, () => {
-      const actual = boxMueller(cadence, 0.75)
-      step = step.plus({seconds: 60 / actual})
-      return [step, actual]
-    })
-  )
-  .flat()
-
-export default ({domainSetting = true, timeWindow = 30}) => {
+export default ({domainSetting = true, timeWindow = 30, routine = []}) => {
+  // maybe instead of receiving a routine, we receive a workout?
   // initialize intervals with current DateTime
   const [intervals, dispatch] = useReducer(reducer, initialState)
   const [domain, setDomain] = useState([
@@ -68,7 +41,7 @@ export default ({domainSetting = true, timeWindow = 30}) => {
 
   useEffect(() => {
     // on mount, calculate interval start and end times based off previous interval
-    fakeRoutine.forEach(d => dispatch(addInterval(d)))
+    routine.forEach(d => dispatch(addInterval(d)))
   }, [])
 
   useInterval(() => {
