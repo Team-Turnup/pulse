@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'test') {
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
-if (process.env.NODE_ENV !== 'production') require('../ngrok')
+// if (process.env.NODE_ENV !== 'production') require('../ngrok')
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id))
@@ -62,7 +62,7 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
- 
+
   // auth and api routes
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
@@ -71,7 +71,7 @@ const createApp = () => {
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
   // any remaining requests with an extension (.js, .css, etc.) send 404
-  app.use((req, res, next) => { 
+  app.use((req, res, next) => {
     if (path.extname(req.path).length) {
       const err = new Error('Not found')
       err.status = 404
@@ -81,10 +81,10 @@ const createApp = () => {
     }
   })
 
-//   // sends index.html
-//   app.use('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-//   })
+  //   // sends index.html
+  //   app.use('*', (req, res) => {
+  //     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
+  //   })
 
   // error handling endware
   app.use((err, req, res, next) => {

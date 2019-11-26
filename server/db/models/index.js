@@ -10,6 +10,7 @@ const WorkoutTimestamp = require('./WorkoutTimestamp')
 Class.hasMany(Workout)
 Class.belongsTo(Routine)
 Class.belongsTo(User) // class leader
+Class.belongsToMany(User, {through: 'Attendees'})
 
 Interval.belongsTo(Routine)
 
@@ -17,7 +18,7 @@ Option.belongsTo(User)
 Option.belongsTo(Routine)
 Option.belongsTo(Interval)
 
-Playlist.belongsTo(Class) 
+Playlist.belongsTo(Class)
 Playlist.belongsTo(Routine)
 Playlist.belongsTo(Workout)
 
@@ -30,6 +31,7 @@ User.belongsToMany(User, {as: 'friend', through: 'Friends'})
 User.hasMany(Workout)
 User.hasMany(Routine)
 User.hasMany(Class) // class leader
+User.belongsToMany(Class, {through: 'Attendees'})
 
 Workout.belongsTo(Class)
 Workout.belongsTo(User)
@@ -52,11 +54,11 @@ WorkoutTimestamp.belongsTo(Workout)
  * instead of: const User = require('../db/models/user')
  */
 module.exports = {
-    Class,
-    Interval,
-    Option,
-    Playlist,
-    Routine,
+  Class,
+  Interval,
+  Option,
+  Playlist,
+  Routine,
   User,
   Workout,
   WorkoutTimestamp
