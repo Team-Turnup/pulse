@@ -23,6 +23,7 @@ import activityTypes from '../assets/images/activityTypes'
 import {
   getRoutineThunk,
   createRoutineThunk,
+  createAndStartRoutineThunk,
   updateRoutineThunk,
 } from '../store/routines';
 
@@ -41,7 +42,8 @@ class BuildRoutineScreen extends Component {
       makePublic: false
       //dirty: false,
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.createRoutine = this.createRoutine.bind(this);
+    this.createAndStartRoutine = this.createAndStartRoutine.bind(this);
     this.addInterval = this.addInterval.bind(this)
     this.removeInterval = this.removeInterval.bind(this)
     this.saveInterval = this.saveInterval.bind(this)
@@ -57,10 +59,16 @@ class BuildRoutineScreen extends Component {
     }
   }
 
-  handleSubmit() {
+  createRoutine() {
     const {routineName, routineType, routine, makePublic} = this.state
     this.props.createRoutineThunk({routineName, routineType, routine, makePublic});
-    // this.props.navigation.navigate('HomeScreen');
+    this.props.navigation.navigate('HomeScreen');
+  }
+
+  async createAndStartRoutine() {
+    const {routineName, routineType, routine, makePublic} = this.state
+    await this.props.createAndStartRoutineThunk({routineName, routineType, routine, makePublic});
+    this.props.navigation.navigate('StartRoutineScreen');
   }
 
   addInterval() {
@@ -174,9 +182,12 @@ class BuildRoutineScreen extends Component {
 
               </View>
 
+            <View style={styles.barGraphic}>
           {this.state.index<this.state.routine.length ? <Text style={styles.message}>Current interval is highlighted in blue</Text> : null}
 
           <RoutineBarGraphic routine={this.state.routine} changeIndex={this.changeIndex} index={this.state.index}/>
+            </View>
+
             <View style={styles.buttons}>
           <TouchableOpacity
              style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
@@ -187,16 +198,15 @@ class BuildRoutineScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
-            onPress={() => this.state.routine.length ? this.handleSubmit() : {}}
+            onPress={this.state.routine.length ? this.createRoutine : null}
           >
-            <Text style={styles.buttonText}>Save Routine & Return Home</Text>
+            <Text style={styles.buttonText}>Create Routine & Return Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{...styles.button, backgroundColor: this.state.routine.length ? 'blue' : 'gray'}}
-            onPress={() => this.state.routine.length ? this.handleSubmit() : {}}
-            //onPress={() => this.navigation.navigate('StartRoutineScreen')}
+            onPress={this.state.routine.length ? this.createAndStartRoutine : null}
           >
-            <Text style={styles.buttonText}>Save and Start Routine</Text>
+            <Text style={styles.buttonText}>Create and Start Routine</Text>
           </TouchableOpacity>
             </View>
 
@@ -259,17 +269,15 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     color: "white",
     textAlign: 'center'
+  },
+  barGraphic: {
+    marginTop: 20,
+    marginBottom: 20
   }
 });
 
-const mapStateToProps = state => ({
-  routines: state.routines,
-});
+const mapStateToProps = ({routines}) => ({routines})
 
-const mapDispatchToProps = dispatch => ({
-  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-  updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine)),
-});
+const mapDispatchToProps = {getRoutineThunk, createRoutineThunk, updateRoutineThunk, createAndStartRoutineThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen);
