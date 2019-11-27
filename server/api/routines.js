@@ -5,9 +5,10 @@ const Op = Sequelize.Op
 const db = require('../db')
 
 router.get('/', async (req, res, next) => {
+  console.log('entering api')
   try {
     const routines = await Routine.findAll({
-      //include: [{ model: Interval }, { model: User }, { model: Workout }]
+      include: [{ model: Interval }, { model: User }, { model: Workout }]
     })
     res.json(routines)
   } catch (err) {

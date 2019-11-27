@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux'
 import {View, StyleSheet, ScrollView} from 'react-native'
 import {
   Container,
@@ -17,40 +17,41 @@ import {
   Item,
   Label
 } from 'native-base'
-import { fetchClasses } from '../store/classes'
-
+import {fetchClasses} from '../store/classes'
 
 class ClassesScreen extends React.Component {
-  constructor(){
+  constructor() {
     super()
     this.state = {
-      search:''
+      search: ''
     }
     this.handleChange = this.handleChange.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.getClasses()
   }
 
-  handleChange(search){
+  handleChange(search) {
     this.setState({search})
   }
 
   render() {
     const {classes} = this.props
-    let allClasses = classes.filter(aClass => aClass.name.toLowerCase().includes(this.state.search.toLowerCase()))
+    let allClasses = classes.filter(aClass =>
+      aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
+    )
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
           <Form style={{backgroundColor: 'pink'}}>
-            <Item floatingLabel >
+            <Item floatingLabel>
               <Label>Search Classes</Label>
               <Input
-              autoCapitalize="none"
-              name='search'
-              value={this.state.search}
-              onChangeText={this.handleChange}
+                autoCapitalize="none"
+                name="search"
+                value={this.state.search}
+                onChangeText={this.handleChange}
               />
             </Item>
           </Form>
@@ -59,11 +60,19 @@ class ClassesScreen extends React.Component {
               <Title>Classes</Title>
             </CardItem>
             <Card>
-              {allClasses.map((workout, i) => {
+              {allClasses.map((aClass, i) => {
                 return (
-                  <CardItem button key={i}>
+                  <CardItem
+                    onPress={() =>
+                      this.props.navigation.navigate('UserWaitingScreen', {
+                        trainerId: aClass.userId
+                      })
+                    }
+                    button
+                    key={i}
+                  >
                     <Text header>
-                      {i + 1}. {workout.name}
+                      {i + 1}. {aClass.name}
                     </Text>
                   </CardItem>
                 )
@@ -76,12 +85,12 @@ class ClassesScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
   classes: state.classes
 })
 
-const mapDispatchToProps = dispatch =>({
+const mapDispatchToProps = dispatch => ({
   getClasses: () => dispatch(fetchClasses())
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(ClassesScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(ClassesScreen)
