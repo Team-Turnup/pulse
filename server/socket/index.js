@@ -6,14 +6,19 @@ module.exports = io => {
       console.log(`Connection ${socket.id} has left the building`)
     })
 
-    socket.on('create', roomNum => {
-      console.log('created!')
+    socket.on('subscribe', roomNum => {
+      console.log(`subscribed to ${roomNum}`)
       socket.join(roomNum)
+    })
+
+    socket.on('unsubscribe', roomNum => {
+      console.log(`unsubscribed from ${roomNum}`)
+      socket.leave(roomNum)
     })
 
     socket.on('message', (roomNum, message) => {
       console.log(message)
-      socket.to(roomNum).emit(message)
+      socket.to(roomNum).emit('message', message)
     })
   })
 }
