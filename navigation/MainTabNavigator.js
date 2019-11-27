@@ -167,7 +167,7 @@ SettingsStack.path = ''
 // SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  ClassesSearch,
+  // ClassesSearch,
   HomeStack,
   LoginStack,
   HistoryStack,

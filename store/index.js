@@ -11,7 +11,7 @@ const reducer = combineReducers({
   routine,
   routines,
   users,
-
+  classes
 })
 const middleware = composeWithDevTools(
   // applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))

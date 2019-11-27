@@ -10,13 +10,6 @@ import {
   Card,
   CardItem
 } from 'native-base'
-import {
-  VictoryChart,
-  VictoryBar,
-  VictoryLabel,
-  VictoryAxis,
-  VictoryBrushLine
-} from 'victory-native'
 
 export default class HomeScreen extends Component {
   render() {
@@ -63,11 +56,18 @@ export default class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() =>
-              this.props.navigation.navigate('ClassesScreen')
-            }
+            onPress={() => this.props.navigation.navigate('ClassesScreen')}
           >
             <Text>Join A Class</Text>
+          </Button>
+
+          <Button
+            block
+            danger
+            style={{margin: 7}}
+            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+          >
+            <Text>Create A Class</Text>
           </Button>
         </Content>
       </Container>
