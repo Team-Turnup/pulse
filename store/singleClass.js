@@ -1,7 +1,6 @@
 import axios from 'axios'
 import {ngrok} from '../ngrok'
 import {setRoutine} from './routine'
-import {setWorkout} from './workout'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const GET_CLASS = 'GET_CLASS'
@@ -19,8 +18,12 @@ const removeClass = () => ({
 
 export const getClassThunk = id => async dispatch => {
   try {
-    const {data} = await axios.get(`${ngrok}/api/class/${id}`)
-    dispatch(getClass(data))
+    const {
+      data: {routine, ...singleClass}
+    } = await axios.get(`${ngrok}/api/class/${id}`)
+    dispatch(getClass(singleClass))
+    dispatch(setRoutine(routine))
+    di
   } catch (err) {
     console.error(err)
   }
@@ -49,7 +52,6 @@ initialState = {
   name: '',
   canEnroll: true,
   when: new Date(null),
-  routine: [],
   attendees: []
 }
 
