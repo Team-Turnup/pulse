@@ -9,7 +9,7 @@ import CommunityScreen from '../screens/CommunityScreen'
 import HistoryScreen from '../screens/HistoryScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
 //delete the select workout screen after development.
-import PreviousRoutine from '../components/PreviousRoutine'
+import PreviousRoutine from '../screens/PreviousRoutine'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'

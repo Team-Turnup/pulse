@@ -3,4 +3,9 @@ const leaderValidate = (req, res, next) => {
   else next(new Error('User is not a leader'))
 }
 
-module.exports = {leaderValidate}
+const authenticatedUser = (req, res, next) => {
+  if (req.user) next()
+  else next(new Error('User is not logged in'))
+}
+
+module.exports = {leaderValidate, authenticatedUser}
