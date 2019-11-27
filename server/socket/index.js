@@ -11,7 +11,7 @@ module.exports = io => {
     //   roomLeaders.push({[roomNum]: socket.id})
     // })
 
-    socket.on('subscribe', roomNum, isLeader => {
+    socket.on('subscribe', (roomNum, isLeader = false) => {
       if (isLeader) {
         console.log('hello leader')
         roomLeaders[roomNum] = socket.id
@@ -19,7 +19,7 @@ module.exports = io => {
       socket.join(roomNum)
     })
 
-    socket.on('unsubscribe', roomNum, isLeader => {
+    socket.on('unsubscribe', (roomNum, isLeader = false) => {
       if (isLeader) {
         console.log('bye leader')
         delete roomLeaders[roomNum]

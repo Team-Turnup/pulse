@@ -8,7 +8,7 @@ export default () => {
   const [roomNum, setRoomNum] = useState(1)
   const [currMessage, setCurrMessage] = useState('')
   useEffect(() => {
-    socket.emit('subscribe', roomNum)
+    socket.emit('subscribe', roomNum, true)
     return () => socket.emit('unsubscribe', roomNum)
   }, [roomNum])
 
