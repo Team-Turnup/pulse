@@ -39,7 +39,7 @@ router.get('/', authenticatedUser, async (req, res, next) => {
         }
       })
     })
-    res.status(200).json(classes)
+    res.json(classes).status(200)
   } catch (err) {
     next(err)
   }
