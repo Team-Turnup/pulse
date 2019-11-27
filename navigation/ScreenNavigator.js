@@ -6,6 +6,8 @@ import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import PreviousRoutine from '../screens/PreviousRoutine'
+import SocketFollower from '../screens/SocketFollower'
+import SocketLeader from '../screens/SocketLeader'
 
 const ScreenNavigator = createStackNavigator(
   {
@@ -14,7 +16,9 @@ const ScreenNavigator = createStackNavigator(
     BuildRoutineScreen,
     StartRoutineScreen,
     InProgressScreen,
-    PreviousRoutine
+    PreviousRoutine,
+    SocketFollower,
+    SocketLeader
   },
   {headerMode: 'none'}
 )

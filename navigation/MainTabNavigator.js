@@ -14,15 +14,19 @@ import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
+import SocketFollower from '../screens/SocketFollower'
+import SocketLeader from '../screens/SocketLeader'
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
   default: {}
 })
 
-const InProgressStack = createStackNavigator({InProgress: InProgressScreen})
+const SocketFollowerStack = createStackNavigator({
+  Follower: SocketFollower
+})
 
-InProgressStack.navigationOptions = {
+SocketFollowerStack.navigationOptions = {
   tabBarLabel: 'InProgress',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
@@ -36,10 +40,10 @@ InProgressStack.navigationOptions = {
   )
 }
 
-const LoginStack = createStackNavigator({Login: LoginScreen})
+const SocketLeaderStack = createStackNavigator({Leader: SocketLeader})
 
-LoginStack.navigationOptions = {
-  tabBarLabel: 'Login',
+SocketLeaderStack.navigationOptions = {
+  tabBarLabel: 'InProgress',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
@@ -52,80 +56,112 @@ LoginStack.navigationOptions = {
   )
 }
 
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen
-  }
-  // config
-)
+// const InProgressStack = createStackNavigator({InProgress: InProgressScreen})
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  )
-}
+// InProgressStack.navigationOptions = {
+//   tabBarLabel: 'InProgress',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
-HomeStack.path = ''
+// const LoginStack = createStackNavigator({Login: LoginScreen})
 
-const CommunityStack = createStackNavigator({Settings: CommunityScreen}, config)
+// LoginStack.navigationOptions = {
+//   tabBarLabel: 'Login',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
-CommunityStack.navigationOptions = {
-  tabBarLabel: 'Community',
-  TabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  )
-}
+// const HomeStack = createStackNavigator(
+//   {
+//     Home: HomeScreen
+//   }
+//   // config
+// )
 
-CommunityStack.path = ''
+// HomeStack.navigationOptions = {
+//   tabBarLabel: 'Home',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
-const HistoryStack = createStackNavigator(
-  {
-    Settings: HistoryScreen
-  },
-  config
-)
+// HomeStack.path = ''
 
-HistoryStack.navigationOptions = {
-  tabBarLabel: 'History',
-  TabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  )
-}
+// const CommunityStack = createStackNavigator({Settings: CommunityScreen}, config)
 
-HistoryStack.path = ''
+// CommunityStack.navigationOptions = {
+//   tabBarLabel: 'Community',
+//   TabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   )
+// }
 
-const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen
-  },
-  config
-)
+// CommunityStack.path = ''
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
-  tabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  )
-}
+// const HistoryStack = createStackNavigator(
+//   {
+//     Settings: HistoryScreen
+//   },
+//   config
+// )
 
-SettingsStack.path = ''
+// HistoryStack.navigationOptions = {
+//   tabBarLabel: 'History',
+//   TabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   )
+// }
+
+// HistoryStack.path = ''
+
+// const SettingsStack = createStackNavigator(
+//   {
+//     Settings: SettingsScreen
+//   },
+//   config
+// )
+
+// SettingsStack.navigationOptions = {
+//   tabBarLabel: 'Settings',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   )
+// }
+
+// SettingsStack.path = ''
 
 // const AccelerometerStack = createStackNavigator(
 //   { Settings: Accelerometer },
@@ -166,17 +202,19 @@ SettingsStack.path = ''
 // SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  LoginStack,
-  HomeStack,
-  HistoryStack,
-  CommunityStack,
-  SettingsStack,
-  // AccelerometerStack,
-  SelectRoutineScreen,
-  BuildRoutineScreen: BuildRoutineScreen,
-  PreviousRoutine,
-  InProgressStack,
-  SignupScreen
+  SocketLeader,
+  SocketFollower
+  // LoginStack,
+  // HomeStack,
+  // HistoryStack,
+  // CommunityStack,
+  // SettingsStack,
+  // // AccelerometerStack,
+  // SelectRoutineScreen,
+  // BuildRoutineScreen: BuildRoutineScreen,
+  // PreviousRoutine,
+  // InProgressStack,
+  // SignupScreen
 })
 
 tabNavigator.path = ''
