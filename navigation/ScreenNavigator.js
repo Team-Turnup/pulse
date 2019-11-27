@@ -8,6 +8,10 @@ import InProgressScreen from '../screens/InProgressScreen'
 import SignupScreen from '../screens/SignupScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import PreviousRoutine from '../screens/PreviousRoutine'
+import UserWaitingScreen from '../screens/UserWaitingScreen'
+import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
+
+
 
 const ScreenNavigator = createStackNavigator({
   SelectRoutineScreen,
@@ -17,7 +21,10 @@ const ScreenNavigator = createStackNavigator({
   InProgressScreen,
   SignupScreen,
   ClassesScreen,
-  PreviousRoutine
+  PreviousRoutine,
+  UserWaitingScreen,
+  TrainerWaitingScreen
+
 
 },{headerMode:'none'})
 
