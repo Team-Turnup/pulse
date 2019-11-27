@@ -65,7 +65,9 @@
     "victory-native": "^33.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
     "babel-preset-expo": "^7.0.0",
+    "eslint": "^6.7.1",
     "jest-expo": "^35.0.0"
   },
   "private": true
