@@ -7,10 +7,12 @@ module.exports = io => {
     })
 
     socket.on('create', roomNum => {
+      console.log('created!')
       socket.join(roomNum)
     })
 
-    socket.on('messsage', (roomNum, message) => {
+    socket.on('message', (roomNum, message) => {
+      console.log(message)
       socket.to(roomNum).emit(message)
     })
   })
