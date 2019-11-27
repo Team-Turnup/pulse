@@ -8,8 +8,8 @@ const getClasses = classes =>({type:GET_CLASSES,classes})
 
 export const fetchClasses = () => async dispatch =>{
   try{
-    const allClasses = await axios.get(`${ngrok}/api/classes`)
-    dispatch(getClasses(allClasses.data))
+    const response = await axios.get(`${ngrok}/api/classes`)
+    dispatch(getClasses(response.data))
   } catch (error){
     console.error(error)
   }
