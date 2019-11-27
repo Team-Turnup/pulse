@@ -72,21 +72,21 @@ SocketLeaderStack.navigationOptions = {
 //   )
 // }
 
-// const LoginStack = createStackNavigator({Login: LoginScreen})
+const LoginStack = createStackNavigator({Login: LoginScreen})
 
-// LoginStack.navigationOptions = {
-//   tabBarLabel: 'Login',
-//   tabBarIcon: ({focused}) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={
-//         Platform.OS === 'ios'
-//           ? `ios-information-circle${focused ? '' : '-outline'}`
-//           : 'md-information-circle'
-//       }
-//     />
-//   )
-// }
+LoginStack.navigationOptions = {
+  tabBarLabel: 'Login',
+  tabBarIcon: ({focused}) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  )
+}
 
 // const HomeStack = createStackNavigator(
 //   {
@@ -202,9 +202,9 @@ SocketLeaderStack.navigationOptions = {
 // SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
+  LoginStack,
   SocketLeader,
   SocketFollower
-  // LoginStack,
   // HomeStack,
   // HistoryStack,
   // CommunityStack,

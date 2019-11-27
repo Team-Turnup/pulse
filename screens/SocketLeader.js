@@ -6,11 +6,11 @@ import {Container, Content, Text, Button, Input} from 'native-base'
 
 export default () => {
   const [roomNum, setRoomNum] = useState(1)
-  const [currMessage, setCurrMessage] = useState('')
+  const [userId, setUserId] = useState(1)
   useEffect(() => {
-    socket.emit('subscribe', roomNum, true)
-    return () => socket.emit('unsubscribe', roomNum)
-  }, [roomNum])
+    socket.emit('subscribe', roomNum, userId, true)
+    return () => socket.emit('unsubscribe', roomNum, userId, true)
+  }, [roomNum, userId])
 
   const sendMessage = () => {
     socket.emit('message', roomNum, `I am the leader of ${roomNum}`)
@@ -18,6 +18,7 @@ export default () => {
   return (
     <View>
       <NumericInput value={roomNum} onChange={value => setRoomNum(value)} />
+      <NumericInput value={userId} onChange={value => setUserId(value)} />
       <Text>Hello</Text>
       <Button onPress={sendMessage}>
         <Text>"send message"</Text>
