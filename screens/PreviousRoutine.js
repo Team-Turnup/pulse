@@ -46,6 +46,7 @@ class PreviousRoutine extends Component {
     )
   }
   componentDidMount() {
+    console.log('Mounting...')
     this.props.getAllRoutinesThunk()
   }
   // setModalVisible(visible) {
