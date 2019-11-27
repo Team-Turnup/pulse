@@ -176,8 +176,8 @@ const tabNavigator = createBottomTabNavigator({
   // AccelerometerStack,
   // SelectWorkoutStack,
   //BuildRoutineScreen: BuildRoutineScreen,
-  BuildClassRoutineScreen
-  //PreviousRoutine
+  BuildClassRoutineScreen,
+  PreviousRoutine
   // InProgressStack,
 })
 

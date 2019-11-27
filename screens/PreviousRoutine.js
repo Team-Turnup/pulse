@@ -36,7 +36,7 @@ class PreviousRoutine extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalVisible: false,
+      // modalVisible: false,
       //previousRoutines: [],
       selectedRoutine: {}
     }
@@ -48,16 +48,16 @@ class PreviousRoutine extends Component {
   componentDidMount() {
     this.props.getAllRoutinesThunk()
   }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible})
-  }
+  // setModalVisible(visible) {
+  //   this.setState({modalVisible: visible})
+  // }
   handleChange(value) {
     this.setState({
       selectedRoutine: value
     })
   }
   handleSubmitPreviousRoutine() {
-    this.props.setRoutine(this.state.selectedRoutine)
+    //this.props.setRoutine(this.state.selectedRoutine)
     //this.props.updateRoutineThunk();
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
@@ -65,17 +65,25 @@ class PreviousRoutine extends Component {
     })
   }
   render() {
-    const mappedRoutines = this.props.routines.map(routine => {
+    // const mappedRoutines = this.props.routines.map(routine => {
+    const mappedRoutines = [].map(routine => {
       return {
         label: `${routine.name}`,
         value: `${routine.name}`
       }
     })
+
     return (
       <Container>
         <RNPickerSelect
           onValueChange={value => this.handleChange(value)}
-          items={[...mappedRoutines]}
+          items={[
+            ...mappedRoutines
+            // {
+            //   label: 'hi',
+            //   value: 'hi'
+            // }
+          ]}
         />
         <Button
           bordered
@@ -157,8 +165,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
   //updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine))
-  getAllRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
-  setRoutine: routine => dispatch(setRoutine(routine))
+  getAllRoutinesThunk: () => dispatch(getAllRoutinesThunk())
+  //setRoutine: routine => dispatch(setRoutine(routine))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreviousRoutine)
