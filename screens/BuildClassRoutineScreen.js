@@ -15,7 +15,7 @@ import {
 } from '../store/routines'
 
 //maybe rename to UpdateRoutineScreen
-class BuildRoutineScreen extends Component {
+class BuildClassRoutineScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -26,7 +26,9 @@ class BuildRoutineScreen extends Component {
       duration: 60,
       intervalType: '',
       routine: [],
-      makePublic: false
+      makePublic: false,
+      setClassPasscode: false,
+      classPasscode: ''
       //dirty: false,
     }
     this.createRoutine = this.createRoutine.bind(this)
@@ -51,23 +53,37 @@ class BuildRoutineScreen extends Component {
   }
 
   createRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
+    const {
+      routineName,
+      routineType,
+      routine,
+      makePublic,
+      classPasscode
+    } = this.state
     this.props.createRoutineThunk({
       routineName,
       routineType,
       routine,
-      makePublic
+      makePublic,
+      classPasscode
     })
     this.props.navigation.navigate('HomeScreen')
   }
 
   async createAndStartRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
+    const {
+      routineName,
+      routineType,
+      routine,
+      makePublic,
+      classPasscode
+    } = this.state
     await this.props.createAndStartRoutineThunk({
       routineName,
       routineType,
       routine,
-      makePublic
+      makePublic,
+      classPasscode
     })
     this.props.navigation.navigate('StartRoutineScreen')
   }
@@ -123,7 +139,7 @@ class BuildRoutineScreen extends Component {
           <Text style={styles.header}>Build Routine</Text>
         </Header> */}
         <Content>
-          <Text style={styles.sectionHeader}>Routine</Text>
+          <Text style={styles.sectionHeader}>Build Class Routine</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
             <Input
@@ -155,7 +171,36 @@ class BuildRoutineScreen extends Component {
             />
             <Text>Make Public</Text>
           </Item>
-
+          <Item fixedLabel style={styles.checkBox}>
+            <CheckBox
+              onClick={() =>
+                this.setState(prevState => ({
+                  setClassPasscode: !prevState.setClassPasscode
+                }))
+              }
+              isChecked={this.state.setClassPasscode}
+            />
+            <Text>Set Passcode for Class?</Text>
+          </Item>
+          {this.state.setClassPasscode ? (
+            <View>
+              <Item fixedLabel style={styles.item}>
+                <Label>Passcode</Label>
+                <Input
+                  placeholder=""
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  //do we want to secure text entry?
+                  secureTextEntry={false}
+                  value={this.state.classPasscode}
+                  onChangeText={classPasscode => this.setState({classPasscode})}
+                  //style={styles.name}
+                />
+              </Item>
+            </View>
+          ) : (
+            <View></View>
+          )}
           {this.state.routineName.length && this.state.routineType ? (
             <View>
               <Text style={styles.sectionHeader}>Intervals</Text>
@@ -361,4 +406,7 @@ const mapDispatchToProps = {
   createAndStartRoutineThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BuildClassRoutineScreen)

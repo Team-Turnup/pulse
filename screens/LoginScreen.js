@@ -79,14 +79,14 @@ class LoginScreen extends React.Component {
                 onChangeText={text => this.setState({password: text})}
               />
             </Item>
-            <Button
-              block
-              style={styles.button}
-              onPress={() => this.handleLogin()}
-            >
-              <Text>Sign In</Text>
-            </Button>
           </Form>
+          <Button
+            block
+            style={styles.button}
+            onPress={() => this.handleLogin()}
+          >
+            <Text>Sign In</Text>
+          </Button>
           <Button
             block
             style={styles.button}

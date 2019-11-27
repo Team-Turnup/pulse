@@ -18,7 +18,13 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const {user, body} = req
-    const {routineName, routineType, routine, makePublic} = body
+    const {
+      routineName,
+      routineType,
+      routine,
+      makePublic
+      //classPasscode
+    } = body
     if (user) {
       console.log('do things')
     }
@@ -26,6 +32,7 @@ router.post('/', async (req, res, next) => {
       name: routineName,
       activityType: routineType,
       makePublic
+      //classPasscode
       // userId: user.id
     })
     if (!newRoutine) throw new Error('Routine not created')
