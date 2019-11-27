@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Class, Routine, User} = require('../db/models')
+const {Class, Routine, User, Interval} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
@@ -15,7 +15,7 @@ router.use(async (req, res, next) => {
 })
 
 // GET all classes at /api/class (for populating the class list for search)
-router.get('/', async (req, res, next) => {
+router.get('/', authenticatedUser, async (req, res, next) => {
   try {
     // are we using req.query with React Native?
     const {
@@ -23,10 +23,21 @@ router.get('/', async (req, res, next) => {
     } = req
     const classes = await Class.findAll({
       // including users for class counts -- may not need this but including it for now?
-      include: [User],
-      where: {
-        name: {[Op.iLike]: `%${search}%`}
-      }
+      include: [
+        {
+          model: User,
+          as: 'attendees',
+          attributes: ['id'],
+          through: {
+            attributes: []
+          }
+        }
+      ],
+      ...(search && {
+        where: {
+          name: {[Op.iLike]: `%${search}%`}
+        }
+      })
     })
     res.status(200).json(classes)
   } catch (err) {
@@ -42,12 +53,23 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
       params: {classId},
       user
     } = req
-    const include = [Routine]
+    const include = [
+      {
+        model: Routine,
+        attributes: ['id', 'name', 'activityType'],
+        include: [
+          {
+            model: Interval,
+            attributes: ['id', 'activityType', 'cadence', 'duration']
+          }
+        ]
+      }
+    ]
     if (await user.hasClass(classId))
       include.push({
         model: User,
         as: 'attendees',
-        attributes: ['id', 'email', 'role'],
+        attributes: ['id', 'email', 'age', 'sex'],
         through: {
           attributes: []
         }
@@ -55,7 +77,8 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
     const currentClass = await Class.findByPk(classId, {
       // include age, sex, role of attendees?
       // used to load up the routine/intervals for every user and class list
-      include
+      include,
+      attributes: ['id', 'name', 'canEnroll', 'when']
     })
     if (!currentClass) throw new Error(`Class with id ${classId} not found.`)
     res.status(200).json(currentClass)
