@@ -8,9 +8,9 @@ const Workout = require('./Workout')
 const WorkoutTimestamp = require('./WorkoutTimestamp')
 
 Class.hasMany(Workout) ///
-Class.belongsTo(Routine)//
+Class.belongsTo(Routine) //
 Class.belongsTo(User) // class leader
-Class.belongsToMany(User, {through: 'Attendees'})
+Class.belongsToMany(User, {as: 'attendees', through: 'Attendees'})
 
 Interval.belongsTo(Routine) ///
 
@@ -31,7 +31,7 @@ User.belongsToMany(User, {as: 'friend', through: 'Friends'})
 User.hasMany(Workout)
 User.hasMany(Routine)
 User.hasMany(Class) // class leader
-User.belongsToMany(Class, {through: 'Attendees'})
+User.belongsToMany(Class, {as: 'attendee', through: 'Attendees'})
 
 Workout.belongsTo(Class)
 Workout.belongsTo(User)

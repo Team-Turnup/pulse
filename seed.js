@@ -120,11 +120,10 @@ async function seed() {
         d.setUser(
           faker.random.arrayElement(users.filter(d => d.role === 'leader'))
         )
-        d.addUsers(
-          ...new Set(
-            Array.from({length: faker.random.number({min: 5, max: 10})}, () =>
-              faker.random.arrayElement(users)
-            )
+        d.addAttendees(
+          Array.from(
+            {length: faker.random.number({min: 5, max: 9})},
+            (d, i) => faker.random.number({min: 1, max: 9}) + 10 * i
           )
         ).catch(e => console.error(e))
       })
