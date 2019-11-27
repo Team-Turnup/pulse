@@ -5,7 +5,6 @@ import {setWorkout} from './workout'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const GET_CLASS = 'GET_CLASS'
-const CREATE_CLASS = 'CREATE_CLASS'
 //const UPDATE_CLASS = 'UPDATE_CLASS';
 const REMOVE_CLASS = 'REMOVE_CLASS'
 
@@ -14,14 +13,8 @@ const getClass = singleClass => ({
   singleClass
 })
 
-const createClass = singleClass => ({
-  type: CREATE_CLASS,
-  singleClass
-})
-
-const removeClass = classId => ({
-  type: REMOVE_CLASS,
-  classId
+const removeClass = () => ({
+  type: REMOVE_CLASS
 })
 
 export const getClassThunk = id => async dispatch => {
@@ -45,7 +38,7 @@ export const createClassThunk = singleClass => async dispatch => {
 export const deleteRoutineThunk = classId => async dispatch => {
   try {
     await axios.delete(`${ngrok}/api/routines/${classId}`)
-    dispatch(removeClass(classId))
+    dispatch(removeClass())
   } catch (error) {
     console.error(error)
   }
@@ -56,7 +49,8 @@ initialState = {
   name: '',
   canEnroll: true,
   when: new Date(null),
-  routine: []
+  routine: [],
+  attendees: []
 }
 
 //should be a GET_ROUTINES probably
@@ -64,12 +58,8 @@ const classReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CLASS:
       return action.singleClass
-    case CREATE_CLASS:
-      return [...state, action.singleClass]
     case REMOVE_CLASS:
-      return state.filter(singleClass => singleClass.id !== action.classId)
-    case GET_ALL_ROUTINES:
-      return action.routines
+      return initialState
     default:
       return state
   }
