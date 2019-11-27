@@ -15,6 +15,9 @@ import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
 import ClassesSearch from '../screens/ClassesScreen'
+import UserWaitingScreen from '../screens/UserWaitingScreen'
+import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
+
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -167,7 +170,7 @@ SettingsStack.path = ''
 // SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  // ClassesSearch,
+  TrainerWaitingScreen,
   HomeStack,
   LoginStack,
   HistoryStack,
