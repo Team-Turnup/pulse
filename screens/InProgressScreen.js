@@ -18,6 +18,7 @@ import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
 import routine from '../dummyIntervals'
+import socket from '../socket'
 
 class InProgressScreen extends React.Component {
   constructor() {
@@ -71,12 +72,14 @@ class InProgressScreen extends React.Component {
         (sum, cadence) => sum + cadence / cadences.length,
         0
       )
-      avgCadences = [...avgCadences, {timestamp, cadence: avgCadence}]
+      const workoutTimestamp = {timestamp, cadence: avgCadence}
+      avgCadences = [...avgCadences, workoutTimestamp]
       this.setState({
         currentStepCount: result.steps,
         cadences,
         avgCadences
       })
+      socket.emit('workoutTimestamp', workoutTimestamp)
     })
 
     Pedometer.isAvailableAsync().then(
