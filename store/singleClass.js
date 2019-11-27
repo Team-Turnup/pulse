@@ -22,8 +22,7 @@ export const getClassThunk = id => async dispatch => {
       data: {routine, ...singleClass}
     } = await axios.get(`${ngrok}/api/class/${id}`)
     dispatch(getClass(singleClass))
-    dispatch(setRoutine(routine))
-    di
+    // dispatch(setRoutine(routine))
   } catch (err) {
     console.error(err)
   }
@@ -47,7 +46,7 @@ export const deleteRoutineThunk = classId => async dispatch => {
   }
 }
 
-initialState = {
+const initialState = {
   id: 0,
   name: '',
   canEnroll: true,

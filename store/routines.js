@@ -77,14 +77,13 @@ export const deleteRoutineThunk = routineId => async dispatch => {
 export const getAllRoutinesThunk = () => async dispatch => {
   try {
     const response = await axios.get(`${ngrok}/api/routines`)
-    //console.log('in the thunk', response)
     dispatch(getAllRoutines(response.data))
   } catch (err) {
     console.error(err)
   }
 }
 
-initialState = []
+const initialState = []
 
 //should be a GET_ROUTINES probably
 const routinesReducer = (state = initialState, action) => {
