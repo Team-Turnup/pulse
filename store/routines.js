@@ -84,7 +84,7 @@ export const getAllRoutinesThunk = () => async dispatch => {
   }
 }
 
-initialState = []
+const initialState = []
 
 //should be a GET_ROUTINES probably
 const routinesReducer = (state = initialState, action) => {

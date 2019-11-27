@@ -11,28 +11,37 @@ import {
 } from 'native-base';
 // import {setWorkoutThunk} from '../store/workout';
 
+const _class = {
+    id: 1,
+    name: 'test',
+    when: Date.now() + 10000
+}
+
+const user = {
+    id: 1
+}
+
 //maybe rename to UpdateRoutineScreen
-class StartRoutineScreen extends Component {
+class FollowerWaitClassScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {count: 4, clearCountdown: null}
+    this.state = {message: Math.floor((_class.when-Date.now())/1000), clearCountdown: null}
   }
 
   componentDidMount() {
-    console.log(this.props.routine)
-      const clearCountdown = setInterval(() => {
-          let {count} = this.state
-          if (count>1) {
-              count=count-1
+      let {message} = this.state
+      if (typeof message==='number' && message>0) {
+          const clearCountdown = setInterval(() => {
+          if (message>1) {
+              message = Math.floor((_class.when-Date.now())/1000)
           } else {
               clearInterval(this.state.clearCountdown)
-              count='Go!'
-              this.props.navigation.navigate('InProgressScreen')
+              message='Waiting for leader to start class...'
         }
-        this.setState({count})
-      }, 60000/this.props.routine.intervals[0].cadence)
+        this.setState({message})
+      }, 1000)
       this.setState({clearCountdown})
-      // this.props.setWorkoutThunk(this.props.routine)
+    }
   }
 
   render() {
@@ -40,7 +49,7 @@ class StartRoutineScreen extends Component {
       <Container>
         <Content>
             <View style={styles.countdown}>
-            <Text style={styles.text}>{this.state.count}</Text>
+            <Text style={styles.text}>{this.state.message}</Text>
             </View>
         </Content>
       </Container>
@@ -65,4 +74,4 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({routine}) => ({routine})
 
-export default connect(mapStateToProps)(StartRoutineScreen);
+export default connect(mapStateToProps)(FollowerWaitClassScreen);

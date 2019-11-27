@@ -15,7 +15,7 @@ export const fetchClasses = () => async dispatch =>{
   }
 }
 
-initialState = []
+const initialState = []
 
 const classesReducer = (state = initialState, action) => {
   switch(action.type){
