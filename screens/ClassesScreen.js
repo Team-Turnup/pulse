@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import {View, StyleSheet, ScrollView} from 'react-native'
 import {
   Container,
@@ -16,8 +17,10 @@ import {
   Item,
   Label
 } from 'native-base'
+import { fetchClasses } from '../store/classes'
 
-export default class ClassesScreen extends React.Component {
+
+class ClassesScreen extends React.Component {
   constructor(){
     super()
     this.state = {
@@ -26,13 +29,17 @@ export default class ClassesScreen extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentDidMount(){
+    this.props.getClasses()
+    console.log('PROPS',this.props)
+
+  }
+
   handleChange(search){
     this.setState({search})
   }
 
   render() {
-    console.log(this.state)
-    // console.log(this.state)
     let dummyData = [
       {name: 'First Class', duration: 60, date: 'Sept.15.2019'},
       {name: 'Jump Rope Class', duration: 45, date: 'Oct.4.2019'},
@@ -50,7 +57,7 @@ export default class ClassesScreen extends React.Component {
       {name: 'Summer Shredding', duration: 45, date: 'Oct.4.2019'},
       {name: 'Third Class', duration: 70, date: 'Nov.21.2019'},
       {name: 'Fourth Class', duration: 80, date: 'Dec.13.2019'}
-    ].filter(gymClass => gymClass.name.toLocaleLowerCase().includes(this.state.search.toLocaleLowerCase()))
+    ].filter(aClass => aClass.name.toLocaleLowerCase().includes(this.state.search.toLocaleLowerCase()))
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -86,3 +93,12 @@ export default class ClassesScreen extends React.Component {
     )
   }
 }
+
+mapStateToProps = state =>({
+  classes: state.classes
+})
+mapDispatchToProps = dispatch =>({
+  getClasses: () => dispatch(fetchClasses())
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(ClassesScreen)

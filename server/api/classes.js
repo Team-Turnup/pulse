@@ -5,6 +5,17 @@ const Op = Sequelize.Op
 const {leaderValidate} = require('./authFunctions')
 
 // GET all classes at /api/class (for populating the class list for search)
+
+// router.get(`/`, async(req, res,next)=>{
+//   try{
+//     const allClasses = await Class.findAll()
+//     res.json(allClasses).status(200)
+
+//   } catch(error){
+//     console.error(error)
+//   }
+// })
+
 router.get('/', async (req, res, next) => {
   try {
     // are we using req.query with React Native?
@@ -18,7 +29,7 @@ router.get('/', async (req, res, next) => {
         name: {[Op.iLike]: `%${search}%`}
       }
     })
-    res.status(200).json(classes)
+    res.json(classes).status(200)
   } catch (err) {
     next(err)
   }
