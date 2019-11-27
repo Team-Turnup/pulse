@@ -8,6 +8,8 @@ import {Provider} from 'react-redux'
 import store from './store'
 import AppNavigator from './navigation/AppNavigator'
 
+import './socket'
+
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
 
