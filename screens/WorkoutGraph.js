@@ -36,7 +36,7 @@ export default ({
 }) => {
   // maybe instead of receiving a routine, we receive a workout?
   // initialize tsIntervals with current DateTime
-  const [tsIntervals, dispatch] = useReducer(reducer, initialState)
+  const [tsIntervals, dispatch] = useReducer(reducer, [])
   const [domain, setDomain] = useState([
     DateTime.local().minus({seconds: timeWindow}),
     DateTime.local().plus({seconds: timeWindow})

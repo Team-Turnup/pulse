@@ -47,7 +47,7 @@ export const deleteRoutineThunk = classId => async dispatch => {
   }
 }
 
-initialState = {
+const initialState = {
   id: 0,
   name: '',
   canEnroll: true,

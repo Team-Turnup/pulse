@@ -19,6 +19,7 @@ class StartRoutineScreen extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.routine)
       const clearCountdown = setInterval(() => {
           let {count} = this.state
           if (count>1) {

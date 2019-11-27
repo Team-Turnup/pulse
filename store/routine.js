@@ -18,7 +18,7 @@ export const setRoutine = routine => ({
 //   }
 // };
 
-initialState = {};
+const initialState = {};
 
 //should be a GET_ROUTINES probably
 const routineReducer = (state = initialState, action) => {
