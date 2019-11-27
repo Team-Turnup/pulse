@@ -64,7 +64,7 @@ export default class HomeScreen extends Component {
             danger
             style={{margin: 7}}
             onPress={() =>
-              this.props.navigation.navigate('SelectRoutineScreen')
+              this.props.navigation.navigate('ClassesScreen')
             }
           >
             <Text>Join A Class</Text>
