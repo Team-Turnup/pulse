@@ -3,7 +3,7 @@ const db = require('../db')
 
 const Interval = db.define('interval', {
   activityType: {
-      type: Sequelize.ENUM(['running', 'walking', 'jumping jacks', 'push-ups', 'stairs', 'rowing', 'swimming', 'dancing', 'playing music', 'breathing', 'jumprope', 'cycling']),
+      type: Sequelize.ENUM(['running', 'walking', 'jumpingJacks', 'pushups', 'stairs', 'rowing', 'swimming', 'dancing', 'playingMusic', 'breathing', 'jumprope', 'cycling']),
       allowNull: false
   },
   cadence: {

@@ -15,7 +15,7 @@ router.use(async (req, res, next) => {
 })
 
 // GET all classes at /api/class (for populating the class list for search)
-router.get('/', authenticatedUser, async (req, res, next) => {
+router.get('/',  authenticatedUser, async (req, res, next) => {
   try {
     // are we using req.query with React Native?
     const {
