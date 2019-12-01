@@ -38,7 +38,7 @@ class ClassesScreen extends React.Component {
   }
 
   render() {
-    const studentId =  this.props.navigation.getParam('loggedInUserId','NA')
+    const studentId = this.props.navigation.getParam('loggedInUserId', 'NA')
 
     const {classes} = this.props
     let allClasses = classes.filter(aClass =>
@@ -66,13 +66,13 @@ class ClassesScreen extends React.Component {
               {allClasses.map((aClass, i) => {
                 return (
                   <CardItem
-                    onPress={() =>
+                    onPress={() => {
+                      console.log(aClass),
                       this.props.navigation.navigate('UserWaitingScreen', {
-                        trainerId: aClass.userId,
-                      })
-                    }
-                    // onPress={() => console.log(aClass)}
-                    onPress={() => this.props.enrollClass(aClass.id, studentId)}
+                        trainerId: aClass.userId
+                      }),
+                      this.props.enrollClass(aClass.id, studentId)
+                    }}
                     button
                     key={i}
                   >
@@ -96,7 +96,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getClasses: () => dispatch(fetchClasses()),
-  enrollClass: (classId,studentId) => dispatch(enrollClass(classId,studentId))
+  enrollClass: (classId, studentId) => dispatch(enrollClass(classId, studentId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassesScreen)

@@ -16,9 +16,6 @@ import {me} from '../store/users'
 
 class HomeScreen extends Component {
   componentDidMount(){
-    // console.log('HELLOFROMHOMESCREEN', this.props.navigation.getParam('email','NA'))
-    // console.log('....................................')
-    // console.log('PROPS', this.props)
     this.props.getUser()
   }
 
@@ -27,12 +24,6 @@ class HomeScreen extends Component {
 
     const {navigation} = this.props
 
-    let dummyData = [
-      {name: 'First Workout', duration: 60, date: 'Sept.15.2019'},
-      {name: 'Second Workout', duration: 45, date: 'Oct.4.2019'},
-      {name: 'Third Workout', duration: 70, date: 'Nov.21.2019'},
-      {name: 'Fourth Workout', duration: 80, date: 'Dec.13.2019'}
-    ]
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -40,7 +31,7 @@ class HomeScreen extends Component {
             <CardItem header>
               <Title>My Classes</Title>
             </CardItem>
-            {dummyData.map((workout, i) => {
+            {/* {dummyData.map((workout, i) => {
               return (
                 <CardItem
                   button
@@ -54,14 +45,14 @@ class HomeScreen extends Component {
                   <Text header>{workout.name}</Text>
                 </CardItem>
               )
-            })}
+            })} */}
           </Card>
           <Button
             block
             danger
             style={{margin: 7}}
             onPress={() =>
-              this.props.navigation.navigate('SelectRoutineScreen')
+              navigation.navigate('SelectRoutineScreen')
             }
           >
             <Text>Add New Workout</Text>
@@ -70,8 +61,8 @@ class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() => this.props.navigation.navigate('ClassesScreen',{
-              loggedInUserId:this.props.user.id
+            onPress={()=> navigation.navigate('ClassesScreen', {
+              loggedInUserId: this.props.user.id
             })}
           >
             <Text>Join A Class</Text>
