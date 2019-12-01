@@ -6,6 +6,7 @@ import {setRoutine} from './routine'
 const GET_CLASS = 'GET_CLASS'
 //const UPDATE_CLASS = 'UPDATE_CLASS';
 const REMOVE_CLASS = 'REMOVE_CLASS'
+const ENROLL_INTO_CLASS = 'ENROLL_INTO_CLASS'
 
 const getClass = singleClass => ({
   type: GET_CLASS,
@@ -16,6 +17,25 @@ const removeClass = () => ({
   type: REMOVE_CLASS
 })
 
+const enrollIntoClass = (classId, StudentId) => ({
+  type: ENROLL_INTO_CLASS,
+  classId,
+  StudentId
+})
+
+export const enrollClass = (classId,studentId) => async dispatch =>{
+  try{
+    console.log('CLASSID', classId)
+    console.log('STUDENTID', studentId)
+
+    const response = await axios.post(`${ngrok}/api/classes/`, {classId,studentId})
+    dispatch(enrollIntoClass(response.data))
+
+  } catch(error){
+    console.error(error)
+  }
+}
+
 export const getClassThunk = id => async dispatch => {
   try {
     const {
@@ -23,7 +43,6 @@ export const getClassThunk = id => async dispatch => {
     } = await axios.get(`${ngrok}/api/class/${id}`)
     dispatch(getClass(singleClass))
     dispatch(setRoutine(routine))
-    di
   } catch (err) {
     console.error(err)
   }
@@ -62,6 +81,8 @@ const classReducer = (state = initialState, action) => {
       return action.singleClass
     case REMOVE_CLASS:
       return initialState
+    case ENROLL_INTO_CLASS:
+      return {...state, attendees:[...state.attendees, action.studentId]}
     default:
       return state
   }

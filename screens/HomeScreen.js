@@ -23,7 +23,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    console.log('HOMEPROPSS', this.props.user)
+    console.log('HOMEPROPSS.user::', this.props.user)
 
     const {navigation} = this.props
 
@@ -38,7 +38,7 @@ class HomeScreen extends Component {
         <Content style={{backgroundColor: 'midnightblue'}}>
           <Card>
             <CardItem header>
-              <Title>Recent Workouts</Title>
+              <Title>My Classes</Title>
             </CardItem>
             {dummyData.map((workout, i) => {
               return (
@@ -70,7 +70,9 @@ class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() => this.props.navigation.navigate('ClassesScreen')}
+            onPress={() => this.props.navigation.navigate('ClassesScreen',{
+              loggedInUserId:this.props.user.id
+            })}
           >
             <Text>Join A Class</Text>
           </Button>

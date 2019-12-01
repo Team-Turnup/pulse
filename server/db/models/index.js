@@ -6,6 +6,8 @@ const Routine = require('./Routine')
 const User = require('./User')
 const Workout = require('./Workout')
 const WorkoutTimestamp = require('./WorkoutTimestamp')
+const db = require('../db')
+
 
 Class.hasMany(Workout) ///
 Class.belongsTo(Routine) //
@@ -40,6 +42,7 @@ Workout.hasMany(WorkoutTimestamp) ///
 
 WorkoutTimestamp.belongsTo(Workout)
 
+
 /**
  * If we had any associations to make, this would be a great place to put them!
  * ex. if we had another model called BlogPost, we might say:
@@ -53,6 +56,10 @@ WorkoutTimestamp.belongsTo(Workout)
  * for example, we can say: const {User} = require('../db/models')
  * instead of: const User = require('../db/models/user')
  */
+
+const Attendees = db.model('Attendees')
+
+
 module.exports = {
   Class,
   Interval,
@@ -61,5 +68,6 @@ module.exports = {
   Routine,
   User,
   Workout,
-  WorkoutTimestamp
+  WorkoutTimestamp,
+  Attendees
 }

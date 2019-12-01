@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Class, Routine, User, Interval} = require('../db/models')
+const {Class, Routine, User, Interval, Attendees} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
@@ -12,6 +12,22 @@ router.use(async (req, res, next) => {
     )
   }
   next()
+})
+
+router.post(`/`, authenticatedUser, async(req,res,next)=>{
+
+  console.log('reaching here at classes', req.body)
+
+  try{
+    let enrollment = await Attendees.create({
+      classId:req.body.classId,
+      userId:req.body.studentId
+    })
+    console.log("enrollment", enrollment)
+    res.json(enrollment).status(200)
+  } catch(error){
+    console.error(error)
+  }
 })
 
 // GET all classes at /api/class (for populating the class list for search)
