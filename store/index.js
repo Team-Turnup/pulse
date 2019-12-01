@@ -8,7 +8,6 @@ import users from './users'
 import classes from './classes'
 import singleClass from './singleClass'
 import authReducer from './auth'
-import singleClass from './singleClass'
 import socket from './socket'
 
 const reducer = combineReducers({
