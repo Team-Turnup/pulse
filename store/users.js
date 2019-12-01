@@ -16,7 +16,7 @@ const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
 
 export const me = () => async dispatch => {
   try {
-    const response = await axios.get(`auth/me`)
+    const response = await axios.get(`${ngrok}/auth/me`)
     dispatch(getUser(response.data || defaultUser))
   } catch (error) {
     console.error(error)
@@ -105,10 +105,9 @@ export const changeUserInfoThunk = userId => async dispatch => {
 const defaultUser = {}
 
 //reducer
-export default function(state = defaultUser, action) {
+ const userReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case GET_USER:
-      console.log('USERFROMREDUCER', action.user.id)
       return action.user
     case REMOVE_USER:
       return defaultUser
@@ -121,10 +120,4 @@ export default function(state = defaultUser, action) {
   }
 }
 
-// async () => {
-//   try{
-//     await AsyncStorage.setItem('userId', action.user.id)
-//   } catch(error){
-//     console.error(error)
-//   }
-// }
+export default userReducer

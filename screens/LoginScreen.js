@@ -43,8 +43,6 @@ class LoginScreen extends React.Component {
   }
 
   render() {
-    console.log('PROPSSS from Login', this.props.users.id)
-
     return (
       <Container>
         <Content>

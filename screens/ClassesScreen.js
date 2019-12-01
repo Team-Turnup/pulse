@@ -37,8 +37,7 @@ class ClassesScreen extends React.Component {
   }
 
   render() {
-    console.log('HELLOCLASSES', this.props.navigation.state)
-
+    console.log('CLASSSPROPSSS',this.props.state)
     const {classes} = this.props
     let allClasses = classes.filter(aClass =>
       aClass.name.toLowerCase().includes(this.state.search.toLowerCase())

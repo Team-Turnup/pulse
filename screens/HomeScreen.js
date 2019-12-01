@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
 import {
   Container,
@@ -10,15 +11,21 @@ import {
   Card,
   CardItem
 } from 'native-base'
+import {me} from '../store/users'
 
-export default class HomeScreen extends Component {
+
+class HomeScreen extends Component {
   componentDidMount(){
-
+    // console.log('HELLOFROMHOMESCREEN', this.props.navigation.getParam('email','NA'))
+    // console.log('....................................')
+    // console.log('PROPS', this.props)
+    this.props.getUser()
   }
-  render() {
-    const {navigation} = this.props
-    console.log('HELLO', this.props.navigation.state)
 
+  render() {
+    console.log('HOMEPROPSS', this.props.user)
+
+    const {navigation} = this.props
 
     let dummyData = [
       {name: 'First Workout', duration: 60, date: 'Sept.15.2019'},
@@ -86,3 +93,13 @@ HomeScreen.navigationOptions = {
   title: '⚡️ Stride ⚡️',
   header: null
 }
+
+const mapStateToProps = state =>({
+  user: state.users
+})
+
+const mapDispatchToProps = dispatch => ({
+  getUser: () => dispatch(me())
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(HomeScreen)
