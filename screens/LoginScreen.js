@@ -18,7 +18,10 @@ import {
   Button,
   Text
 } from 'native-base'
+import {saveUserToken} from '../store/auth'
+
 import {tsImportEqualsDeclaration} from '@babel/types'
+
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -26,18 +29,38 @@ class LoginScreen extends React.Component {
       email: '',
       password: ''
     }
-    this.handleLogin = this.handleLogin.bind(this)
+    //this.handleLogin = this.handleLogin.bind(this)
   }
 
-  handleLogin() {
-    const formName = 'login'
-    this.props.doHandleLogin(this.state, formName)
-    this.setState({
-      email: '',
-      password: ''
-    })
-    this.props.navigation.navigate('HomeStack')
+  // _signInAsync = async () => {
+  //   await AsyncStorage.setItem('userToken', 'abc')
+  //   this.props.navigation.navigate('App')
+  // }
+  _signInAsync = () => {
+    this.props
+      .saveUserToken()
+      // .then(() => {
+      //   //this.props.navigation.navigate('Auth')
+      //   this.props.navigation.navigate('LoginScreen')
+      // })
+      .then(() => {
+        this.props.navigation.navigate('HomeScreen')
+      })
+
+      .catch(error => {
+        this.setState({error})
+      })
   }
+
+  // handleLogin() {
+  //   const formName = 'login'
+  //   this.props.doHandleLogin(this.state, formName)
+  //   this.setState({
+  //     email: '',
+  //     password: ''
+  //   })
+  //   this.props.navigation.navigate('HomeStack')
+  // }
 
   render() {
     return (
@@ -82,7 +105,8 @@ class LoginScreen extends React.Component {
             <Button
               block
               style={styles.button}
-              onPress={() => this.handleLogin()}
+              //onPress={() => this.handleLogin()}
+              onPress={this._signInAsync}
             >
               <Text>Sign In</Text>
             </Button>
@@ -156,6 +180,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     color: 'white',
     textAlign: 'center'
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
 
@@ -171,13 +200,15 @@ const mapLogin = state => {
   return {
     users: state.users,
     name: 'login',
-    displayName: 'Login'
+    displayName: 'Login',
     //error: state.user.error
+    token: state.token
   }
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method))
+  //doHandleLogin: (user, method) => dispatch(auth(user, method))
+  saveUserToken: () => dispatch(saveUserToken())
 })
 
 export default connect(mapLogin, mapDispatch)(LoginScreen)

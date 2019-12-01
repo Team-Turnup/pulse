@@ -17,7 +17,7 @@ import SignupScreen from '../screens/SignupScreen'
 import ClassesSearch from '../screens/ClassesScreen'
 import UserWaitingScreen from '../screens/UserWaitingScreen'
 import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
-
+import AuthLoadingScreen from '../screens/AuthLoadingScreen'
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -55,6 +55,8 @@ LoginStack.navigationOptions = {
     />
   )
 }
+
+LoginStack.path = ''
 
 const HomeStack = createStackNavigator(
   {
@@ -169,18 +171,31 @@ SettingsStack.path = ''
 
 // SelectWorkoutStack.path = '';
 
-const tabNavigator = createBottomTabNavigator({
-  TrainerWaitingScreen,
-  HomeStack,
-  LoginStack,
-  HistoryStack,
-  SettingsStack,
-  // AccelerometerStack,
-  // SelectWorkoutStack,
-  // BuildRoutineScreen: BuildRoutineScreen,
-  //PreviousRoutine
-  // InProgressStack,
-})
+const AppStack = createStackNavigator({Home: HomeScreen})
+const AuthStack = createStackNavigator({Login: LoginScreen})
+
+const tabNavigator = createBottomTabNavigator(
+  {
+    TrainerWaitingScreen,
+    //HomeStack,
+    //LoginStack,
+    HomeScreen,
+    LoginScreen,
+    HistoryStack,
+    SettingsStack,
+    // AccelerometerStack,
+    // SelectWorkoutStack,
+    // BuildRoutineScreen: BuildRoutineScreen,
+    //PreviousRoutine
+    // InProgressStack,
+    AuthLoading: AuthLoadingScreen
+    // App: AppStack,
+    // Auth: AuthStack
+  },
+  {
+    initialRouteName: 'AuthLoading'
+  }
+)
 
 tabNavigator.path = ''
 

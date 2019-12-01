@@ -7,12 +7,14 @@ import routine from './routine'
 import users from './users'
 import classes from './classes'
 import singleClass from './singleClass'
+import authReducer from './auth'
 
 const reducer = combineReducers({
   routine,
   routines,
   users,
-  singleClass
+  singleClass,
+  authReducer
 })
 const middleware = composeWithDevTools(
   // applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
