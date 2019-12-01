@@ -8,13 +8,17 @@ import users from './users'
 import classes from './classes'
 import singleClass from './singleClass'
 import authReducer from './auth'
+import singleClass from './singleClass'
+import socket from './socket'
 
 const reducer = combineReducers({
   routine,
   routines,
   users,
   singleClass,
-  authReducer
+  authReducer,
+  classes,
+  socket
 })
 const middleware = composeWithDevTools(
   // applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
