@@ -12,7 +12,14 @@ import {
 } from 'native-base'
 
 export default class HomeScreen extends Component {
+  componentDidMount(){
+
+  }
   render() {
+    const {navigation} = this.props
+    console.log('HELLO', this.props.navigation.state)
+
+
     let dummyData = [
       {name: 'First Workout', duration: 60, date: 'Sept.15.2019'},
       {name: 'Second Workout', duration: 45, date: 'Oct.4.2019'},

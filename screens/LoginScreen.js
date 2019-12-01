@@ -29,17 +29,22 @@ class LoginScreen extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
+
+
+
   handleLogin() {
     const formName = 'login'
     this.props.doHandleLogin(this.state, formName)
+    this.props.navigation.navigate('HomeScreen', {email:this.state.email})
     this.setState({
       email: '',
       password: ''
     })
-    this.props.navigation.navigate('HomeStack')
   }
 
   render() {
+    console.log('PROPSSS from Login', this.props.users.id)
+
     return (
       <Container>
         <Content>
@@ -87,6 +92,7 @@ class LoginScreen extends React.Component {
               <Text>Sign In</Text>
             </Button>
           </Form>
+
           <Button
             block
             style={styles.button}

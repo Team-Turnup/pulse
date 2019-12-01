@@ -37,6 +37,8 @@ class ClassesScreen extends React.Component {
   }
 
   render() {
+    console.log('HELLOCLASSES', this.props.navigation.state)
+
     const {classes} = this.props
     let allClasses = classes.filter(aClass =>
       aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
@@ -68,6 +70,7 @@ class ClassesScreen extends React.Component {
                         trainerId: aClass.userId
                       })
                     }
+                    // onPress={() => console.log(aClass.id)}
                     button
                     key={i}
                   >

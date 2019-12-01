@@ -56,12 +56,7 @@ LoginStack.navigationOptions = {
   )
 }
 
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen
-  }
-  // config
-)
+const HomeStack = createStackNavigator({HomeScreen})
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',

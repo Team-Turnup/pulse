@@ -14,8 +14,6 @@ const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
 
 //THUNKS
 
-
-
 export const me = () => async dispatch => {
   try {
     const response = await axios.get(`auth/me`)
@@ -110,6 +108,7 @@ const defaultUser = {}
 export default function(state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
+      console.log('USERFROMREDUCER', action.user.id)
       return action.user
     case REMOVE_USER:
       return defaultUser
@@ -121,3 +120,11 @@ export default function(state = defaultUser, action) {
       return state
   }
 }
+
+// async () => {
+//   try{
+//     await AsyncStorage.setItem('userId', action.user.id)
+//   } catch(error){
+//     console.error(error)
+//   }
+// }
