@@ -54,7 +54,8 @@ class CreateClassScreen extends Component {
             ...styles.button
             //backgroundColor: this.state.intervalType ? 'blue' : 'gray'
           }}
-          onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+          //this should lead to BuildClass instead
+          onPress={() => this.props.navigation.navigate('BuildClassScreen')}
         >
           <Text>Create a Class using a New Routine</Text>
         </Button>

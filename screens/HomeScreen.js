@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
 import {
   Container,
@@ -10,8 +11,9 @@ import {
   Card,
   CardItem
 } from 'native-base'
+import {me} from '../store/users'
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   render() {
     let dummyData = [
       {name: 'First Workout', duration: 60, date: 'Sept.15.2019'},
@@ -65,10 +67,13 @@ export default class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+            onPress={() => this.props.navigation.navigate('CreateClassScreen')}
           >
             <Text>Create A Class</Text>
           </Button>
+          <Card>
+            <Text></Text>
+          </Card>
         </Content>
       </Container>
     )
@@ -79,3 +84,13 @@ HomeScreen.navigationOptions = {
   title: '⚡️ Stride ⚡️',
   header: null
 }
+
+const mapStateToProps = state => ({
+  user: state.user
+})
+
+const mapDispatchToProps = dispatch => ({
+  me: () => dispatch(me())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

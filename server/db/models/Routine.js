@@ -27,10 +27,6 @@ const Routine = db.define('routine', {
   makePublic: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
-  },
-  classPasscode: {
-    type: Sequelize.STRING,
-    defaultValue: ''
   }
 })
 

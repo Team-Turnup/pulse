@@ -19,15 +19,15 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const {user, body} = req
-    const {routineName, routineType, routine, makePublic, classPasscode} = body
+    const {routineName, routineType, routine, makePublic} = body
     if (user) {
       console.log('do things')
     }
     let newRoutine = await Routine.create({
       name: routineName,
       activityType: routineType,
-      makePublic,
-      classPasscode
+      makePublic
+
       // userId: user.id
     })
     if (!newRoutine) throw new Error('Routine not created')

@@ -87,4 +87,22 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
   }
 })
 
+//should modify more
+router.post('/:classId', authenticatedUser, async (req, res, next) => {
+  try {
+    const {user, body} = req
+    const {name, canEnroll, when, classPasscode} = body
+    let currentClass = await Class.create({
+      name: name,
+      canEnroll: canEnroll,
+      when,
+      classPasscode
+    })
+    if (!currentClass) throw new Error(`Class not found.`)
+    res.status(200).json(currentClass)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router

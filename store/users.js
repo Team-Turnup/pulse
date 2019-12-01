@@ -15,7 +15,7 @@ const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
 //THUNKS
 export const me = () => async dispatch => {
   try {
-    const response = await axios.get(`auth/me`)
+    const response = await axios.get(`${ngrok}/auth/me`)
     dispatch(getUser(response.data || defaultUser))
   } catch (error) {
     console.error(error)
