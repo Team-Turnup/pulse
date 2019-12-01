@@ -94,6 +94,12 @@ class LoginScreen extends React.Component {
           >
             <Text>Create an Account</Text>
           </Button>
+          <Button
+            onPress={() => this.loginWithGoogle()}
+            title="login with google"
+          >
+            <Text>Login with Google </Text>
+          </Button>
         </Content>
       </Container>
     )

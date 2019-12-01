@@ -30,7 +30,8 @@ const User = db.define('user', {
     }
   },
   googleId: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    unique: true
   },
   spotifyId: {
     type: Sequelize.STRING
