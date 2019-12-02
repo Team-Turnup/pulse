@@ -22,7 +22,6 @@ class HomeScreen extends Component {
   async componentDidMount() {
     // await this.props.me()
     await this.props.getMyClassesThunk()
-    console.log(this.props.user)
   }
 
   render() {

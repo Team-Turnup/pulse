@@ -25,7 +25,7 @@ export const getClassThunk = id => async dispatch => {
   try {
     const {
       data: {routine, ...singleClass}
-    } = await axios.get(`${ngrok}/api/class/${id}`)
+    } = await axios.get(`${ngrok}/api/classes/${id}`)
     dispatch(getClass(singleClass))
     // dispatch(setRoutine(routine))
   } catch (err) {
@@ -35,7 +35,8 @@ export const getClassThunk = id => async dispatch => {
 
 export const createClassThunk = singleClass => async dispatch => {
   try {
-    const {data} = await axios.post(`${ngrok}/api/class/`, singleClass)
+    const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
+    console.log('create class thunk')
     dispatch(createClass(data))
   } catch (err) {
     console.error(err)
