@@ -141,9 +141,7 @@ class BuildClassScreen extends Component {
         <Button
           style={{
             ...styles.button
-            //backgroundColor: this.state.intervalType ? 'blue' : 'gray'
           }}
-          //this should lead to BuildClass instead
           onPress={() => this.handleCreateClass()}
         >
           <Text>Create a Class using a New Routine</Text>
@@ -213,7 +211,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  class: state.class
+  singleClass: state.singleClass
 })
 
 const mapDispatchToProps = dispatch => ({

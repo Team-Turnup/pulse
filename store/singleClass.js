@@ -68,7 +68,7 @@ export const getClassThunk = id => async dispatch => {
 export const createClassThunk = singleClass => async dispatch => {
   try {
     console.log('singleClass in thunk', singleClass)
-    const {data} = await axios.post(`${ngrok}/api/classes`, {singleClass})
+    const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
     dispatch(createClass(data))
   } catch (err) {
     console.error(err)
