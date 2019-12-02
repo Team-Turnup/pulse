@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import {
   Container,
   Button,
@@ -13,15 +14,21 @@ import {
   CheckBox
 } from 'native-base'
 
-export default class UserWaitingScreen extends React.Component {
+import {leaveClass} from '../store/singleClass'
 
-  componentDidMount(){
-
-  }
-
+class UserWaitingScreen extends React.Component {
 
   render() {
-    const {navigation} = this.props
+    const {navigation,leaveClass} = this.props
+    let classId = navigation.getParam('classId', 'NA')
+    let studentId = navigation.getParam('studentId', 'NA')
+
+    console.log('..................................................')
+    console.log("WAITING classId", classId)
+    console.log("WAITING studentId", studentId)
+
+
+
     // console.log(JSON.stringify(navigation.getParam('trainerId')))
     return (
       <Container>
@@ -38,8 +45,10 @@ export default class UserWaitingScreen extends React.Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() =>
-              this.props.navigation.navigate('SelectRoutineScreen')
+            onPress={() =>{
+              leaveClass(classId,studentId)
+              this.props.navigation.navigate('HomeScreen')
+            }
             }
           >
             <Text>Leave Class</Text>
@@ -49,3 +58,10 @@ export default class UserWaitingScreen extends React.Component {
   }
 }
 
+
+
+const mapDispatchToProps = dispatch => ({
+  leaveClass: (classId, studentId) => dispatch(leaveClass(classId,studentId))
+})
+
+export default connect(null,mapDispatchToProps)(UserWaitingScreen)

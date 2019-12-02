@@ -17,6 +17,7 @@ import {
   Item,
   Label
 } from 'native-base'
+import {enrollClass} from '../store/singleClass'
 import {getClassesThunk} from '../store/classes'
 
 class ClassesScreen extends React.Component {
@@ -37,6 +38,8 @@ class ClassesScreen extends React.Component {
   }
 
   render() {
+    const studentId = this.props.navigation.getParam('loggedInUserId', 'NA')
+
     const {classes} = this.props
     let allClasses = classes.filter(aClass =>
       aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
@@ -63,11 +66,17 @@ class ClassesScreen extends React.Component {
               {allClasses.map((aClass, i) => {
                 return (
                   <CardItem
-                    onPress={() =>
+                    onPress={() => {
+                      this.props.enrollClass(aClass.id, studentId),
                       this.props.navigation.navigate('UserWaitingScreen', {
-                        trainerId: aClass.userId
-                      })
-                    }
+                        trainerId: aClass.userId,
+                        studentId:studentId,
+                        classId:aClass.id
+                      }),
+                      console.log('THECLASSSS',aClass),
+                      console.log('THECLASSSSIDDD',aClass.id)
+
+                    }}
                     button
                     key={i}
                   >
@@ -90,6 +99,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  enrollClass: (classId, studentId) => dispatch(enrollClass(classId, studentId)),
   getClasses: () => dispatch(getClassesThunk())
 })
 

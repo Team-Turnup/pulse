@@ -1,21 +1,57 @@
 const router = require('express').Router()
-const {Class, Routine, User, Interval} = require('../db/models')
+const {Class, Routine, User, Interval, Attendees} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
 
 // Quick and dirty testing DO NOT USE IN PRODUCTION
 router.use(async (req, res, next) => {
-  if (process.env.NODE_ENV === 'test') {
-    req.login((await Class.findOne({include: [User]})).user, err =>
-      err ? next(err) : 'good!'
-    )
+  try {
+    if (process.env.NODE_ENV === 'test') {
+      req.login((await Class.findOne({include: [User]})).user, err =>
+        err ? next(err) : 'good!'
+      )
+    }
+    console.log(await req.user.getClasses())
+    next()
+  } catch (err) {
+    next(err)
   }
-  next()
+})
+// POST - Enrolling in a class
+router.post(`/:classId`, authenticatedUser, async(req,res,next)=>{
+  console.log('REQBODY FROM POST---', req.body)
+
+  try{
+    let enrollment = await Attendees.create({
+      classId:req.params.classId,
+      userId:req.user.id
+    })
+    console.log("enrollment", enrollment)
+    res.json(enrollment).status(200)
+  } catch(error){
+    console.error(error)
+  }
+})
+// DELETE - leaving class
+router.delete(`/:classId`, authenticatedUser, async (req, res, next) => {
+  console.log('REACHING HERE AT DELETING CLASSES', req.user)
+
+  try {
+    let ditchedClass = await Attendees.destroy({
+      where: {
+        classId: req.params.classId,
+        userId: req.user.id
+      }
+    })
+    res.json(ditchedClass).status(200)
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 // GET all classes at /api/class (for populating the class list for search)
-router.get('/', authenticatedUser, async (req, res, next) => {
+router.get('/',  authenticatedUser, async (req, res, next) => {
   try {
     // are we using req.query with React Native?
     const {
