@@ -23,7 +23,8 @@ class HomeScreen extends Component {
 
   render() {
     const {navigation} = this.props
-
+    // console.log('this.props.user', this.props.user)
+    console.log('myClasses', this.props.myClasses)
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -65,13 +66,14 @@ class HomeScreen extends Component {
             <Text>My Classes List</Text>
             {/* I need to be able to persist user information to be able to call on user's classes */}
             {/* {this.props.user.classes.map((aClass, i) => { */}
-            {/* {this.props.myClasses.map((aClass, i) => {
+            {this.props.myClasses.map((aClass, i) => {
+              console.log('aClass', aClass)
               return (
                 <CardItem key={i}>
                   <Text>{aClass.name}</Text>
                 </CardItem>
               )
-            })} */}
+            })}
           </Card>
         </Content>
       </Container>
@@ -85,7 +87,8 @@ HomeScreen.navigationOptions = {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  myClasses: state.myClasses
 })
 
 const mapDispatchToProps = dispatch => ({

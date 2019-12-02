@@ -7,16 +7,16 @@ const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const CHANGE_USER_INFO = 'CHANGE_USER_INFO'
 const ADD_USER = 'ADD_USER'
-const GET_MY_CLASSES = 'GET_MY_CLASSES'
+//const GET_MY_CLASSES = 'GET_MY_CLASSES'
 
 //ACTION CREATORS
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 const changeUserInfo = info => ({type: CHANGE_USER_INFO, info})
-const getMyClasses = myClasses => ({
-  type: GET_MY_CLASSES,
-  myClasses
-})
+// const getMyClasses = myClasses => ({
+//   type: GET_MY_CLASSES,
+//   myClasses
+// })
 
 //THUNKS
 export const me = () => async dispatch => {
@@ -28,14 +28,14 @@ export const me = () => async dispatch => {
   }
 }
 
-export const getUserClassesThunk = userId => async dispatch => {
-  try {
-    const response = await axios.get(`${ngrok}/api/users/${userId}/myClasses`)
-    dispatch(getMyClasses(response.data))
-  } catch (err) {
-    console.error(err)
-  }
-}
+// export const getUserClassesThunk = userId => async dispatch => {
+//   try {
+//     const response = await axios.get(`${ngrok}/api/users/${userId}/myClasses`)
+//     dispatch(getMyClasses(response.data))
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }
 
 export const auth = (user, method) => async dispatch => {
   let res
@@ -90,7 +90,7 @@ export const changeUserInfoThunk = info => async dispatch => {
 const defaultUser = {}
 
 //reducer
- const userReducer = (state = defaultUser, action) => {
+const userReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case GET_USER:
       return action.user
@@ -98,8 +98,8 @@ const defaultUser = {}
       return defaultUser
     case CHANGE_USER_INFO:
       return {...state, ...action.info}
-    case GET_MY_CLASSES:
-      return action.myClasses
+    // case GET_MY_CLASSES:
+    //   return action.myClasses
     default:
       return state
   }

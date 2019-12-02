@@ -9,7 +9,6 @@ const getClasses = classes => ({type: GET_CLASSES, classes})
 export const getClassesThunk = () => async dispatch => {
   try {
     const response = await axios.get(`${ngrok}/api/classes`)
-    console.log('getting to the thunk')
     dispatch(getClasses(response.data))
   } catch (error) {
     console.error(error)

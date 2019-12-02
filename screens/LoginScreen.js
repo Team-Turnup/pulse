@@ -148,14 +148,19 @@ class LoginScreen extends React.Component {
               <Text>Create an Account</Text>
             </Button>
           ) : null}
+
           {isUser ? (
-            <Button
-              block
-              style={styles.button}
-              onPress={this.props.handleClick}
-            >
-              <Text>Logout</Text>
-            </Button>
+            <Container>
+              <Text>Hello, {this.props.user.email}</Text>
+
+              <Button
+                block
+                style={styles.button}
+                onPress={this.props.handleClick}
+              >
+                <Text>Logout</Text>
+              </Button>
+            </Container>
           ) : null}
 
           {/* <Text
