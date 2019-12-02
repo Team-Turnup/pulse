@@ -129,8 +129,8 @@ export const StartTime = ({when}) => {
   )
 }
 
-export const StartButton = () => (
-  <Button>
+export const StartButton = ({onPress}) => (
+  <Button onPress={onPress}>
     <Text>Start Class</Text>
   </Button>
 )
@@ -196,12 +196,16 @@ export default () => {
   const userId = useSelector(({user}) => user.id) || 101
   const [curTime, setCurTime] = useState(Date.now())
 
+  // subscribe to the class socket as leader
   useEffect(() => {
     socket.emit('subscribe', _class.id, userId, true)
     return () => socket.emit('unsubscribe', _class.id, userId, true)
   }, [])
 
+  // update the time once a second
   useInterval(() => setCurTime(Date.now()), 1000)
+
+  const _startClass = () => socket.emit('start', _class.id, userId)
 
   return (
     <Container>
@@ -211,7 +215,11 @@ export default () => {
           <Fragment>
             <View style={styles.startView}>
               <H1 style={{textAlign: 'center', fontWeight: 'bold'}}>{name}</H1>
-              {when < curTime ? <StartButton /> : <StartTime when={when} />}
+              {when < curTime ? (
+                <StartButton onPress={_startClass} />
+              ) : (
+                <StartTime when={when} />
+              )}
             </View>
             <H3
               style={{textAlign: 'center', paddingBottom: 20}}

@@ -16,14 +16,13 @@ module.exports = io => {
     //   classes.push({[classId]: socket.id})
     // })
 
-<<<<<<< HEAD
-=======
     socket.on('workoutTimestamp', async ({workoutTimestamp, workoutId}) => {
-      const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
+      const newWorkoutTimestamp = await WorkoutTimestamp.create(
+        workoutTimestamp
+      )
       newWorkoutTimestamp.setWorkout(workoutId)
     })
 
->>>>>>> 6308b310e55b7cc917739107f2b151d240cb64c9
     socket.on('subscribe', (classId, userId, isLeader = false) => {
       if (!classes[classId]) {
         classes[classId] = {leader: {...initialLeader}, followers: []}
@@ -60,6 +59,11 @@ module.exports = io => {
       )
         delete classes[classId]
       console.log(classes)
+    })
+
+    socket.on('start', (classId, userId) => {
+      console.log(`${userId} has started class ${classId}`)
+      // socket.to(classes[classId].leader.socket).emit('ready', userId)
     })
 
     socket.on('message', (classId, message) => {

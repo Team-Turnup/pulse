@@ -15,6 +15,7 @@ import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
 import SocketFollower from '../screens/SocketFollower'
 import SocketLeader from '../screens/SocketLeader'
+import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -55,6 +56,24 @@ SocketLeaderStack.navigationOptions = {
   )
 }
 
+const TrainerWorkoutScreenStack = createStackNavigator({
+  Trainer: TrainerWorkoutScreen
+})
+
+TrainerWorkoutScreenStack.navigationOptions = {
+  tabBarLabel: 'InProgress',
+  tabBarIcon: ({focused}) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  )
+}
+
 // const InProgressStack = createStackNavigator({InProgress: InProgressScreen})
 
 // InProgressStack.navigationOptions = {
@@ -71,21 +90,21 @@ SocketLeaderStack.navigationOptions = {
 //   )
 // }
 
-const LoginStack = createStackNavigator({Login: LoginScreen})
+// const LoginStack = createStackNavigator({Login: LoginScreen})
 
-LoginStack.navigationOptions = {
-  tabBarLabel: 'Login',
-  tabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  )
-}
+// LoginStack.navigationOptions = {
+//   tabBarLabel: 'Login',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
 // const HomeStack = createStackNavigator(
 //   {
@@ -163,9 +182,10 @@ LoginStack.navigationOptions = {
 // SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
-  LoginStack,
+  //LoginStack,
   SocketLeader,
-  SocketFollower
+  SocketFollower,
+  TrainerWorkoutScreen
   // HomeStack,
   // HistoryStack,
   // CommunityStack,

@@ -13,7 +13,7 @@ export default () => {
   }, [roomNum, userId])
 
   const sendMessage = () => {
-    socket.emit('message', roomNum, `I am the follower of ${roomNum}`)
+    socket.emit('ready', roomNum, userId)
   }
   return (
     <View>
