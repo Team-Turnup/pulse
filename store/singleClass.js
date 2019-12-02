@@ -35,10 +35,8 @@ export const leaveClass = (classId, studentId) => async dispatch => {
     console.log('CLASSID from THUNK', classId)
     console.log('STUDENTID from THUNK', studentId)
 
-    const response = await axios.delete(`${ngrok}/api/classes/`, {
-      classId,
-      studentId
-    })
+    const response = await axios.delete(`${ngrok}/api/classes/${classId}`,)
+
     console.log('response.dataAaaa', response.data)
     // dispatch(unenrollFromClass(response.data))
   } catch (error) {

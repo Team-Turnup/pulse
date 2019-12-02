@@ -13,7 +13,7 @@ router.use(async (req, res, next) => {
   }
   next()
 })
-
+// POST - Enrolling in a class
 router.post(`/`, authenticatedUser, async(req,res,next)=>{
   console.log('REQBODY FROM POST---', req.body)
 
@@ -29,14 +29,14 @@ router.post(`/`, authenticatedUser, async(req,res,next)=>{
   }
 })
 // DELETE - leaving class
-router.delete(`/`, async (req, res, next) => {
-  console.log('reaching here at deleting classes', req)
+router.delete(`/:classId`, authenticatedUser, async (req, res, next) => {
+  console.log('REACHING HERE AT DELETING CLASSES', req.user)
 
   try {
-    let ditchedClass = await Attendees.findOne({
+    let ditchedClass = await Attendees.destroy({
       where: {
-        classId: req.body.classId,
-        userId: req.body.studentId
+        classId: req.params.classId,
+        userId: req.user.id
       }
     })
     res.json(ditchedClass).status(200)
