@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store/users'
 import {Image} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Linking} from 'react-native'
 import {
   Container,
   Header,
@@ -18,6 +18,8 @@ import {
   Button,
   Text
 } from 'native-base'
+import {ngrok} from '../ngrok'
+import * as Google from 'expo-google-app-auth'
 import {tsImportEqualsDeclaration} from '@babel/types'
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -27,6 +29,7 @@ class LoginScreen extends React.Component {
       password: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
+    this.loginWithGoogle = this.loginWithGoogle.bind(this)
   }
 
   handleLogin() {
@@ -37,6 +40,12 @@ class LoginScreen extends React.Component {
       password: ''
     })
     this.props.navigation.navigate('HomeStack')
+  }
+
+  async loginWithGoogle() {
+    // const result = await Google.logInAsync({
+    //   androidClientId: process.env.GOOGLE_CLIENT_ID
+    // })
   }
 
   render() {
@@ -94,12 +103,18 @@ class LoginScreen extends React.Component {
           >
             <Text>Create an Account</Text>
           </Button>
-          <Button
+          <Text
+            style={{color: 'blue'}}
+            onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
+          >
+            Google
+          </Text>
+          {/* <Button
             onPress={() => this.loginWithGoogle()}
             title="login with google"
           >
             <Text>Login with Google </Text>
-          </Button>
+          </Button> */}
         </Content>
       </Container>
     )
