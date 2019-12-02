@@ -37,12 +37,7 @@ const unenrollFromClass = (classId, studentId) => ({
 
 export const leaveClass = (classId, studentId) => async dispatch => {
   try {
-    console.log('CLASSID from THUNK', classId)
-    console.log('STUDENTID from THUNK', studentId)
-
-    const response = await axios.delete(`${ngrok}/api/classes/${classId}`,)
-
-    console.log('response.dataAaaa', response.data)
+    const response = await axios.delete(`${ngrok}/api/classes/${classId}`)
     // dispatch(unenrollFromClass(response.data))
   } catch (error) {
     console.error(error)
@@ -51,7 +46,6 @@ export const leaveClass = (classId, studentId) => async dispatch => {
 
 export const enrollClass = (classId, studentId) => async dispatch => {
   try {
-
     const response = await axios.post(`${ngrok}/api/classes/${classId}`)
     dispatch(enrollIntoClass(response.data))
   } catch (error) {
@@ -63,7 +57,7 @@ export const getClassThunk = id => async dispatch => {
   try {
     const {
       data: {routine, ...singleClass}
-    } = await axios.get(`${ngrok}/api/class/${id}`)
+    } = await axios.get(`${ngrok}/api/classes/${id}`)
     dispatch(getClass(singleClass))
     // dispatch(setRoutine(routine))
   } catch (err) {
@@ -73,7 +67,7 @@ export const getClassThunk = id => async dispatch => {
 
 export const createClassThunk = singleClass => async dispatch => {
   try {
-    const {data} = await axios.post(`${ngrok}/api/class/`, singleClass)
+    const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
     dispatch(createClass(data))
   } catch (err) {
     console.error(err)
@@ -112,7 +106,8 @@ const classReducer = (state = initialState, action) => {
         ...state,
         attendees: state.attendees.filter(
           student => student.id !== action.studentId
-        )}
+        )
+      }
     default:
       return state
   }

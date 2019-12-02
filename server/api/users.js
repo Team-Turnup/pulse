@@ -1,5 +1,12 @@
 const router = require('express').Router()
-const {Routine, Interval, User, Workout, Class, Option} = require('../db/models')
+const {
+  Routine,
+  Interval,
+  User,
+  Workout,
+  Class,
+  Option
+} = require('../db/models')
 const Sequelize = require('sequelize')
 const db = require('../db')
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
@@ -17,9 +24,14 @@ const {leaderValidate, authenticatedUser} = require('./authFunctions')
 router.get('/myClasses', authenticatedUser, async (req, res, next) => {
   try {
     const myClasses = await Class.findAll({
+      // include: [
+      //   {
+      //     model: User,
       where: {
         userId: req.user.id
       }
+      //   }
+      // ]
     })
     if (!myClasses) res.status(404).send("can't find user's classes")
     res.json(myClasses)

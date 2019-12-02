@@ -33,7 +33,13 @@ class BuildClassScreen extends Component {
 
   handleCreateClass() {
     const {name, canEnroll, when, attendees, classPasscode} = this.state
-    this.props.createClassThunk(name, canEnroll, when, attendees, classPasscode)
+    this.props.createClassThunk({
+      name,
+      canEnroll,
+      when,
+      attendees,
+      classPasscode
+    })
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
       name: '',
@@ -135,9 +141,7 @@ class BuildClassScreen extends Component {
         <Button
           style={{
             ...styles.button
-            //backgroundColor: this.state.intervalType ? 'blue' : 'gray'
           }}
-          //this should lead to BuildClass instead
           onPress={() => this.handleCreateClass()}
         >
           <Text>Create a Class using a New Routine</Text>
@@ -207,12 +211,12 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  class: state.class
+  singleClass: state.singleClass
 })
 
 const mapDispatchToProps = dispatch => ({
   //getClassThunk: () => dispatch(getClassThunk())
-  createClassThunk: () => dispatch(createClassThunk())
+  createClassThunk: singleClass => dispatch(createClassThunk(singleClass))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildClassScreen)

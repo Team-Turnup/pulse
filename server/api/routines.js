@@ -8,6 +8,9 @@ router.get('/', async (req, res, next) => {
   console.log('entering api')
   try {
     const routines = await Routine.findAll({
+      where:{
+        userId:req.user.id
+      },
       include: [{model: Interval}, {model: User}, {model: Workout}]
     })
     res.json(routines)
