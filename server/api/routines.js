@@ -8,6 +8,9 @@ router.get('/', async (req, res, next) => {
   console.log('entering api')
   try {
     const routines = await Routine.findAll({
+      where:{
+        userId:req.user.id
+      },
       include: [{model: Interval}, {model: User}, {model: Workout}]
     })
     res.json(routines)
@@ -20,16 +23,12 @@ router.post('/', async (req, res, next) => {
   try {
     const {user, body} = req
     const {routineName, routineType, routine, makePublic} = body
-    if (user) {
-      console.log('do things')
-    }
     let newRoutine = await Routine.create({
       name: routineName,
       activityType: routineType,
       makePublic
-
-      // userId: user.id
     })
+    await newRoutine.setUser(user.id)
     if (!newRoutine) throw new Error('Routine not created')
     await newRoutine.setIntervals(
       await Promise.all(

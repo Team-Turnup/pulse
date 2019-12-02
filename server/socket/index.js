@@ -1,3 +1,5 @@
+const {WorkoutTimestamp, User} = require('../db/models')
+
 module.exports = io => {
   let classes = {
     /* [classId]: {leader: socketId, followers: []}*/
@@ -13,6 +15,11 @@ module.exports = io => {
     // socket.on('identify', classId => {
     //   classes.push({[classId]: socket.id})
     // })
+
+    socket.on('workoutTimestamp', async ({workoutTimestamp, workoutId}) => {
+      const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
+      newWorkoutTimestamp.setWorkout(workoutId)
+    })
 
     socket.on('subscribe', (classId, userId, isLeader = false) => {
       if (!classes[classId]) {

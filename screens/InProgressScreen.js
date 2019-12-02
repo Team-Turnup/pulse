@@ -1,23 +1,16 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {
   Container,
-  Button,
   Text,
-  Header,
-  Grid,
-  Title,
   Content,
   Card,
   CardItem,
-  Row,
-  Col
 } from 'native-base'
 import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
-import routine from '../dummyIntervals'
 import socket from '../socket'
 
 class InProgressScreen extends React.Component {
@@ -80,7 +73,7 @@ class InProgressScreen extends React.Component {
         cadences,
         avgCadences
       })
-      socket.emit('workoutTimestamp', workoutTimestamp)
+      socket.emit('workoutTimestamp', {workoutTimestamp: {...workoutTimestamp, goalCadence: this.state.intervals[this.state.currentInterval].cadence}, workoutId: this.props.workout.id})
     })
 
     Pedometer.isAvailableAsync().then(
@@ -322,6 +315,6 @@ InProgressScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = ({routine, option}) => ({routine, option})
+const mapStateToProps = ({routine, option, user, workout}) => ({routine, option, user, workout})
 
 export default connect(mapStateToProps)(InProgressScreen)

@@ -19,17 +19,17 @@ router.use(async (req, res, next) => {
   }
 })
 // POST - Enrolling in a class
-router.post(`/:classId`, authenticatedUser, async(req,res,next)=>{
+router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
   console.log('REQBODY FROM POST---', req.body)
 
-  try{
+  try {
     let enrollment = await Attendees.create({
-      classId:req.params.classId,
-      userId:req.user.id
+      classId: req.params.classId,
+      userId: req.user.id
     })
-    console.log("enrollment", enrollment)
+    console.log('enrollment', enrollment)
     res.json(enrollment).status(200)
-  } catch(error){
+  } catch (error) {
     console.error(error)
   }
 })
@@ -51,7 +51,7 @@ router.delete(`/:classId`, authenticatedUser, async (req, res, next) => {
 })
 
 // GET all classes at /api/class (for populating the class list for search)
-router.get('/',  authenticatedUser, async (req, res, next) => {
+router.get('/', authenticatedUser, async (req, res, next) => {
   try {
     // are we using req.query with React Native?
     const {
@@ -122,15 +122,15 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
     next(err)
   }
 })
-
 //should modify more
-router.post('/:classId', authenticatedUser, async (req, res, next) => {
+router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {user, body} = req
     const {name, canEnroll, when, attendees, classPasscode} = body
+    console.log('req.body', req.body)
     let currentClass = await Class.create({
-      name: name,
-      canEnroll: canEnroll,
+      name,
+      canEnroll,
       when,
       attendees,
       classPasscode

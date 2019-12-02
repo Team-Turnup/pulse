@@ -38,6 +38,7 @@ const unenrollFromClass = (classId, studentId) => ({
 export const leaveClass = (classId, studentId) => async dispatch => {
   try {
     const response = await axios.delete(`${ngrok}/api/classes/${classId}`)
+    // dispatch(unenrollFromClass(response.data))
   } catch (error) {
     console.error(error)
   }
@@ -56,7 +57,7 @@ export const getClassThunk = id => async dispatch => {
   try {
     const {
       data: {routine, ...singleClass}
-    } = await axios.get(`${ngrok}/api/class/${id}`)
+    } = await axios.get(`${ngrok}/api/classes/${id}`)
     dispatch(getClass(singleClass))
     // dispatch(setRoutine(routine))
   } catch (err) {
@@ -66,7 +67,7 @@ export const getClassThunk = id => async dispatch => {
 
 export const createClassThunk = singleClass => async dispatch => {
   try {
-    const {data} = await axios.post(`${ngrok}/api/class/`, singleClass)
+    const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
     dispatch(createClass(data))
   } catch (err) {
     console.error(err)

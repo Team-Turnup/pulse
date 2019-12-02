@@ -11,12 +11,13 @@ export const setMyClasses = myClasses => ({
 
 export const getMyClassesThunk = () => async dispatch => {
   try {
-    const response = await axios.get(`${ngrok}/api/users/myClasses`);
-    dispatch(setMyClasses(response.data));
+    const response = await axios.get(`${ngrok}/api/users/myClasses`)
+    console.log('in myClasses thunk', response.data)
+    dispatch(setMyClasses(response.data))
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
-};
+}
 
 const initialState = []
 

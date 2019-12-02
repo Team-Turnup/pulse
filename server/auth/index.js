@@ -6,7 +6,6 @@ module.exports = router
 router.post('/login', async (req, res, next) => {
   try {
     const user = await User.findOne({where: {email: req.body.email}})
-    console.log('user', user)
     const option = await Option.findOne({where: {userId: user.id}})
     if (!user) {
       console.log('No such user found:', req.body.email)

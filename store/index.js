@@ -10,6 +10,8 @@ import singleClass from './singleClass'
 import option from './option'
 import myClasses from './myClasses'
 import socket from './socket'
+import workout from './workout'
+import workouts from './workouts'
 
 const reducer = combineReducers({
   routine,
@@ -19,7 +21,9 @@ const reducer = combineReducers({
   classes,
   socket,
   option,
-  myClasses
+  myClasses,
+  workout,
+  workouts
 })
 const middleware = composeWithDevTools(
   //applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
