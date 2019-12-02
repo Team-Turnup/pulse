@@ -11,16 +11,21 @@ import {
   Card,
   CardItem
 } from 'native-base'
-import {me} from '../store/users'
+import {me, getUserClassesThunk} from '../store/users'
 
 class HomeScreen extends Component {
+  constructor() {
+    super()
+    this.state = {}
+  }
+  async componentDidMount() {
+    await this.props.me()
+    this.props.getUserClassesThunk(this.props.user.id)
+    //user information is not persisting
+    console.log(this.props.user)
+  }
+
   render() {
-    let dummyData = [
-      {name: 'First Workout', duration: 60, date: 'Sept.15.2019'},
-      {name: 'Second Workout', duration: 45, date: 'Oct.4.2019'},
-      {name: 'Third Workout', duration: 70, date: 'Nov.21.2019'},
-      {name: 'Fourth Workout', duration: 80, date: 'Dec.13.2019'}
-    ]
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -28,21 +33,6 @@ class HomeScreen extends Component {
             <CardItem header>
               <Title>Recent Workouts</Title>
             </CardItem>
-            {dummyData.map((workout, i) => {
-              return (
-                <CardItem
-                  button
-                  key={i}
-                  onPress={() =>
-                    alert(
-                      `Duration: ${workout.duration}\nDate: ${workout.date}`
-                    )
-                  }
-                >
-                  <Text header>{workout.name}</Text>
-                </CardItem>
-              )
-            })}
           </Card>
           <Button
             block
@@ -72,7 +62,16 @@ class HomeScreen extends Component {
             <Text>Create A Class</Text>
           </Button>
           <Card>
-            <Text></Text>
+            <Text>My Classes List</Text>
+            {/* I need to be able to persist user information to be able to call on user's classes */}
+            {/* {this.props.user.classes.map((aClass, i) => { */}
+            {/* {this.props.myClasses.map((aClass, i) => {
+              return (
+                <CardItem key={i}>
+                  <Text>{aClass.name}</Text>
+                </CardItem>
+              )
+            })} */}
           </Card>
         </Content>
       </Container>
@@ -90,7 +89,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  me: () => dispatch(me())
+  me: () => dispatch(me()),
+  getUserClassesThunk: userId => dispatch(getUserClassesThunk(userId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
