@@ -13,6 +13,8 @@ import {
 } from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
+import {getMyWorkoutsThunk} from '../store/workouts'
+import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 
 
 
@@ -22,16 +24,18 @@ class HomeScreen extends Component {
     this.props.me()
     // await this.props.me()
     this.props.getMyClassesThunk()
+    this.props.getMyWorkoutsThunk()
   }
 
   render() {
-    console.log('HOMEPROPSS.user::', this.props.user)
+
 
     const {navigation} = this.props
 
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
+          <MyPreviousWorkouts workouts={this.props.workouts} />
           <Card>
             <CardItem header>
               <Title>My Classes</Title>
@@ -89,13 +93,8 @@ HomeScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = state => ({
-  user: state.user
-})
+const mapStateToProps = ({user, workouts}) => ({user, workouts})
 
-const mapDispatchToProps = dispatch => ({
-  me: () => dispatch(me()),
-  getMyClassesThunk: () => dispatch(getMyClassesThunk())
-})
+const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
