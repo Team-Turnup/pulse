@@ -15,16 +15,18 @@ import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 
 class HomeScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
   componentDidMount() {
     this.props.me()
-    // await this.props.me()
     this.props.getMyClassesThunk()
   }
 
   render() {
     const {navigation} = this.props
-    // console.log('this.props.user', this.props.user)
-    console.log('myClasses', this.props.myClasses)
+    console.log('this.props.myClasses', this.props.myClasses)
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -64,10 +66,7 @@ class HomeScreen extends Component {
           </Button>
           <Card>
             <Text>My Classes List</Text>
-            {/* I need to be able to persist user information to be able to call on user's classes */}
-            {/* {this.props.user.classes.map((aClass, i) => { */}
             {this.props.myClasses.map((aClass, i) => {
-              console.log('aClass', aClass)
               return (
                 <CardItem key={i}>
                   <Text>{aClass.name}</Text>
