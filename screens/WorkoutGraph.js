@@ -36,7 +36,7 @@ export default ({
 }) => {
   // maybe instead of receiving a routine, we receive a workout?
   // initialize tsIntervals with current DateTime
-  const [tsIntervals, dispatch] = useReducer(reducer, initialState)
+  const [tsIntervals, dispatch] = useReducer(reducer, [])
   const [domain, setDomain] = useState([
     DateTime.local().minus({seconds: timeWindow}),
     DateTime.local().plus({seconds: timeWindow})
@@ -57,8 +57,7 @@ export default ({
       now.plus({seconds: timeWindow})
     ])
   }, 1000)
-
-  return tsIntervals && tsIntervals.length > 2 ? (
+  return tsIntervals && tsIntervals.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain, y: [80, 120]} : {}}

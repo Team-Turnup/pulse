@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios from 'axios'
 import {ngrok} from '../ngrok'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
-const SET_ROUTINE = 'SET_ROUTINE';
+const SET_ROUTINE = 'SET_ROUTINE'
 
 export const setRoutine = routine => ({
   type: SET_ROUTINE,
-  routine,
-});
+  routine
+})
 
 // export const thunk = id => async dispatch => {
 //   try {
@@ -18,15 +18,15 @@ export const setRoutine = routine => ({
 //   }
 // };
 
-initialState = {};
+const initialState = {}
 
 //should be a GET_ROUTINES probably
 const routineReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_ROUTINE:
-      return action.routine;
+      return action.routine
     default:
-      return state;
+      return state
   }
-};
-export default routineReducer;
+}
+export default routineReducer

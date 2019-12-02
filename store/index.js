@@ -1,20 +1,32 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { createLogger } from 'redux-logger';
-import thunkMiddleware from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import routines from './routines';
-import routine from './routine';
-import users from './users'
+import {createStore, combineReducers, applyMiddleware} from 'redux'
+import {createLogger} from 'redux-logger'
+import thunkMiddleware from 'redux-thunk'
+import {composeWithDevTools} from 'redux-devtools-extension'
+import routines from './routines'
+import routine from './routine'
+import user from './user'
+import classes from './classes'
+import singleClass from './singleClass'
+import option from './option'
+import myClasses from './myClasses'
+import socket from './socket'
+import workout from './workout'
 
 const reducer = combineReducers({
   routine,
   routines,
-  users
+  user,
+  singleClass,
+  classes,
+  socket,
+  option,
+  myClasses,
+  workout
 })
 const middleware = composeWithDevTools(
-  // applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
+  //applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
   applyMiddleware(thunkMiddleware)
-);
-const store = createStore(reducer, middleware);
+)
+const store = createStore(reducer, middleware)
 
 export default store

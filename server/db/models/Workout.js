@@ -6,10 +6,6 @@ const Workout = db.define('workout', {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
     },
-  duration: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
-  },
 })
 
 module.exports = Workout

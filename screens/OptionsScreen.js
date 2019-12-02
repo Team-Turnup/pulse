@@ -1,149 +1,203 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity} from 'react-native'
-import {Container, Content, Button, Item, Label, Input, Text} from 'native-base'
+import {Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
-import RoutineBarGraphic from '../components/RoutineBarGraphic'
-import activityTypes from '../assets/images/activityTypes'
-import {
-  getRoutineThunk,
-  createRoutineThunk,
-  createAndStartRoutineThunk,
-  updateRoutineThunk
-} from '../store/routines'
+import {changeUserInfoThunk} from '../store/user'
+import {haptic} from '../assets/options/haptics'
+import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
+import {updateOptionThunk} from '../store/option'
 
-class BuildRoutineScreen extends Component {
+class OptionsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      routineType: '',
-      routineName: '',
-      index: 0,
-      cadence: 100,
-      duration: 60,
-      intervalType: '',
-      routine: [],
-      makePublic: false
-      //dirty: false,
+      name: this.props.user.name || '',
+      age: this.props.user.age || 0,
+      gender: this.props.user.gender || '',
+      weight: this.props.user.weight || 0,
+      height: this.props.user.height || 0,
+      hapticWhat: this.props.option.hapticWhat || 'singlebeat',
+      hapticWhen: this.props.option.hapticWhen || 'everybeat',
+      visualWhat: this.props.option.visualWhat || 'blink',
+      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
+      opacity: 1,
+      visualWhen: this.props.option.visualWhen || 'everybeat'
     }
-    this.createRoutine = this.createRoutine.bind(this)
-    this.createAndStartRoutine = this.createAndStartRoutine.bind(this)
-    this.addInterval = this.addInterval.bind(this)
-    this.removeInterval = this.removeInterval.bind(this)
-    this.saveInterval = this.saveInterval.bind(this)
-    this.changeIndex = this.changeIndex.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.updateUserInfo = this.updateUserInfo.bind(this)
+    this.handleHaptic = this.handleHaptic.bind(this)
+    this.handleVisual = this.handleVisual.bind(this)
+    this.handleVisualColor = this.handleVisualColor.bind(this)
+    this.clear = []
+    this.clearVisual = []
   }
 
   handleChange(key, value) {
     this.setState({[key]: value})
-    if (key === 'routineType' && value !== 'combo') {
-      const newRoutine = this.state.routine.map(interval => ({
-        cadence: interval.cadence,
-        duration: interval.duration,
-        intervalType: value
-      }))
-      this.setState({intervalType: value, routine: newRoutine})
+    if (key!=='visualColor') {
+      this.props.updateOptionThunk({[key]: value})
     }
   }
 
-  createRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
-    this.props.createRoutineThunk({
-      routineName,
-      routineType,
-      routine,
-      makePublic
-    })
-    this.props.navigation.navigate('HomeScreen')
+  updateUserInfo() {
+    const {name, age, gender, height, weight} = this.state
+    this.props.changeUserInfoThunk({name, age, gender, height, weight})
   }
 
-  async createAndStartRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
-    await this.props.createAndStartRoutineThunk({
-      routineName,
-      routineType,
-      routine,
-      makePublic
-    })
-    this.props.navigation.navigate('StartRoutineScreen')
+  handleHaptic(value) {
+    this.props.updateOptionThunk({hapticWhat: value})
+    this.setState({hapticWhat: value})
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    this.clear.push(setInterval(haptic(value, 100), 600))
+    setTimeout(() => clearInterval(this.clear.shift()), 5000)
   }
 
-  addInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
-    const newRoutine = [
-      ...routine.slice(0, index + 1),
-      {cadence, duration, intervalType},
-      ...routine.slice(index + 1)
-    ]
-    this.setState({
-      routine: newRoutine,
-      index: routine.length === 0 ? index : index + 1
-    })
+  handleVisual(value) {
+    this.props.updateOptionThunk({visualWhat: value})
+    this.setState({visualWhat: value})
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    // this.clear.push(setInterval(haptic(value, 100), 600))
+    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
-  saveInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
-    const newRoutine = [
-      ...routine.slice(0, index),
-      {cadence, duration, intervalType},
-      ...routine.slice(index + 1)
-    ]
-    this.setState({routine: newRoutine})
-  }
-
-  removeInterval() {
-    const {routine, index} = this.state
-    const newRoutine = [...routine.slice(0, index), ...routine.slice(index + 1)]
-    this.setState({routine: newRoutine, index: index === 0 ? index : index - 1})
-  }
-
-  changeIndex(index) {
-    const interval = this.state.routine[index]
-    this.setState({
-      index,
-      cadence: interval.cadence,
-      duration: interval.duration,
-      intervalType: interval.intervalType
-    })
+  handleVisualColor(value) {
+    this.props.updateOptionThunk({visualColor: value})
+    this.clearVisual.push(setInterval(()=>{
+      this.setState({opacity: 0.3})
+      setTimeout(()=>this.setState({opacity: 1}), 300)
+    }, 600))
+    setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    // this.clear.push(setInterval(haptic(value, 100), 600))
+    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
   render() {
-    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
-      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
-      value: activity
-    }))
-
     return (
       <Container>
-        {/* <Header>
-          <Text style={styles.header}>Build Routine</Text>
-        </Header> */}
         <Content>
-          <Text style={styles.sectionHeader}>Routine</Text>
+          <Text style={styles.sectionHeader}>User Info</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
             <Input
               placeholder=""
               autoCapitalize="none"
               autoCorrect={false}
-              value={this.state.routineName}
-              onChangeText={routineName => this.setState({routineName})}
+              value={this.state.name}
+              onChangeText={name => this.setState({name})}
               style={styles.name}
             />
           </Item>
-          {/* <Item fixedLabel style={styles.item}> */}
-          <Label>Activity Type</Label>
+          <Item fixedLabel style={styles.item}>
+            <Label>Age</Label>
+            <NumericInput
+              value={this.state.age}
+              onChange={value => this.handleChange('age', value)}
+            />
+          </Item>
+          <Item fixedLabel style={styles.item}>
+            <Label>Height (inches)</Label>
+            <NumericInput
+              value={this.state.height}
+              onChange={value => this.handleChange('height', value)}
+            />
+          </Item>
+          <Item fixedLabel style={styles.item}>
+            <Label>Weight (lb)</Label>
+            <NumericInput
+              value={this.state.weight}
+              onChange={value => this.handleChange('weight', value)}
+            />
+          </Item>
+          <Label>Gender</Label>
           <RNPickerSelect
-            onValueChange={value => this.handleChange('routineType', value)}
+            onValueChange={value => this.handleChange('gender', value)}
             style={{display: 'flex', alignItems: 'center'}}
-            value={this.state.routineType}
-            items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
+            value={this.state.gender}
+            items={[
+              {label: 'Female', value: 'female'},
+              {label: 'Male', value: 'male'},
+              {label: 'Non-binary', value: 'non-binary'}
+            ]}
           />
-          {/* </Item> */}
-          <Item fixedLabel style={styles.checkBox}>
+          <TouchableOpacity
+            style={{
+              ...styles.button,
+              backgroundColor: 'blue'
+            }}
+            onPress={this.updateUserInfo}
+          >
+            <Text style={styles.buttonText}>Save User Info</Text>
+          </TouchableOpacity>
+          <Text style={styles.sectionHeader}>Cadence Settings</Text>
+          <Text style={styles.sectionHeader}>Vibration Settings</Text>
+          <Label>Vibration Feedback Style</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleHaptic(value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.hapticWhat}
+            items={[
+              {label: 'Single Beat', value: 'singlebeat'},
+              {label: 'Heartbeat', value: 'heartbeat'},
+              {label: 'Triplet', value: 'triplet'},
+              {label: 'Double-time', value: 'doubletime'},
+              {label: 'Triple-time', value: 'tripletime'},
+              {label: 'Quadruple-time', value: 'quadrupletime'}
+            ]}
+          />
+          <Label>When to Play Vibration Feedback</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('hapticWhen', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.hapticWhen}
+            items={[
+              {label: 'Every Beat', value: 'everybeat'},
+              {label: 'Mute at Goal', value: 'muteAtGoal'},
+              {label: 'Mute', value: 'mute'}
+            ]}
+          />
+          <Text style={styles.sectionHeader}>Visual Settings</Text>
+          <View style={{...styles.visual, backgroundColor: fromHsv(this.state.visualColor), opacity: this.state.opacity}}></View>
+          <Label>Visual Feedback Style</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleVisual(value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhat}
+            items={[{label: 'Blink', value: 'blink'}]}
+          />
+          <Label>Visual Feedback Color</Label>
+          <Text>(click the center circle to confirm color)</Text>
+          <ColorPicker
+            onColorSelected={color => this.handleVisualColor(color)}
+            onColorChange={color => this.handleChange('visualColor', color)}
+            style={{ height: 200, marginBottom: 100}}
+            color={this.state.visualColor}
+            // hideSliders={true}
+          />
+          <Label>When to Play Visual Feedback</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('visualWhen', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhen}
+            items={[
+              {label: 'Every Beat', value: 'everybeat'},
+              {label: 'Mute at Goal', value: 'muteAtGoal'},
+              {label: 'Mute', value: 'mute'}
+            ]}
+          />
+          {/* <Item fixedLabel style={styles.checkBox}>
             <CheckBox
               onClick={() =>
                 this.setState(prevState => ({
@@ -285,7 +339,7 @@ class BuildRoutineScreen extends Component {
             </View>
           ) : (
             <View></View>
-          )}
+          )} */}
         </Content>
       </Container>
     )
@@ -348,16 +402,17 @@ const styles = StyleSheet.create({
   barGraphic: {
     marginTop: 20,
     marginBottom: 20
+  },
+  visual: {
+    height: 50,
+    width: '100%'
   }
 })
 
-const mapStateToProps = ({routines}) => ({routines})
+const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  getRoutineThunk,
-  createRoutineThunk,
-  updateRoutineThunk,
-  createAndStartRoutineThunk
+  changeUserInfoThunk, updateOptionThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen)

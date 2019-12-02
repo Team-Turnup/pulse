@@ -5,9 +5,13 @@ const Op = Sequelize.Op
 const db = require('../db')
 
 router.get('/', async (req, res, next) => {
+  console.log('entering api')
   try {
     const routines = await Routine.findAll({
-      //include: [{ model: Interval }, { model: User }, { model: Workout }]
+      where:{
+        userId:req.user.id
+      },
+      include: [{model: Interval}, {model: User}, {model: Workout}]
     })
     res.json(routines)
   } catch (err) {
@@ -26,6 +30,7 @@ router.post('/', async (req, res, next) => {
       name: routineName,
       activityType: routineType,
       makePublic
+
       // userId: user.id
     })
     if (!newRoutine) throw new Error('Routine not created')

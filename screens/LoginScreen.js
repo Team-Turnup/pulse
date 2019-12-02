@@ -1,9 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {auth} from '../store/users'
-import {Image} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View, Linking, Image} from 'react-native'
+import {auth, logout} from '../store/user'
 import {
   Container,
   Header,
@@ -18,28 +17,76 @@ import {
   Button,
   Text
 } from 'native-base'
+import {ngrok} from '../ngrok'
+import * as Google from 'expo-google-app-auth'
+//import ANDROID_GOOGLE_CLIENT_ID from '../secrets'
+import {me} from '../store/user'
 import {tsImportEqualsDeclaration} from '@babel/types'
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      message: ''
+      // signedIn: false,
+      // name: '',
+      // photoUrl: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
+    this.loginWithGoogle = this.loginWithGoogle.bind(this)
   }
 
-  handleLogin() {
+  componentDidMount() {
+    this.props.me()
+  }
+
+  async handleLogin() {
     const formName = 'login'
-    this.props.doHandleLogin(this.state, formName)
+    const result = await this.props.doHandleLogin(this.state, formName)
     this.setState({
       email: '',
-      password: ''
+      password: '',
+      message: ''
+      // signedIn: false,
+      // name: '',
+      // photoUrl: ''
     })
-    this.props.navigation.navigate('HomeStack')
+    if (result.user && result.user.error) {
+      this.setState({message: 'Wrong username and/or password'})
+      setTimeout(() => this.setState({message: ''}), 2000)
+    } else {
+      console.log('hey')
+      this.props.navigation.navigate('HomeStack')
+    }
+  }
+
+  async loginWithGoogle() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId:
+          '237987528571-l28e6dd63f4cnhjv1itscvj8a5r9j8uo.apps.googleusercontent.com',
+        scopes: ['profile', 'email']
+      })
+      if (result.type === 'success') {
+        this.setState({
+          signedIn: true,
+          name: result.user.name,
+          photoUrl: result.user.photoUrl
+        })
+      } else {
+        console.log('cancelled')
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
+    const isUser =
+      typeof this.props.user === 'object' &&
+      Object.keys(this.props.user).length &&
+      !this.props.user.error
     return (
       <Container>
         <Content>
@@ -57,28 +104,33 @@ class LoginScreen extends React.Component {
               />
             </CardItem>
           </Card>
-          <Form style={{paddingBottom: 25}} name={'login'}>
-            <Item floatingLabel>
-              <Label>Email</Label>
-              <Input
-                name="email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={this.state.email}
-                onChangeText={text => this.setState({email: text})}
-              />
-            </Item>
-            <Item floatingLabel last>
-              <Label>Password</Label>
-              <Input
-                name="password"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={true}
-                value={this.state.password}
-                onChangeText={text => this.setState({password: text})}
-              />
-            </Item>
+          {!isUser ? (
+            <Form style={{paddingBottom: 25}} name={'login'}>
+              <Item floatingLabel>
+                <Label>Email</Label>
+                <Input
+                  name="email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={this.state.email}
+                  onChangeText={text => this.setState({email: text})}
+                />
+              </Item>
+              <Item floatingLabel last>
+                <Label>Password</Label>
+                <Input
+                  name="password"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={true}
+                  value={this.state.password}
+                  onChangeText={text => this.setState({password: text})}
+                />
+              </Item>
+            </Form>
+          ) : null}
+          <Text>{this.state.message}</Text>
+          {!isUser ? (
             <Button
               block
               style={styles.button}
@@ -86,16 +138,48 @@ class LoginScreen extends React.Component {
             >
               <Text>Sign In</Text>
             </Button>
-          </Form>
-          <Button
-            block
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SignupScreen')}
+          ) : null}
+          {!isUser ? (
+            <Button
+              block
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate('SignupScreen')}
+            >
+              <Text>Create an Account</Text>
+            </Button>
+          ) : null}
+
+          {isUser ? (
+            <Container>
+              <Text>Hello, {this.props.user.email}</Text>
+
+              <Button
+                block
+                style={styles.button}
+                onPress={this.props.handleClick}
+              >
+                <Text>Logout</Text>
+              </Button>
+            </Container>
+          ) : null}
+
+          {/* <Text
+            style={{color: 'blue'}}
+            onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
           >
-            <Text>Create an Account</Text>
+            Google
+          </Text> */}
+          <Button
+            onPress={() => this.loginWithGoogle()}
+            title="login with google"
+          >
+            <Text>Login with Google </Text>
           </Button>
         </Content>
       </Container>
+      //    )
+      //   }
+      // </View>
     )
   }
 }
@@ -169,15 +253,20 @@ const styles = StyleSheet.create({
 
 const mapLogin = state => {
   return {
-    users: state.users,
     name: 'login',
-    displayName: 'Login'
+    displayName: 'Login',
     //error: state.user.error
+    user: state.user,
+    isLoggedIn: !!state.user
   }
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method))
+  doHandleLogin: (user, method) => dispatch(auth(user, method)),
+  me: () => dispatch(me()),
+  handleClick() {
+    dispatch(logout())
+  }
 })
 
 export default connect(mapLogin, mapDispatch)(LoginScreen)
@@ -185,7 +274,8 @@ export default connect(mapLogin, mapDispatch)(LoginScreen)
 LoginScreen.propTypes = {
   name: PropTypes.string,
   //displayName: PropTypes.string.isRequired,
-  doHandleLogin: PropTypes.func
+  doHandleLogin: PropTypes.func,
   // handleSignup: PropTypes.func,
-  // error: PropTypes.object
+  // error: PropTypes.object,
+  isLoggedIn: PropTypes.bool
 }

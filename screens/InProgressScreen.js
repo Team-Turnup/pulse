@@ -17,24 +17,25 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
-import routine from '../dummyIntervals'
+import socket from '../socket'
 
 class InProgressScreen extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       clearCadence: null,
       avgCadences: [{timestamp: Date.now(), cadence: 0}],
       totalTimeElapsed: 0,
-      totalTime: routine.intervals.reduce(
+      totalTime: props.routine.intervals.reduce(
         (sum, interval) => sum + interval.duration,
         0
       ),
       intervalTime: 0,
       currentInterval: 0,
-      intervals: routine.intervals,
+      intervals: props.routine.intervals,
       pauseTime: null,
-      visualColor: '',
+      // visualColor: '',
+      opacity: 0.3,
       // soundObject: null,
       isPedometerAvailable: 'checking',
       // pastStepCount: 0,
@@ -71,12 +72,14 @@ class InProgressScreen extends React.Component {
         (sum, cadence) => sum + cadence / cadences.length,
         0
       )
-      avgCadences = [...avgCadences, {timestamp, cadence: avgCadence}]
+      const workoutTimestamp = {timestamp, cadence: avgCadence}
+      avgCadences = [...avgCadences, workoutTimestamp]
       this.setState({
         currentStepCount: result.steps,
         cadences,
         avgCadences
       })
+      socket.emit('workoutTimestamp', {workoutTimestamp, workoutId: this.props.workout.id})
     })
 
     Pedometer.isAvailableAsync().then(
@@ -94,6 +97,7 @@ class InProgressScreen extends React.Component {
   }
 
   _startWorkout = async () => {
+
     // const soundObject = new Audio.Sound();
     //   try {
     //     await soundObject.loadAsync(tick)
@@ -103,17 +107,23 @@ class InProgressScreen extends React.Component {
     const clearCadence = setInterval(async () => {
       // soundObject.stopAsync().then(()=>soundObject.playFromPositionAsync(0))
       // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-      haptic(
-        this.state.intervals[this.state.currentInterval].hapticOptions.cadence
-          .what,
+      const withinGoalCadence = this.state.avgCadences[this.state.avgCadences.length-1].cadence>0.85*this.state.intervals[this.state.currentInterval].cadence && this.state.avgCadences[this.state.avgCadences.length-1].cadence<1.15*this.state.intervals[this.state.currentInterval].cadence
+      if (this.props.option.hapticWhen==='everybeat' || (this.props.option.hapticWhen==='muteAtGoal' && !withinGoalCadence)) {
+        haptic(
+        this.props.option.hapticWhat,
         this.state.intervals[this.state.currentInterval].cadence
       )()
-      this.setState({visualColor: 'blue'})
+        }
+
+        if (this.props.option.visualWhen==='everybeat' || (this.props.option.visualWhen==='muteAtGoal' && !withinGoalCadence)) {
+      this.setState({opacity: 1})
       setTimeout(
-        () => this.setState({visualColor: 'white'}),
+        () => this.setState({opacity: 0.3}),
         (30 / this.state.intervals[this.state.currentInterval].cadence) * 1000
       )
+        }
     }, (60 / this.state.intervals[this.state.currentInterval].cadence) * 1000)
+
     const pauseTime = setInterval(async () => {
       let {
         totalTimeElapsed,
@@ -135,28 +145,31 @@ class InProgressScreen extends React.Component {
           //   await soundObject.playAsync()
           // })
           // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-          this.setState({visualColor: 'blue'})
-          setTimeout(
-            () => this.setState({visualColor: 'white'}),
-            (30 / this.state.intervals[this.state.currentInterval].cadence) *
-              1000
-          )
+          // this.setState({opacity: 1})
+          // setTimeout(
+          //   () => this.setState({opacity: 0.3}),
+          //   (30 / this.state.intervals[this.state.currentInterval].cadence) *
+          //     1000
+          // )
           clearCadence = setInterval(async () => {
             // await soundObject.stopAsync(async () => {
             //   await soundObject.setPositionAsync(0)
             //   await soundObject.playAsync()
             // })
+            if (this.props.option.hapticWhen==='everybeat' || (this.props.option.hapticWhen==='muteAtGoal' && !withinGoalCadence)) {
             haptic(
-              this.state.intervals[this.state.currentInterval].hapticOptions
-                .cadence.what,
+              this.props.option.hapticWhat,
               this.state.intervals[this.state.currentInterval].cadence
             )()
-            this.setState({visualColor: 'blue'})
+            }
+            if (this.props.option.visualWhen==='everybeat' || (this.props.option.visualWhen==='muteAtGoal' && !withinGoalCadence)) {
+            this.setState({opacity: 1})
             setTimeout(
-              () => this.setState({visualColor: 'white'}),
+              () => this.setState({opacity: 0.3}),
               (30 / this.state.intervals[this.state.currentInterval].cadence) *
                 1000
             )
+            }
           }, (60 / intervals[currentInterval].cadence) * 1000)
         } else {
           clearInterval(clearCadence)
@@ -191,99 +204,50 @@ class InProgressScreen extends React.Component {
   render() {
     return (
       <Container>
-        <Grid>
-          <Row size={4}>
-            <Col>
               <Content
-                contentContainerStyle={{
-                  justifyContent: 'space-evenly'
-                  // alignItems: "center"
-                }}
               >
-                <Card transparent>
+                <View style={styles.info}>
+                <View style={styles.col}>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                      <Text>Total Time Elapsed:</Text>
                       <Text>{this.state.totalTimeElapsed}</Text>
-                      <Text>Total Time Elapsed</Text>
-                    </Content>
                   </CardItem>
                 </Card>
-                <Card transparent>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                      <Text>Total Time Left:</Text>
                       <Text>
                         {this.state.totalTime - this.state.totalTimeElapsed}
                       </Text>
-                      <Text>Total Time Left</Text>
-                    </Content>
                   </CardItem>
                 </Card>
-                <Card transparent>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                        <Text>Time Left in Interval:</Text>
                       <Text>
                         {this.state.intervals[this.state.currentInterval]
                           .duration - this.state.intervalTime}
                       </Text>
-                      <Text>Time Left in Interval</Text>
-                    </Content>
                   </CardItem>
                 </Card>
-              </Content>
-            </Col>
-            <Col>
-              <Content
-                contentContainerStyle={{
-                  justifyContent: 'space-evenly'
-                  // alignItems: "center"
-                }}
-              >
-                <Card transparent>
+                </View>
+
+                <View style={styles.col}>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                        <Text>Goal Cadence:</Text>
                       <Text>
                         {
                           this.state.intervals[this.state.currentInterval]
                             .cadence
                         }
                       </Text>
-                      <Text>Goal Cadence</Text>
-                    </Content>
                   </CardItem>
                 </Card>
-                <Card transparent>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                        <Text>Current Cadence:</Text>
                       <Text>
                         {
                           this.state.avgCadences[
@@ -291,47 +255,39 @@ class InProgressScreen extends React.Component {
                           ].cadence.toFixed(0)
                         }
                       </Text>
-                      <Text>Current Cadence</Text>
-                    </Content>
                   </CardItem>
                 </Card>
-                <Card transparent>
+                <Card transparent style={styles.card}>
                   <CardItem>
-                    <Content
-                      contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                      <Text>Total Steps:</Text>
                       <Text>{this.state.currentStepCount}</Text>
-                      <Text>Total Steps</Text>
-                    </Content>
                   </CardItem>
                 </Card>
+                </View>
+                </View>
+          {/* <Row size={4} style={{justifyContent: 'center'}}> */}
+            <WorkoutGraph intervals={this.state.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
+          <View
+            style={{
+              ...styles.visual,
+              backgroundColor: this.props.option.visualColor,
+              opacity: this.state.opacity
+            }}
+          ></View>
+          {/* </Row> */}
               </Content>
-            </Col>
-          </Row>
+          {/* </Row> */}
 
-          <Row size={5.5} style={{justifyContent: 'center'}}>
-            <WorkoutGraph intervals={routine.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
-          </Row>
 
-          <Row
+          {/* <Row
             size={1.5}
             style={{
               flex: 1,
               justifyContent: 'space-evenly'
             }}
-          >
-            <View
-              style={{
-                ...styles.visual,
-                backgroundColor: this.state.visualColor
-              }}
-            ></View>
-          </Row>
-        </Grid>
+          > */}
+          {/* </Row> */}
+        {/* </Grid> */}
       </Container>
     )
   }
@@ -340,7 +296,23 @@ class InProgressScreen extends React.Component {
 const styles = StyleSheet.create({
   visual: {
     width: '100%',
-    height: 200
+    height: 200,
+  },
+  col: {
+    width: '50%',
+    height: 50,
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  card: {
+    width: '100%',
+    height: '100%'
+  },
+  info: {
+    width: '100%',
+    height: 150,
+    display: 'flex',
+    flexDirection: 'row'
   }
 })
 
@@ -349,6 +321,6 @@ InProgressScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = ({routine}) => ({routine})
+const mapStateToProps = ({routine, option, user, workout}) => ({routine, option, user, workout})
 
 export default connect(mapStateToProps)(InProgressScreen)

@@ -6,11 +6,13 @@ const Routine = require('./Routine')
 const User = require('./User')
 const Workout = require('./Workout')
 const WorkoutTimestamp = require('./WorkoutTimestamp')
+const db = require('../db')
+
 
 Class.hasMany(Workout) ///
-Class.belongsTo(Routine)//
+Class.belongsTo(Routine) //
 Class.belongsTo(User) // class leader
-Class.belongsToMany(User, {through: 'Attendees'})
+Class.belongsToMany(User, {as: 'attendees', through: 'Attendees'})
 
 Interval.belongsTo(Routine) ///
 
@@ -31,7 +33,8 @@ User.belongsToMany(User, {as: 'friend', through: 'Friends'})
 User.hasMany(Workout)
 User.hasMany(Routine)
 User.hasMany(Class) // class leader
-User.belongsToMany(Class, {through: 'Attendees'})
+User.belongsToMany(Class, {as: 'attendee', through: 'Attendees'})
+User.hasOne(Option)
 
 Workout.belongsTo(Class)
 Workout.belongsTo(User)
@@ -39,6 +42,7 @@ Workout.belongsTo(Routine)
 Workout.hasMany(WorkoutTimestamp) ///
 
 WorkoutTimestamp.belongsTo(Workout)
+
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -53,6 +57,10 @@ WorkoutTimestamp.belongsTo(Workout)
  * for example, we can say: const {User} = require('../db/models')
  * instead of: const User = require('../db/models/user')
  */
+
+const Attendees = db.model('Attendees')
+
+
 module.exports = {
   Class,
   Interval,
@@ -61,5 +69,6 @@ module.exports = {
   Routine,
   User,
   Workout,
-  WorkoutTimestamp
+  WorkoutTimestamp,
+  Attendees
 }

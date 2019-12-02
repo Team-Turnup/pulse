@@ -5,9 +5,11 @@ import HomeScreen from '../screens/HomeScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
+import SignupScreen from '../screens/SignupScreen'
+import ClassesScreen from '../screens/ClassesScreen'
 import PreviousRoutine from '../screens/PreviousRoutine'
-import SocketFollower from '../screens/SocketFollower'
-import SocketLeader from '../screens/SocketLeader'
+import UserWaitingScreen from '../screens/UserWaitingScreen'
+import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 
 const ScreenNavigator = createStackNavigator(
   {
@@ -16,9 +18,11 @@ const ScreenNavigator = createStackNavigator(
     BuildRoutineScreen,
     StartRoutineScreen,
     InProgressScreen,
+    SignupScreen,
+    ClassesScreen,
     PreviousRoutine,
-    SocketFollower,
-    SocketLeader
+    UserWaitingScreen,
+    TrainerWaitingScreen
   },
   {headerMode: 'none'}
 )
