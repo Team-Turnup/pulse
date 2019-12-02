@@ -57,8 +57,7 @@ export default ({
       now.plus({seconds: timeWindow})
     ])
   }, 1000)
-
-  return tsIntervals && tsIntervals.length > 2 ? (
+  return tsIntervals && tsIntervals.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain, y: [80, 120]} : {}}
