@@ -92,14 +92,7 @@ HomeScreen.navigationOptions = {
   header: null
 }
 
-<<<<<<< HEAD
-const mapStateToProps = ({user, workouts}) => ({user, workouts})
-=======
-const mapStateToProps = state => ({
-  user: state.user,
-  myClasses: state.myClasses
-})
->>>>>>> master
+const mapStateToProps = ({user, workouts, myClasses}) => ({user, workouts, myClasses})
 
 const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk}
 
