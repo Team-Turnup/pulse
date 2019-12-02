@@ -68,6 +68,8 @@ class LoginScreen extends React.Component {
           '237987528571-l28e6dd63f4cnhjv1itscvj8a5r9j8uo.apps.googleusercontent.com',
         scopes: ['profile', 'email']
       })
+      console.log('result', result)
+      console.log('this.props.user', this.props.user)
       if (result.type === 'success') {
         this.setState({
           email: result.user.email,
@@ -77,6 +79,9 @@ class LoginScreen extends React.Component {
           name: result.user.name,
           photoUrl: result.user.photoUrl
         })
+        //this part is not happening
+        this.props.user = result.user
+        console.log('this.props.user again', this.props.user)
       } else {
         console.log('cancelled')
       }
@@ -159,6 +164,8 @@ class LoginScreen extends React.Component {
           </Text> */}
           {!isUser ? (
             <Button
+              block
+              style={styles.button}
               onPress={() => this.loginWithGoogle()}
               title="login with google"
             >
