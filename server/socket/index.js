@@ -63,5 +63,10 @@ module.exports = io => {
       console.log(message)
       socket.to(classes[classId].leader.socket).emit('message', message)
     })
+
+    socket.on('ready', (classId, userId) => {
+      console.log(userId)
+      socket.to(classes[classId].leader.socket).emit('ready', userId)
+    })
   })
 }
