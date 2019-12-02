@@ -12,7 +12,7 @@ import PreviousRoutine from '../screens/PreviousRoutine'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'
-import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
+import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildClassScreen from '../screens/BuildClassScreen'
 import OptionsScreen from '../screens/OptionsScreen'
@@ -54,12 +54,7 @@ LoginStack.navigationOptions = {
   )
 }
 
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen
-  }
-  // config
-)
+const HomeStack = createStackNavigator({HomeScreen})
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
@@ -129,48 +124,11 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = ''
 
-// const AccelerometerStack = createStackNavigator(
-//   { Settings: Accelerometer },
-//   config
-// );
-
-// AccelerometerStack.navigationOptions = {
-//   tabBarLabel: 'Accelerometer',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-//     />
-//   ),
-// };
-
-// AccelerometerStack.path = '';
-
-// const SelectWorkoutStack = createStackNavigator(
-//   //{ Settings: PreviousRoutine },
-//   { Settings: SelectRoutineScreen },
-
-//   config
-// );
-
-// SelectWorkoutStack.navigationOptions = {
-//   //tabBarLabel: 'PreviousRoutine',
-//   tabBarLabel: 'SelectWorkout',
-
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-//     />
-//   ),
-// };
-
-// SelectWorkoutStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  TrainerWaitingScreen,
-  HomeStack,
   LoginStack,
+  ClassesScreen,
+  HomeStack,
   HistoryStack,
   SettingsStack,
   // AccelerometerStack,
