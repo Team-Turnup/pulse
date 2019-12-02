@@ -20,9 +20,10 @@ export default class MyPreviousWorkouts extends React.Component {
 
   render() {
     return (
+        <Content>
       <Card>
         <CardItem header>
-          <Title>My Previous Workouts</Title>
+          <Text>My Previous Solo Workouts</Text>
         </CardItem>
         {this.state.showAll
           ? this.props.workouts.map(workout => {
@@ -56,6 +57,21 @@ export default class MyPreviousWorkouts extends React.Component {
 
             </Content>
       </Card>
+            <Card>
+            <CardItem header>
+            <Text>My Previous Classes (follower)</Text>
+
+            </CardItem>
+
+            </Card>
+            <Card>
+            <CardItem header>
+            <Text>My Previous Classes (leader)</Text>
+
+            </CardItem>
+
+            </Card>
+            </Content>
     )
   }
 }

@@ -38,8 +38,8 @@ export default ({
   // initialize tsIntervals with current DateTime
   const [tsIntervals, dispatch] = useReducer(reducer, [])
   const [domain, setDomain] = useState([
-    DateTime.local().minus({seconds: timeWindow}),
-    DateTime.local().plus({seconds: timeWindow})
+    DateTime.local().minus({seconds: timeWindow * (2 / 3)}),
+    DateTime.local().plus({seconds: timeWindow * (1 / 3)})
   ])
 
   useEffect(() => {
@@ -53,8 +53,8 @@ export default ({
     // update chart domain every second to keep current time in the middle
     const now = DateTime.local()
     setDomain([
-      now.minus({seconds: timeWindow}),
-      now.plus({seconds: timeWindow})
+      now.minus({seconds: timeWindow * (2 / 3)}),
+      now.plus({seconds: timeWindow * (1 / 3)})
     ])
   }, 1000)
   return tsIntervals && tsIntervals.length > 1 ? (

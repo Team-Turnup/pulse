@@ -22,6 +22,8 @@ import * as Google from 'expo-google-app-auth'
 //import ANDROID_GOOGLE_CLIENT_ID from '../secrets'
 import {me} from '../store/user'
 import {tsImportEqualsDeclaration} from '@babel/types'
+
+
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props)
