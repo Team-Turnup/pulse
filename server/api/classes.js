@@ -14,13 +14,13 @@ router.use(async (req, res, next) => {
   next()
 })
 // POST - Enrolling in a class
-router.post(`/`, authenticatedUser, async(req,res,next)=>{
+router.post(`/:classId`, authenticatedUser, async(req,res,next)=>{
   console.log('REQBODY FROM POST---', req.body)
 
   try{
     let enrollment = await Attendees.create({
-      classId:req.body.classId,
-      userId:req.body.studentId
+      classId:req.params.classId,
+      userId:req.user.id
     })
     console.log("enrollment", enrollment)
     res.json(enrollment).status(200)

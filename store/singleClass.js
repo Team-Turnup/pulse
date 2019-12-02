@@ -47,10 +47,7 @@ export const leaveClass = (classId, studentId) => async dispatch => {
 export const enrollClass = (classId, studentId) => async dispatch => {
   try {
 
-      const response = await axios.post(`${ngrok}/api/classes/`, {
-      classId,
-      studentId
-    })
+    const response = await axios.post(`${ngrok}/api/classes/${classId}`)
     dispatch(enrollIntoClass(response.data))
   } catch (error) {
     console.error(error)
