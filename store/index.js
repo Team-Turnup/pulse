@@ -4,18 +4,22 @@ import thunkMiddleware from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import routines from './routines'
 import routine from './routine'
-import users from './users'
+import user from './user'
 import classes from './classes'
 import singleClass from './singleClass'
+import option from './option'
+import myClasses from './myClasses'
 import socket from './socket'
 
 const reducer = combineReducers({
   routine,
   routines,
-  users,
+  user,
   singleClass,
   classes,
-  socket
+  socket,
+  option,
+  myClasses
 })
 const middleware = composeWithDevTools(
   //applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
