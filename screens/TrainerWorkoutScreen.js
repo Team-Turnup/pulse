@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {StyleSheet} from 'react-native'
 import {Container, Header, Content, List, ListItem, Text} from 'native-base'
+import {DateTime} from 'luxon'
 import WorkoutGraph from './WorkoutGraph'
 import activityTypes from '../assets/images/activityTypes'
 import userData from '../assets/images/userData'
@@ -114,6 +115,10 @@ export default () => {
   return (
     <Container>
       <Header />
+      <Text>
+        Start Time:{' '}
+        {DateTime.fromMillis(_class.when).toLocaleString(DateTime.TIME_SIMPLE)}
+      </Text>
       <Content>
         <UserList attendees={attendees} />
       </Content>

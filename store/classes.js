@@ -1,16 +1,16 @@
-import axios from 'axios';
+import axios from 'axios'
 import {ngrok} from '../ngrok'
-import { debuggerStatement } from '@babel/types';
+import {debuggerStatement} from '@babel/types'
 
 const GET_CLASSES = 'GET_CLASSES'
 
-const getClasses = classes =>({type:GET_CLASSES,classes})
+const getClasses = classes => ({type: GET_CLASSES, classes})
 
-export const fetchClasses = () => async dispatch =>{
-  try{
+export const getClassesThunk = () => async dispatch => {
+  try {
     const response = await axios.get(`${ngrok}/api/classes`)
     dispatch(getClasses(response.data))
-  } catch (error){
+  } catch (error) {
     console.error(error)
   }
 }
@@ -18,7 +18,7 @@ export const fetchClasses = () => async dispatch =>{
 const initialState = []
 
 const classesReducer = (state = initialState, action) => {
-  switch(action.type){
+  switch (action.type) {
     case GET_CLASSES:
       return action.classes
     default:
