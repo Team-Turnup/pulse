@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Class, Routine, User, Interval} = require('../db/models')
+const {Class, Routine, User, Interval, Attendees} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
@@ -16,6 +16,37 @@ router.use(async (req, res, next) => {
     next()
   } catch (err) {
     next(err)
+  }
+})
+// POST - Enrolling in a class
+router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
+  console.log('REQBODY FROM POST---', req.body)
+
+  try {
+    let enrollment = await Attendees.create({
+      classId: req.params.classId,
+      userId: req.user.id
+    })
+    console.log('enrollment', enrollment)
+    res.json(enrollment).status(200)
+  } catch (error) {
+    console.error(error)
+  }
+})
+// DELETE - leaving class
+router.delete(`/:classId`, authenticatedUser, async (req, res, next) => {
+  console.log('REACHING HERE AT DELETING CLASSES', req.user)
+
+  try {
+    let ditchedClass = await Attendees.destroy({
+      where: {
+        classId: req.params.classId,
+        userId: req.user.id
+      }
+    })
+    res.json(ditchedClass).status(200)
+  } catch (error) {
+    console.error(error)
   }
 })
 
@@ -96,14 +127,14 @@ router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {user, body} = req
     const {name, canEnroll, when, attendees, classPasscode} = body
+    console.log('req.body', req.body)
     let currentClass = await Class.create({
-      name: name,
-      canEnroll: canEnroll,
+      name,
+      canEnroll,
       when,
       attendees,
       classPasscode
     })
-    console.log(currentClass)
     if (!currentClass) throw new Error(`Class not found.`)
     res.status(200).json(currentClass)
   } catch (err) {

@@ -90,7 +90,7 @@ export const changeUserInfoThunk = info => async dispatch => {
 const defaultUser = {}
 
 //reducer
-export default function(state = defaultUser, action) {
+ const userReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case GET_USER:
       return action.user
@@ -104,3 +104,5 @@ export default function(state = defaultUser, action) {
       return state
   }
 }
+
+export default userReducer

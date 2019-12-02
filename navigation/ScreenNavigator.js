@@ -25,7 +25,6 @@ const ScreenNavigator = createStackNavigator({
   UserWaitingScreen,
   TrainerWaitingScreen
 
-
 },{headerMode:'none'})
 
 export default ScreenNavigator

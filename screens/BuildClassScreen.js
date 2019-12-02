@@ -33,7 +33,13 @@ class BuildClassScreen extends Component {
 
   handleCreateClass() {
     const {name, canEnroll, when, attendees, classPasscode} = this.state
-    this.props.createClassThunk(name, canEnroll, when, attendees, classPasscode)
+    this.props.createClassThunk({
+      name,
+      canEnroll,
+      when,
+      attendees,
+      classPasscode
+    })
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
       name: '',
@@ -212,7 +218,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   //getClassThunk: () => dispatch(getClassThunk())
-  createClassThunk: () => dispatch(createClassThunk())
+  createClassThunk: singleClass => dispatch(createClassThunk(singleClass))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuildClassScreen)
