@@ -180,7 +180,7 @@ export const Routine = ({routine: {intervals, name}, ...routine}) => (
 export default () => {
   //   const dispatch = useDispatch()
   //   const _class = useSelector(({singleClass}) => singleClass)
-  const {routine, attendees, ..._class} = dummyClass
+  const {routine, attendees, when, ..._class} = dummyClass
   const [curTime, setCurTime] = useState(Date.now())
 
   useInterval(() => setCurTime(Date.now()), 1000)
@@ -190,11 +190,7 @@ export default () => {
       <Header />
       <Content>
         <View style={styles.startView}>
-          {_class.when < curTime ? (
-            <StartButton />
-          ) : (
-            <StartTime when={_class.when} />
-          )}
+          {when < curTime ? <StartButton /> : <StartTime when={when} />}
         </View>
         <Routine routine={routine} />
         <UserList attendees={attendees} />
