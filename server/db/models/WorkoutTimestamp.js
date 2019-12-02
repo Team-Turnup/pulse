@@ -3,7 +3,7 @@ const db = require('../db')
 
 const WorkoutTimestamp = db.define('workoutTimestamp', {
     cadence: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
     },
   timestamp: {
