@@ -148,7 +148,20 @@ class LoginScreen extends React.Component {
               <Text>Create an Account</Text>
             </Button>
           ) : null}
-
+          {/* <Text
+            style={{color: 'blue'}}
+            onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
+          >
+            Google
+          </Text> */}
+          {!isUser ? (
+            <Button
+              onPress={() => this.loginWithGoogle()}
+              title="login with google"
+            >
+              <Text>Login with Google </Text>
+            </Button>
+          ) : null}
           {isUser ? (
             <Container>
               <Text>Hello, {this.props.user.email}</Text>
@@ -162,19 +175,6 @@ class LoginScreen extends React.Component {
               </Button>
             </Container>
           ) : null}
-
-          {/* <Text
-            style={{color: 'blue'}}
-            onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
-          >
-            Google
-          </Text> */}
-          <Button
-            onPress={() => this.loginWithGoogle()}
-            title="login with google"
-          >
-            <Text>Login with Google </Text>
-          </Button>
         </Content>
       </Container>
       //    )
