@@ -1,6 +1,9 @@
+// Core React/Redux libraries
 import React, {useEffect, useState, Fragment} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import useInterval from 'use-interval'
+
+// Components
 import {StyleSheet} from 'react-native'
 import {
   Container,
@@ -9,15 +12,21 @@ import {
   List,
   ListItem,
   Text,
+  H1,
   H2,
   H3,
   View,
   Button
 } from 'native-base'
+import RoutineBarDisplay from '../components/RoutineBarDisplay'
+
+// Utility libraries
 import {DateTime} from 'luxon'
-import {getClassThunk} from '../store/singleClass'
+// assuming for right now that the class was already gotten?
+// import {getClassThunk} from '../store/singleClass'
 import activityTypes from '../assets/images/activityTypes'
 import userData from '../assets/images/userData'
+import socket from '../socket'
 
 const dummyClass = {
   id: 11,
@@ -152,35 +161,37 @@ export const UserList = ({attendees}) => (
   </Fragment>
 )
 
-export const Routine = ({routine: {intervals, name}, ...routine}) => (
-  <Fragment>
-    <H3 style={{textAlign: 'center'}}>{`Routine: ${name}`}</H3>
-    <List>
-      <ListItem itemHeader style={styles.listItem}>
-        <Text style={[styles.activityName, styles.listHeader]}>Activity</Text>
-        <Text style={[styles.activityIcon, styles.listHeader]}></Text>
-        <Text style={[styles.cadence, styles.listHeader]}>Cadence</Text>
-        <Text style={[styles.Duration, styles.listHeader]}>Duration</Text>
-      </ListItem>
-      {intervals.map(({id: intervalId, activityType, cadence, duration}, i) => (
-        <ListItem key={intervalId} style={styles.listItem}>
-          <Text style={styles.activityName}>
-            {activityTypes[activityType].display}
-          </Text>
-          <Text style={styles.activityIcon}>
-            {activityTypes[activityType].icon}
-          </Text>
-          <Text style={styles.cadence}>{cadence}</Text>
-          <Text style={styles.Duration}>{duration}</Text>
-        </ListItem>
-      ))}
-    </List>
-  </Fragment>
-)
+// export const Routine = ({routine: {intervals, name}, ...routine}) => (
+//   <Fragment>
+//     <H3 style={{textAlign: 'center'}}>{`Routine: ${name}`}</H3>
+//     <List>
+//       <ListItem itemHeader style={styles.listItem}>
+//         <Text style={[styles.activityName, styles.listHeader]}>Activity</Text>
+//         <Text style={[styles.activityIcon, styles.listHeader]}></Text>
+//         <Text style={[styles.cadence, styles.listHeader]}>Cadence</Text>
+//         <Text style={[styles.Duration, styles.listHeader]}>Duration</Text>
+//       </ListItem>
+//       {intervals.map(({id: intervalId, activityType, cadence, duration}, i) => (
+//         <ListItem key={intervalId} style={styles.listItem}>
+//           <Text style={styles.activityName}>
+//             {activityTypes[activityType].display}
+//           </Text>
+//           <Text style={styles.activityIcon}>
+//             {activityTypes[activityType].icon}
+//           </Text>
+//           <Text style={styles.cadence}>{cadence}</Text>
+//           <Text style={styles.Duration}>{duration}</Text>
+//         </ListItem>
+//       ))}
+//     </List>
+//   </Fragment>
+// )
 
 export default () => {
   //   const dispatch = useDispatch()
-  //   const _class = useSelector(({singleClass}) => singleClass)
+  // const {routine, attendees, when, name, ..._class} = useSelector(
+  //   ({singleClass}) => singleClass
+  // )
   const {routine, attendees, when, name, ..._class} = dummyClass
   const [curTime, setCurTime] = useState(Date.now())
 
@@ -190,12 +201,21 @@ export default () => {
     <Container>
       <Header />
       <Content>
-        <View style={styles.startView}>
-          <H2 style={textAlign: 'center'}>{name}</H2>
-          {when < curTime ? <StartButton /> : <StartTime when={when} />}
-        </View>
-        <Routine routine={routine} />
-        <UserList attendees={attendees} />
+        {name && routine && attendees ? (
+          <Fragment>
+            <View style={styles.startView}>
+              <H1 style={{textAlign: 'center', fontWeight: 'bold'}}>{name}</H1>
+              {when < curTime ? <StartButton /> : <StartTime when={when} />}
+            </View>
+            <H3
+              style={{textAlign: 'center', paddingBottom: 20}}
+            >{`Routine: ${routine.name}`}</H3>
+            <RoutineBarDisplay routine={routine.intervals} />
+            <UserList attendees={attendees} />
+          </Fragment>
+        ) : (
+          <Text>Loading...</Text>
+        )}
       </Content>
     </Container>
   )

@@ -8,4 +8,6 @@ socket.on('connect', () => {
 
 socket.on('message', message => console.log(message))
 
+socket.on('ready', userId => console.log(`${userId} is ready`))
+
 export default socket
