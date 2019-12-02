@@ -16,7 +16,7 @@ import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildClassScreen from '../screens/BuildClassScreen'
 import OptionsScreen from '../screens/OptionsScreen'
-
+import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
   default: {}
@@ -137,7 +137,9 @@ const tabNavigator = createBottomTabNavigator({
   // PreviousRoutine,
   // CreateClassScreen,
   // InProgressStack,
-  // BuildClassScreen
+  // BuildClassScreen,
+  TrainerWorkScreen
+
 })
 
 tabNavigator.path = ''
