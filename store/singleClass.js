@@ -4,11 +4,16 @@ import {setRoutine} from './routine'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const GET_CLASS = 'GET_CLASS'
-//const UPDATE_CLASS = 'UPDATE_CLASS';
+const CREATE_CLASS = 'CREATE_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
 
 const getClass = singleClass => ({
   type: GET_CLASS,
+  singleClass
+})
+
+const createClass = singleClass => ({
+  type: CREATE_CLASS,
   singleClass
 })
 
@@ -22,8 +27,7 @@ export const getClassThunk = id => async dispatch => {
       data: {routine, ...singleClass}
     } = await axios.get(`${ngrok}/api/class/${id}`)
     dispatch(getClass(singleClass))
-    dispatch(setRoutine(routine))
-    di
+    // dispatch(setRoutine(routine))
   } catch (err) {
     console.error(err)
   }
@@ -32,7 +36,7 @@ export const getClassThunk = id => async dispatch => {
 export const createClassThunk = singleClass => async dispatch => {
   try {
     const {data} = await axios.post(`${ngrok}/api/class/`, singleClass)
-    dispatch(getClass(data))
+    dispatch(createClass(data))
   } catch (err) {
     console.error(err)
   }
@@ -55,11 +59,12 @@ const initialState = {
   attendees: []
 }
 
-//should be a GET_ROUTINES probably
 const classReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CLASS:
       return action.singleClass
+    case CREATE_CLASS:
+      return {...state, ...action.singleClass}
     case REMOVE_CLASS:
       return initialState
     default:
