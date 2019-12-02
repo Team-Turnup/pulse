@@ -22,21 +22,21 @@ const config = Platform.select({
   default: {}
 })
 
-const InProgressStack = createStackNavigator({InProgress: InProgressScreen})
+// const InProgressStack = createStackNavigator({InProgress: InProgressScreen})
 
-InProgressStack.navigationOptions = {
-  tabBarLabel: 'InProgress',
-  tabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  )
-}
+// InProgressStack.navigationOptions = {
+//   tabBarLabel: 'InProgress',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
 const LoginStack = createStackNavigator({Login: LoginScreen})
 
@@ -72,38 +72,38 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = ''
 
-const CommunityStack = createStackNavigator({Settings: CommunityScreen}, config)
+// const CommunityStack = createStackNavigator({Settings: CommunityScreen}, config)
 
-CommunityStack.navigationOptions = {
-  tabBarLabel: 'Community',
-  TabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  )
-}
+// CommunityStack.navigationOptions = {
+//   tabBarLabel: 'Community',
+//   TabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   )
+// }
 
-CommunityStack.path = ''
+// CommunityStack.path = ''
 
-const HistoryStack = createStackNavigator(
-  {
-    Settings: HistoryScreen
-  },
-  config
-)
+// const HistoryStack = createStackNavigator(
+//   {
+//     Settings: HistoryScreen
+//   },
+//   config
+// )
 
-HistoryStack.navigationOptions = {
-  tabBarLabel: 'History',
-  TabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  )
-}
+// HistoryStack.navigationOptions = {
+//   tabBarLabel: 'History',
+//   TabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//     />
+//   )
+// }
 
-HistoryStack.path = ''
+// HistoryStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
@@ -127,17 +127,17 @@ SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
   LoginStack,
-  ClassesScreen,
+  // ClassesScreen,
   HomeStack,
-  HistoryStack,
+  // HistoryStack,
   SettingsStack,
   // AccelerometerStack,
   // SelectWorkoutStack,
-  BuildRoutineScreen,
-  PreviousRoutine,
-  CreateClassScreen,
+  // BuildRoutineScreen,
+  // PreviousRoutine,
+  // CreateClassScreen,
   // InProgressStack,
-  BuildClassScreen
+  // BuildClassScreen
 })
 
 tabNavigator.path = ''

@@ -29,19 +29,13 @@ class HomeScreen extends Component {
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
-          <MyPreviousWorkouts workouts={this.props.workouts} />
-          <Card>
-            <CardItem header>
-              <Title>My Classes</Title>
-            </CardItem>
-          </Card>
           <Button
             block
             danger
             style={{margin: 7}}
             onPress={() => navigation.navigate('SelectRoutineScreen')}
           >
-            <Text>Add New Workout</Text>
+            <Text>Start New Solo Workout</Text>
           </Button>
           <Button
             block
@@ -65,7 +59,9 @@ class HomeScreen extends Component {
             <Text>Create A Class</Text>
           </Button>
           <Card>
-            <Text>My Classes List</Text>
+          <CardItem header>
+            <Text>My Upcoming Classes (follower)</Text>
+            </CardItem>
             {this.props.myClasses.map((aClass, i) => {
               return (
                 <CardItem key={i}>
@@ -74,6 +70,21 @@ class HomeScreen extends Component {
               )
             })}
           </Card>
+
+          <Card>
+          <CardItem header>
+            <Text>My Upcoming Classes (leader)</Text>
+            </CardItem>
+            {/* {this.props.myClasses.map((aClass, i) => {
+              return (
+                <CardItem key={i}>
+                  <Text>{aClass.name}</Text>
+                </CardItem>
+              )
+            })} */}
+          </Card>
+
+          <MyPreviousWorkouts workouts={this.props.workouts} />
         </Content>
       </Container>
     )
