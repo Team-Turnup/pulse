@@ -14,24 +14,27 @@ import {
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 
+
+
 class HomeScreen extends Component {
-  constructor() {
-    super()
-    this.state = {}
-  }
-  async componentDidMount() {
+  componentDidMount(){
+
+    this.props.me()
     // await this.props.me()
-    await this.props.getMyClassesThunk()
-    //user information is not persisting
+    this.props.getMyClassesThunk()
   }
 
   render() {
+    console.log('HOMEPROPSS.user::', this.props.user)
+
+    const {navigation} = this.props
+
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
           <Card>
             <CardItem header>
-              <Title>Recent Workouts</Title>
+              <Title>My Classes</Title>
             </CardItem>
           </Card>
           <Button
@@ -39,7 +42,7 @@ class HomeScreen extends Component {
             danger
             style={{margin: 7}}
             onPress={() =>
-              this.props.navigation.navigate('SelectRoutineScreen')
+              navigation.navigate('SelectRoutineScreen')
             }
           >
             <Text>Add New Workout</Text>
@@ -48,7 +51,9 @@ class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() => this.props.navigation.navigate('ClassesScreen')}
+            onPress={()=> navigation.navigate('ClassesScreen', {
+              loggedInUserId: this.props.user.id
+            })}
           >
             <Text>Join A Class</Text>
           </Button>
