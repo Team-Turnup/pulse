@@ -3,20 +3,26 @@ import {ngrok} from '../ngrok'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const GET_OPTION = 'GET_OPTION'
+const UPDATE_OPTION = 'UPDATE_OPTION'
 
 export const getOption = option => ({
   type: GET_OPTION,
   option
 })
 
-// export const thunk = id => async dispatch => {
-//   try {
-//     const response = await axios.get(`/api/options/${id}`);
-//     dispatch(getOption(response.data));
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const updateOption = option => ({
+  type: UPDATE_OPTION,
+  option
+})
+
+export const updateOptionThunk = option => async dispatch => {
+  try {
+    await axios.put(`${ngrok}/api/users/options`, option);
+    dispatch(updateOption(option));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const initialState = {}
 
@@ -25,6 +31,8 @@ const optionReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_OPTION:
       return action.option
+      case UPDATE_OPTION:
+      return {...state, ...action.option}
     default:
       return state
   }
