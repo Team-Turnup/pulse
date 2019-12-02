@@ -1,9 +1,20 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
+import useInterval from 'use-interval'
 import {StyleSheet} from 'react-native'
-import {Container, Header, Content, List, ListItem, Text} from 'native-base'
+import {
+  Container,
+  Header,
+  Content,
+  List,
+  ListItem,
+  Text,
+  H2,
+  H3,
+  View,
+  Button
+} from 'native-base'
 import {DateTime} from 'luxon'
-import WorkoutGraph from './WorkoutGraph'
 import activityTypes from '../assets/images/activityTypes'
 import userData from '../assets/images/userData'
 
@@ -11,7 +22,7 @@ const dummyClass = {
   id: 11,
   name: 'Class # 21459',
   canEnroll: true,
-  when: Date.now() + 1000 * 60 * 3,
+  when: Date.now() + 1000 * 35,
   routine: {
     id: 21,
     name: 'Eloise',
@@ -83,9 +94,33 @@ const dummyClass = {
   ]
 }
 
+export const StartTime = ({when}) => {
+  const whenDateTime = DateTime.fromMillis(when)
+  return (
+    <View style={styles.startView}>
+      <H2>Start Time: </H2>
+      <H3>
+        {whenDateTime.diffNow('seconds').toObject().seconds > 30
+          ? whenDateTime.toLocaleString(DateTime.DATETIME_SHORT) // short dateTime format if more than 30s away (mm/dd/yyyy, HH:MM)
+          : whenDateTime.toRelative({
+              unit: 'seconds'
+            }) /* relative time format if less than 30s away */}
+      </H3>
+    </View>
+  )
+}
+
+export const StartButton = () => (
+  <View style={styles.startView}>
+    <Button>
+      <Text>Start Class</Text>
+    </Button>
+  </View>
+)
+
 export const UserList = ({attendees}) => (
   <List>
-    <ListItem style={styles.listItem}>
+    <ListItem itemHeader style={styles.listItem}>
       <Text style={[styles.email, styles.listHeader]}>Email</Text>
       <Text style={[styles.age, styles.listHeader]}>Age</Text>
       <Text style={[styles.sex, styles.listHeader]}>Sex</Text>
@@ -110,24 +145,18 @@ export default () => {
   //   const dispatch = useDispatch()
   //   const _class = useSelector(({singleClass}) => singleClass)
   const {routine, attendees, ..._class} = dummyClass
+  const [curTime, setCurTime] = useState(Date.now())
+
+  useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
     <Container>
       <Header />
-      <Content
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: 10
-        }}
-      >
-        <Text>Start Time: </Text>
-        <Text>
-          {DateTime.fromMillis(_class.when).toLocaleString(
-            DateTime.TIME_SIMPLE
-          )}
-        </Text>
-      </Content>
+      {_class.when < curTime ? (
+        <StartButton />
+      ) : (
+        <StartTime when={_class.when} />
+      )}
       <Content>
         <UserList attendees={attendees} />
       </Content>
@@ -149,5 +178,12 @@ const styles = StyleSheet.create({
   sex: {flex: 1, textAlign: 'right'},
   selected: {
     backgroundColor: 'rgba(0,255,0,0.25)'
+  },
+  startView: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 10
   }
 })
