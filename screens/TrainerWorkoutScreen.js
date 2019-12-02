@@ -111,14 +111,23 @@ export default () => {
   //   const _class = useSelector(({singleClass}) => singleClass)
   const {routine, attendees, ..._class} = dummyClass
 
-  // any way of making these style classes more clean?
   return (
     <Container>
       <Header />
-      <Text>
-        Start Time:{' '}
-        {DateTime.fromMillis(_class.when).toLocaleString(DateTime.TIME_SIMPLE)}
-      </Text>
+      <Content
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: 10
+        }}
+      >
+        <Text>Start Time: </Text>
+        <Text>
+          {DateTime.fromMillis(_class.when).toLocaleString(
+            DateTime.TIME_SIMPLE
+          )}
+        </Text>
+      </Content>
       <Content>
         <UserList attendees={attendees} />
       </Content>
