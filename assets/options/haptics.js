@@ -11,8 +11,8 @@ export const haptic = (option, cadence) => {
     } else if (option==='triplet') {
         return () => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 40000/cadence)
-            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 50000/cadence)
+            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 30000/cadence)
+            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 45000/cadence)
         }
     } else if (option==='doubletime') {
         return () => {
@@ -46,8 +46,8 @@ export const hapticOnce = (option, cadence=100) => {
     } else if (option==='triplet') {
         return () => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 10000/cadence)
-            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 20000/cadence)
+            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), 15000/cadence)
+            setTimeout(()=> Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 30000/cadence)
         }
     } else if (option==='doubletime') {
         return () => {

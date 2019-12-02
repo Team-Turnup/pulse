@@ -48,14 +48,17 @@ class OptionsScreen extends Component {
   }
 
   handleHaptic(value) {
-    this.props.updateOptionThunk({hapticWhat: value})
-    this.setState({hapticWhat: value})
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    this.clear.push(setInterval(haptic(value, 100), 600))
-    setTimeout(() => clearInterval(this.clear.shift()), 5000)
+    if (value) {
+      this.props.updateOptionThunk({hapticWhat: value})
+      this.setState({hapticWhat: value})
+      // if (value) {
+      //     if (this.clear.length) {
+      //         clearInterval(this.clear.shift())
+      //     }
+      this.clear.push(setInterval(haptic(value, 100), 600))
+      setTimeout(() => clearInterval(this.clear.shift()), 5000)
+
+    }
   }
 
   handleVisual(value) {
