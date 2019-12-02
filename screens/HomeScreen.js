@@ -22,7 +22,7 @@ class HomeScreen extends Component {
   async componentDidMount() {
     // await this.props.me()
     await this.props.getMyClassesThunk()
-    //user information is not persisting
+    console.log(this.props.user)
   }
 
   render() {
