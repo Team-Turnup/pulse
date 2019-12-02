@@ -7,7 +7,6 @@ import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
-
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -15,7 +14,6 @@ import {
   updateRoutineThunk
 } from '../store/routines'
 
-//maybe rename to UpdateRoutineScreen
 class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props)
@@ -136,15 +134,15 @@ class BuildRoutineScreen extends Component {
               style={styles.name}
             />
           </Item>
-          <Item fixedLabel style={styles.item}>
-            <Label>Activity Type</Label>
-            <RNPickerSelect
-              onValueChange={value => this.handleChange('routineType', value)}
-              style={{display: 'flex', alignItems: 'center'}}
-              value={this.state.routineType}
-              items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
-            />
-          </Item>
+          {/* <Item fixedLabel style={styles.item}> */}
+          <Label>Activity Type</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('routineType', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.routineType}
+            items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
+          />
+          {/* </Item> */}
           <Item fixedLabel style={styles.checkBox}>
             <CheckBox
               onClick={() =>

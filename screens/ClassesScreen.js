@@ -17,7 +17,7 @@ import {
   Item,
   Label
 } from 'native-base'
-import {fetchClasses} from '../store/classes'
+import {getClassesThunk} from '../store/classes'
 
 class ClassesScreen extends React.Component {
   constructor() {
@@ -90,7 +90,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getClasses: () => dispatch(fetchClasses())
+  getClasses: () => dispatch(getClassesThunk())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassesScreen)

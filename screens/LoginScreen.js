@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store/users'
 import {Image} from 'react-native'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   Container,
   Header,
@@ -18,6 +18,7 @@ import {
   Button,
   Text
 } from 'native-base'
+import {me} from '../store/users'
 import {tsImportEqualsDeclaration} from '@babel/types'
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -27,6 +28,10 @@ class LoginScreen extends React.Component {
       password: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.me()
   }
 
   handleLogin() {
@@ -40,7 +45,19 @@ class LoginScreen extends React.Component {
   }
 
   render() {
+    //console.log(this.state.user)
+    //console.log(this.props)
     return (
+      // <View>
+      //   first check isLoggedIn
+      //   {this.props.isLoggedIn ? (
+      //     <Container>
+      //       <Button>
+      //         <Text>Log Out</Text>
+      //       </Button>
+      //     </Container>
+      //   ) :
+      //   (
       <Container>
         <Content>
           <Card transparent>
@@ -79,14 +96,14 @@ class LoginScreen extends React.Component {
                 onChangeText={text => this.setState({password: text})}
               />
             </Item>
-            <Button
-              block
-              style={styles.button}
-              onPress={() => this.handleLogin()}
-            >
-              <Text>Sign In</Text>
-            </Button>
           </Form>
+          <Button
+            block
+            style={styles.button}
+            onPress={() => this.handleLogin()}
+          >
+            <Text>Sign In</Text>
+          </Button>
           <Button
             block
             style={styles.button}
@@ -96,6 +113,9 @@ class LoginScreen extends React.Component {
           </Button>
         </Content>
       </Container>
+      //    )
+      //   }
+      // </View>
     )
   }
 }
@@ -171,13 +191,19 @@ const mapLogin = state => {
   return {
     users: state.users,
     name: 'login',
-    displayName: 'Login'
+    displayName: 'Login',
     //error: state.user.error
+    user: state.user,
+    isLoggedIn: !!state.user
   }
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method))
+  doHandleLogin: (user, method) => dispatch(auth(user, method)),
+  me: () => dispatch(me()),
+  handleClick() {
+    dispatch(logout())
+  }
 })
 
 export default connect(mapLogin, mapDispatch)(LoginScreen)
@@ -185,7 +211,8 @@ export default connect(mapLogin, mapDispatch)(LoginScreen)
 LoginScreen.propTypes = {
   name: PropTypes.string,
   //displayName: PropTypes.string.isRequired,
-  doHandleLogin: PropTypes.func
+  doHandleLogin: PropTypes.func,
   // handleSignup: PropTypes.func,
-  // error: PropTypes.object
+  // error: PropTypes.object,
+  isLoggedIn: PropTypes.bool
 }
