@@ -193,7 +193,13 @@ export default () => {
   //   ({singleClass}) => singleClass
   // )
   const {routine, attendees, when, name, ..._class} = dummyClass
+  const userId = useSelector(({user}) => user.id) || 101
   const [curTime, setCurTime] = useState(Date.now())
+
+  useEffect(() => {
+    socket.emit('subscribe', _class.id, userId, true)
+    return () => socket.emit('unsubscribe', _class.id, userId, true)
+  }, [])
 
   useInterval(() => setCurTime(Date.now()), 1000)
 
