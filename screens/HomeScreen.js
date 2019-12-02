@@ -47,7 +47,7 @@ class HomeScreen extends Component {
               })
             }
           >
-            <Text>Join A Class</Text>
+            <Text>Join Class</Text>
           </Button>
 
           <Button
@@ -56,7 +56,7 @@ class HomeScreen extends Component {
             style={{margin: 7}}
             onPress={() => this.props.navigation.navigate('CreateClassScreen')}
           >
-            <Text>Create A Class</Text>
+            <Text>Create Class</Text>
           </Button>
           <Card>
           <CardItem header>
