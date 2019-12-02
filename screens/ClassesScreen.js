@@ -67,11 +67,15 @@ class ClassesScreen extends React.Component {
                 return (
                   <CardItem
                     onPress={() => {
-                      console.log(aClass),
+                      this.props.enrollClass(aClass.id, studentId),
                       this.props.navigation.navigate('UserWaitingScreen', {
-                        trainerId: aClass.userId
+                        trainerId: aClass.userId,
+                        studentId:studentId,
+                        classId:aClass.id
                       }),
-                      this.props.enrollClass(aClass.id, studentId)
+                      console.log('THECLASSSS',aClass),
+                      console.log('THECLASSSSIDDD',aClass.id)
+
                     }}
                     button
                     key={i}
