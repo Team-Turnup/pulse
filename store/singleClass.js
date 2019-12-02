@@ -74,14 +74,16 @@ export const createClassThunk = singleClass => async dispatch => {
   }
 }
 
-export const deleteRoutineThunk = classId => async dispatch => {
-  try {
-    await axios.delete(`${ngrok}/api/routines/${classId}`)
-    dispatch(removeClass())
-  } catch (error) {
-    console.error(error)
-  }
-}
+// this no longer means that the instructor is deleting the class now with
+// leaveClass thunk sending a DELETE to :classId. May need to clean this up
+// export const deleteClassThunk = classId => async dispatch => {
+//   try {
+//     await axios.delete(`${ngrok}/api/class/${classId}`)
+//     dispatch(removeClass())
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
 
 const initialState = {
   id: 0,
