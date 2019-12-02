@@ -9,6 +9,7 @@ import {
   Content,
   Text,
 } from 'native-base';
+import InProgressScreen from './InProgressScreen';
 // import {setWorkoutThunk} from '../store/workout';
 
 //maybe rename to UpdateRoutineScreen
@@ -19,7 +20,6 @@ class StartRoutineScreen extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.routine)
       const clearCountdown = setInterval(() => {
           let {count} = this.state
           if (count>1) {
@@ -27,7 +27,6 @@ class StartRoutineScreen extends Component {
           } else {
               clearInterval(this.state.clearCountdown)
               count='Go!'
-              this.props.navigation.navigate('InProgressScreen')
         }
         this.setState({count})
       }, 60000/this.props.routine.intervals[0].cadence)
@@ -39,9 +38,9 @@ class StartRoutineScreen extends Component {
     return (
       <Container>
         <Content>
-            <View style={styles.countdown}>
+           {this.state.count==='Go!' ? <InProgressScreen routine={this.props.routine}/> : <View style={styles.countdown}>
             <Text style={styles.text}>{this.state.count}</Text>
-            </View>
+            </View>}
         </Content>
       </Container>
     );

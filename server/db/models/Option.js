@@ -24,7 +24,7 @@ visualWhat: {
 },
 visualColor: {
     type: Sequelize.STRING,
-    defaultValue: 'rgb(0, 0, 255)'
+    defaultValue: '#0000FF'
 },
 visualWhen: {
     type: Sequelize.ENUM(['everybeat', 'mute', 'muteAtGoal']),

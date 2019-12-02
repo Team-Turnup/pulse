@@ -5,44 +5,83 @@ import {Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
-import {
-  changeUserInfoThunk
-} from '../store/user'
+import {changeUserInfoThunk} from '../store/user'
 import {haptic} from '../assets/options/haptics'
+import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
+import {updateOptionThunk} from '../store/option'
 
 class OptionsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        name: this.props.user.name || '',
-        age: this.props.user.age || 0,
-        gender: this.props.user.gender || '',
-        hapticWhat: this.props.option.hapticWhat || 'singlebeat'
+      name: this.props.user.name || '',
+      age: this.props.user.age || 0,
+      gender: this.props.user.gender || '',
+      weight: this.props.user.weight || 0,
+      height: this.props.user.height || 0,
+      hapticWhat: this.props.option.hapticWhat || 'singlebeat',
+      hapticWhen: this.props.option.hapticWhen || 'everybeat',
+      visualWhat: this.props.option.visualWhat || 'blink',
+      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
+      opacity: 1,
+      visualWhen: this.props.option.visualWhen || 'everybeat'
     }
     this.handleChange = this.handleChange.bind(this)
     this.updateUserInfo = this.updateUserInfo.bind(this)
     this.handleHaptic = this.handleHaptic.bind(this)
-    this.clear = null
+    this.handleVisual = this.handleVisual.bind(this)
+    this.handleVisualColor = this.handleVisualColor.bind(this)
+    this.clear = []
+    this.clearVisual = []
   }
 
   handleChange(key, value) {
     this.setState({[key]: value})
+    if (key!=='visualColor') {
+      this.props.updateOptionThunk({[key]: value})
+    }
   }
 
   updateUserInfo() {
-    const {name, age, gender} = this.state
-    this.props.changeUserInfoThunk({name, age, gender})
+    const {name, age, gender, height, weight} = this.state
+    this.props.changeUserInfoThunk({name, age, gender, height, weight})
   }
 
   handleHaptic(value) {
+    this.props.updateOptionThunk({hapticWhat: value})
     this.setState({hapticWhat: value})
-    if (value) {
-        if (this.clear) {
-            clearInterval(this.clear)
-        }
-        this.clear = setInterval(haptic(value, 100), 600)
-        setTimeout(()=>clearInterval(this.clear), 5000)
-    }
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    this.clear.push(setInterval(haptic(value, 100), 600))
+    setTimeout(() => clearInterval(this.clear.shift()), 5000)
+  }
+
+  handleVisual(value) {
+    this.props.updateOptionThunk({visualWhat: value})
+    this.setState({visualWhat: value})
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    // this.clear.push(setInterval(haptic(value, 100), 600))
+    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
+  }
+
+  handleVisualColor(value) {
+    this.props.updateOptionThunk({visualColor: value})
+    this.clearVisual.push(setInterval(()=>{
+      this.setState({opacity: 0.3})
+      setTimeout(()=>this.setState({opacity: 1}), 300)
+    }, 600))
+    setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
+    // if (value) {
+    //     if (this.clear.length) {
+    //         clearInterval(this.clear.shift())
+    //     }
+    // this.clear.push(setInterval(haptic(value, 100), 600))
+    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
   render() {
@@ -57,46 +96,106 @@ class OptionsScreen extends Component {
               autoCapitalize="none"
               autoCorrect={false}
               value={this.state.name}
-              onChangeText={name=> this.setState({name})}
+              onChangeText={name => this.setState({name})}
               style={styles.name}
             />
           </Item>
           <Item fixedLabel style={styles.item}>
-                <Label>Age</Label>
-                <NumericInput
-                  value={this.state.age}
-                  onChange={value => this.handleChange('age', value)}
-                />
-              </Item>
+            <Label>Age</Label>
+            <NumericInput
+              value={this.state.age}
+              onChange={value => this.handleChange('age', value)}
+            />
+          </Item>
+          <Item fixedLabel style={styles.item}>
+            <Label>Height (inches)</Label>
+            <NumericInput
+              value={this.state.height}
+              onChange={value => this.handleChange('height', value)}
+            />
+          </Item>
+          <Item fixedLabel style={styles.item}>
+            <Label>Weight (lb)</Label>
+            <NumericInput
+              value={this.state.weight}
+              onChange={value => this.handleChange('weight', value)}
+            />
+          </Item>
           <Label>Gender</Label>
           <RNPickerSelect
             onValueChange={value => this.handleChange('gender', value)}
             style={{display: 'flex', alignItems: 'center'}}
             value={this.state.gender}
-            items={[{label: 'Female', value: 'female'},
-            {label: 'Male', value: 'male'},
-            {label: 'Non-binary', value: 'non-binary'}]}
+            items={[
+              {label: 'Female', value: 'female'},
+              {label: 'Male', value: 'male'},
+              {label: 'Non-binary', value: 'non-binary'}
+            ]}
           />
-               <TouchableOpacity
-                    style={{
-                      ...styles.button,
-                      backgroundColor: 'blue'
-                    }}
-                    onPress={this.updateUserInfo
-                    }
-                  >
-                    <Text style={styles.buttonText}>
-                      Save User Info
-                    </Text>
-                  </TouchableOpacity>
-                  <Text style={styles.sectionHeader}>Cadence Settings</Text>
-                  <Label>Vibration Style</Label>
+          <TouchableOpacity
+            style={{
+              ...styles.button,
+              backgroundColor: 'blue'
+            }}
+            onPress={this.updateUserInfo}
+          >
+            <Text style={styles.buttonText}>Save User Info</Text>
+          </TouchableOpacity>
+          <Text style={styles.sectionHeader}>Cadence Settings</Text>
+          <Text style={styles.sectionHeader}>Vibration Settings</Text>
+          <Label>Vibration Feedback Style</Label>
           <RNPickerSelect
             onValueChange={value => this.handleHaptic(value)}
             style={{display: 'flex', alignItems: 'center'}}
             value={this.state.hapticWhat}
-            items={
-            [{label: 'Single Beat', value: 'singlebeat'}, {label: 'Heartbeat', value: 'heartbeat'}, {label: 'Triplet', value: 'triplet'}, {label: 'Double-time', value: 'doubletime'}, {label: 'Triple-time', value:'tripletime'}, {label:'Quadruple-time', value:'quadrupletime'}]}
+            items={[
+              {label: 'Single Beat', value: 'singlebeat'},
+              {label: 'Heartbeat', value: 'heartbeat'},
+              {label: 'Triplet', value: 'triplet'},
+              {label: 'Double-time', value: 'doubletime'},
+              {label: 'Triple-time', value: 'tripletime'},
+              {label: 'Quadruple-time', value: 'quadrupletime'}
+            ]}
+          />
+          <Label>When to Play Vibration Feedback</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('hapticWhen', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.hapticWhen}
+            items={[
+              {label: 'Every Beat', value: 'everybeat'},
+              {label: 'Mute at Goal', value: 'muteAtGoal'},
+              {label: 'Mute', value: 'mute'}
+            ]}
+          />
+          <Text style={styles.sectionHeader}>Visual Settings</Text>
+          <View style={{...styles.visual, backgroundColor: fromHsv(this.state.visualColor), opacity: this.state.opacity}}></View>
+          <Label>Visual Feedback Style</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleVisual(value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhat}
+            items={[{label: 'Blink', value: 'blink'}]}
+          />
+          <Label>Visual Feedback Color</Label>
+          <Text>(click the center circle to confirm color)</Text>
+          <ColorPicker
+            onColorSelected={color => this.handleVisualColor(color)}
+            onColorChange={color => this.handleChange('visualColor', color)}
+            style={{ height: 200, marginBottom: 100}}
+            color={this.state.visualColor}
+            // hideSliders={true}
+          />
+          <Label>When to Play Visual Feedback</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('visualWhen', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhen}
+            items={[
+              {label: 'Every Beat', value: 'everybeat'},
+              {label: 'Mute at Goal', value: 'muteAtGoal'},
+              {label: 'Mute', value: 'mute'}
+            ]}
           />
           {/* <Item fixedLabel style={styles.checkBox}>
             <CheckBox
@@ -303,13 +402,17 @@ const styles = StyleSheet.create({
   barGraphic: {
     marginTop: 20,
     marginBottom: 20
+  },
+  visual: {
+    height: 50,
+    width: '100%'
   }
 })
 
 const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  changeUserInfoThunk
+  changeUserInfoThunk, updateOptionThunk
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen)
