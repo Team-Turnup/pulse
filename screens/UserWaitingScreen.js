@@ -45,9 +45,10 @@ class UserWaitingScreen extends React.Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() =>
-              // this.props.navigation.navigate('SelectRoutineScreen')
+            onPress={() =>{
               leaveClass(classId,studentId)
+              this.props.navigation.navigate('HomeScreen')
+            }
             }
           >
             <Text>Leave Class</Text>
