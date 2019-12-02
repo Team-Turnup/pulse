@@ -15,10 +15,10 @@ import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 
 class HomeScreen extends Component {
-  async componentDidMount() {
+  componentDidMount() {
     this.props.me()
     // await this.props.me()
-    await this.props.getMyClassesThunk()
+    this.props.getMyClassesThunk()
   }
 
   render() {
