@@ -15,6 +15,7 @@ import {
   Button
 } from 'native-base'
 import {DateTime} from 'luxon'
+import {getClassThunk} from '../store/singleClass'
 import activityTypes from '../assets/images/activityTypes'
 import userData from '../assets/images/userData'
 
@@ -180,7 +181,7 @@ export const Routine = ({routine: {intervals, name}, ...routine}) => (
 export default () => {
   //   const dispatch = useDispatch()
   //   const _class = useSelector(({singleClass}) => singleClass)
-  const {routine, attendees, when, ..._class} = dummyClass
+  const {routine, attendees, when, name, ..._class} = dummyClass
   const [curTime, setCurTime] = useState(Date.now())
 
   useInterval(() => setCurTime(Date.now()), 1000)
@@ -190,6 +191,7 @@ export default () => {
       <Header />
       <Content>
         <View style={styles.startView}>
+          <H2 style={textAlign: 'center'}>{name}</H2>
           {when < curTime ? <StartButton /> : <StartTime when={when} />}
         </View>
         <Routine routine={routine} />

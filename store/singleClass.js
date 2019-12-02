@@ -37,13 +37,7 @@ const unenrollFromClass = (classId, studentId) => ({
 
 export const leaveClass = (classId, studentId) => async dispatch => {
   try {
-    console.log('CLASSID from THUNK', classId)
-    console.log('STUDENTID from THUNK', studentId)
-
-    const response = await axios.delete(`${ngrok}/api/classes/${classId}`,)
-
-    console.log('response.dataAaaa', response.data)
-    // dispatch(unenrollFromClass(response.data))
+    const response = await axios.delete(`${ngrok}/api/classes/${classId}`)
   } catch (error) {
     console.error(error)
   }
@@ -51,7 +45,6 @@ export const leaveClass = (classId, studentId) => async dispatch => {
 
 export const enrollClass = (classId, studentId) => async dispatch => {
   try {
-
     const response = await axios.post(`${ngrok}/api/classes/${classId}`)
     dispatch(enrollIntoClass(response.data))
   } catch (error) {
@@ -80,14 +73,16 @@ export const createClassThunk = singleClass => async dispatch => {
   }
 }
 
-export const deleteRoutineThunk = classId => async dispatch => {
-  try {
-    await axios.delete(`${ngrok}/api/routines/${classId}`)
-    dispatch(removeClass())
-  } catch (error) {
-    console.error(error)
-  }
-}
+// this no longer means that the instructor is deleting the class now with
+// leaveClass thunk sending a DELETE to :classId. May need to clean this up
+// export const deleteClassThunk = classId => async dispatch => {
+//   try {
+//     await axios.delete(`${ngrok}/api/class/${classId}`)
+//     dispatch(removeClass())
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
 
 const initialState = {
   id: 0,
@@ -112,7 +107,8 @@ const classReducer = (state = initialState, action) => {
         ...state,
         attendees: state.attendees.filter(
           student => student.id !== action.studentId
-        )}
+        )
+      }
     default:
       return state
   }
