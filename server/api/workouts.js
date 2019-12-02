@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Workout, WorkoutTimestamp, User} = require('../db/models')
+const {Workout, WorkoutTimestamp, User, Routine} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {authenticatedUser} = require('./authFunctions')
@@ -34,20 +34,18 @@ router.get('/', authenticatedUser, async (req, res, next) => {
 router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {
-      body: {timestamp, routine, classId},
+      body: {routineId},
       user
     } = req
-    const workout = await Workout.create({
-      timestamp
-    })
+    const workout = await Workout.create()
+    const routine = await Routine.findByPk(routineId)
 
     // set user and routine, conditionally add classId if provided
     await Promise.all([
       workout.setUser(user),
       workout.setRoutine(routine),
-      ...((classId && workout.setClass(classId)) || [])
+      // ...((classId && workout.setClass(classId)) || [])
     ])
-
     res.status(200).json(workout)
   } catch (err) {
     next(err)

@@ -10,7 +10,7 @@ import {
   Text,
 } from 'native-base';
 import InProgressScreen from './InProgressScreen';
-// import {setWorkoutThunk} from '../store/workout';
+import {createWorkoutThunk} from '../store/workout';
 
 //maybe rename to UpdateRoutineScreen
 class StartRoutineScreen extends Component {
@@ -19,7 +19,8 @@ class StartRoutineScreen extends Component {
     this.state = {count: 4, clearCountdown: null}
   }
 
-  componentDidMount() {
+componentDidMount() {
+  this.props.createWorkoutThunk(this.props.routine.id)
       const clearCountdown = setInterval(() => {
           let {count} = this.state
           if (count>1) {
@@ -31,7 +32,6 @@ class StartRoutineScreen extends Component {
         this.setState({count})
       }, 60000/this.props.routine.intervals[0].cadence)
       this.setState({clearCountdown})
-      // this.props.setWorkoutThunk(this.props.routine)
   }
 
   render() {
@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({routine}) => ({routine})
+const mapDispatchToProps = {createWorkoutThunk}
 
-export default connect(mapStateToProps)(StartRoutineScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(StartRoutineScreen);
