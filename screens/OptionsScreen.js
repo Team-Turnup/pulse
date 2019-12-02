@@ -10,7 +10,7 @@ import {
 } from '../store/user'
 import {haptic} from '../assets/options/haptics'
 
-class BuildRoutineScreen extends Component {
+class OptionsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -312,4 +312,4 @@ const mapDispatchToProps = {
   changeUserInfoThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen)
