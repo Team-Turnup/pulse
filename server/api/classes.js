@@ -91,11 +91,12 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
 router.post('/:classId', authenticatedUser, async (req, res, next) => {
   try {
     const {user, body} = req
-    const {name, canEnroll, when, classPasscode} = body
+    const {name, canEnroll, when, attendees, classPasscode} = body
     let currentClass = await Class.create({
       name: name,
       canEnroll: canEnroll,
       when,
+      attendees,
       classPasscode
     })
     if (!currentClass) throw new Error(`Class not found.`)

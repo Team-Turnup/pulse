@@ -6,7 +6,6 @@ import {setRoutine} from './routine'
 const GET_CLASS = 'GET_CLASS'
 const CREATE_CLASS = 'CREATE_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
-//const UPDATE_CLASS = 'UPDATE_CLASS';
 
 const getClass = singleClass => ({
   type: GET_CLASS,
@@ -60,7 +59,6 @@ const initialState = {
   attendees: []
 }
 
-//should be a GET_ROUTINES probably
 const classReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CLASS:

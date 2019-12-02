@@ -1,36 +1,18 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   Container,
-  Header,
-  Title,
-  Form,
   Content,
-  Picker,
   Item,
-  Footer,
-  FooterTab,
   Button,
-  Left,
-  Right,
-  Body,
-  Icon,
   Text,
-  ListItem,
   DatePicker,
   Label,
-  Input,
-  CheckBox
+  Input
 } from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
+import CheckBox from 'react-native-check-box'
 //import {getClassThunk} from '../store/classes'
 import {createClassThunk} from '../store/singleClass'
 
@@ -41,6 +23,7 @@ class BuildClassScreen extends Component {
       name: '',
       canEnroll: true,
       when: new Date().toLocaleString(),
+      attendees: [],
       setClassPasscode: false,
       classPasscode: ''
     }
@@ -49,13 +32,14 @@ class BuildClassScreen extends Component {
   }
 
   handleCreateClass() {
-    const {name, canEnroll, when, classPasscode} = this.state
-    this.props.createClassThunk(name, canEnroll, when, classPasscode)
+    const {name, canEnroll, when, attendees, classPasscode} = this.state
+    this.props.createClassThunk(name, canEnroll, when, attendees, classPasscode)
     this.props.navigation.navigate('BuildRoutineScreen')
     this.setState({
       name: '',
       canEnroll: true,
       when: new Date().toLocaleString(),
+      attendees: [],
       setClassPasscode: false,
       classPasscode: ''
     })
@@ -76,7 +60,7 @@ class BuildClassScreen extends Component {
       <Container>
         <Content>
           <Item>
-            <Label>Name</Label>
+            <Label>Class Name</Label>
             <Input
               placeholder=""
               autoCapitalize="none"
@@ -87,7 +71,7 @@ class BuildClassScreen extends Component {
             ></Input>
           </Item>
           {/* <Item> */}
-          <Label>Can Enroll</Label>
+          <Label>Can Enroll?</Label>
           <RNPickerSelect
             onValueChange={value => this.handleChange('canEnroll', value)}
             style={{display: 'flex', alignItems: 'center'}}
