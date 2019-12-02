@@ -20,6 +20,7 @@ import {
 } from 'native-base'
 import {ngrok} from '../ngrok'
 import * as Google from 'expo-google-app-auth'
+//import ANDROID_GOOGLE_CLIENT_ID from '../secrets'
 import {tsImportEqualsDeclaration} from '@babel/types'
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -43,9 +44,24 @@ class LoginScreen extends React.Component {
   }
 
   async loginWithGoogle() {
-    // const result = await Google.logInAsync({
-    //   androidClientId: process.env.GOOGLE_CLIENT_ID
-    // })
+    try {
+      const result = await Google.logInAsync({
+        androidClientId:
+          '237987528571-l28e6dd63f4cnhjv1itscvj8a5r9j8uo.apps.googleusercontent.com',
+        scopes: ['profile', 'email']
+      })
+      if (result.type === 'success') {
+        this.setState({
+          signedIn: true,
+          name: result.user.name,
+          photoUrl: result.user.photoUrl
+        })
+      } else {
+        console.log('cancelled')
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
@@ -103,18 +119,18 @@ class LoginScreen extends React.Component {
           >
             <Text>Create an Account</Text>
           </Button>
-          <Text
+          {/* <Text
             style={{color: 'blue'}}
             onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
           >
             Google
-          </Text>
-          {/* <Button
+          </Text> */}
+          <Button
             onPress={() => this.loginWithGoogle()}
             title="login with google"
           >
             <Text>Login with Google </Text>
-          </Button> */}
+          </Button>
         </Content>
       </Container>
     )
