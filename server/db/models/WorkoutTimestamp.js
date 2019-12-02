@@ -10,6 +10,10 @@ const WorkoutTimestamp = db.define('workoutTimestamp', {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
   },
+  goalCadence: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+},
 })
 
 module.exports = WorkoutTimestamp
