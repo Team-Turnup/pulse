@@ -1,28 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {
   Container,
-  Header,
-  Title,
   Form,
   Content,
-  Picker,
-  Item,
-  Footer,
-  FooterTab,
   Button,
-  Left,
-  Right,
   Body,
-  Icon,
   Text,
   ListItem
 } from 'native-base'
@@ -34,7 +18,6 @@ import {createRoutineThunk} from '../store/routines'
 import {setRoutine} from '../store/routine'
 import activityTypes from '../assets/images/activityTypes'
 
-//maybe rename to CreateRoutineScreen
 class SelectRoutineScreen extends Component {
   constructor(props) {
     super(props)
@@ -126,9 +109,6 @@ class SelectRoutineScreen extends Component {
             style={styles.button}
           >
             <Text>Select A Previous Routine</Text>
-            {/* <PreviousRoutine
-            //routineType={this.state.routineType}
-            /> */}
           </Button>
         </Content>
       </Container>

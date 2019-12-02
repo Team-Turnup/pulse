@@ -1,31 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Modal,
-  TouchableHighlight,
-  Alert
-} from 'react-native'
-import {
-  Container,
-  Header,
-  Content,
-  Button,
-  Form,
-  Item,
-  Picker,
-  List,
-  ListItem,
-  Left,
-  Right,
-  Icon,
-  Text
-} from 'native-base'
+import {StyleSheet} from 'react-native'
+import {Container, Button, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import {getAllRoutinesThunk} from '../store/routines'
 import {setRoutine} from '../store/routine'
@@ -36,7 +12,6 @@ class PreviousRoutine extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      // modalVisible: false,
       //previousRoutines: [],
       selectedRoutine: {}
     }
@@ -49,9 +24,7 @@ class PreviousRoutine extends Component {
     console.log('Mounting...')
     this.props.getAllRoutinesThunk()
   }
-  // setModalVisible(visible) {
-  //   this.setState({modalVisible: visible})
-  // }
+
   handleChange(value) {
     this.setState({
       selectedRoutine: value
@@ -66,6 +39,7 @@ class PreviousRoutine extends Component {
     })
   }
   render() {
+    //at the moment this just puts out all routines that exist
     const mappedRoutines = this.props.routines.map(routine => {
       //const mappedRoutines = [].map(routine => {
       return {
@@ -88,53 +62,6 @@ class PreviousRoutine extends Component {
           <Text>Finalize Selection</Text>
         </Button>
       </Container>
-
-      //     <View style={{marginTop: 22}}>
-      //       <Modal
-      //         animationType="slide"
-      //         transparent={false}
-      //         visible={this.state.modalVisible}
-      //         onRequestClose={() => {
-      //           Alert.alert('Modal has been closed.')
-      //         }}
-      //       >
-      //         <View style={{marginTop: 22}}>
-      //           <View>
-      //             <Header>
-      //               <Text style={styles.header}>
-      //                 Select From Your Previous Routines
-      //               </Text>
-      //             </Header>
-      //             <RNPickerSelect
-      //               onValueChange={value => this.handleChange(value)}
-      //               items={[...mappedRoutines]}
-      //             />
-      //             <Button
-      //               bordered
-      //               style={styles.button}
-      //               onPress={() => this.handleSubmitPreviousRoutine()}
-      //             >
-      //               <Text>Finalize Selection</Text>
-      //             </Button>
-      //             <TouchableHighlight
-      //               onPress={() => {
-      //                 this.setModalVisible(!this.state.modalVisible)
-      //               }}
-      //             >
-      //               <Text>Hide Modal</Text>
-      //             </TouchableHighlight>
-      //           </View>
-      //         </View>
-      //       </Modal>
-      //       <Button
-      //         style={styles.button}
-      //         onPress={() => {
-      //           this.setModalVisible(true)
-      //         }}
-      //       >
-      //         <Text>Select From Previous Routine</Text>
-      //       </Button>
-      //     </View>
     )
   }
 }

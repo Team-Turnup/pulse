@@ -14,7 +14,6 @@ import {
   updateRoutineThunk
 } from '../store/routines'
 
-//maybe rename to UpdateRoutineScreen
 class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props)
