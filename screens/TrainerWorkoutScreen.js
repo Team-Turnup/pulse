@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, Fragment} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import useInterval from 'use-interval'
 import {StyleSheet} from 'react-native'
@@ -22,7 +22,7 @@ const dummyClass = {
   id: 11,
   name: 'Class # 21459',
   canEnroll: true,
-  when: Date.now() + 1000 * 35,
+  when: Date.now() + 1000 * 60 * 3,
   routine: {
     id: 21,
     name: 'Eloise',
@@ -95,50 +95,86 @@ const dummyClass = {
 }
 
 export const StartTime = ({when}) => {
-  const whenDateTime = DateTime.fromMillis(when)
+  const _when = DateTime.fromMillis(when)
+  const _timeLeft = _when
+    .diffNow(['days', 'hours', 'minutes', 'seconds'])
+    .toObject()
+  const _formatDateTime = () => {
+    // Time Formats:
+    // 1 day away -> start date in MM/DD/YYY
+    // more than 1 hr away -> start time in hh:mm AM/PM
+    // more than 1 minute away -> start time `in X minutes`
+    // less than 60s away -> start time `in X seconds`
+    if (_timeLeft.days >= 1) return _when.toLocaleString(DateTime.DATE_SHORT)
+    else if (_timeLeft.hours > 0)
+      return _when.toLocaleString(DateTime.TIME_SIMPLE)
+    else if (_timeLeft.minutes > 0) return _when.toRelative({unit: 'minutes'})
+    else return _when.toRelative({unit: 'seconds'})
+  }
   return (
-    <View style={styles.startView}>
+    <Fragment>
       <H2>Start Time: </H2>
-      <H3>
-        {whenDateTime.diffNow('seconds').toObject().seconds > 30
-          ? whenDateTime.toLocaleString(DateTime.DATETIME_SHORT) // short dateTime format if more than 30s away (mm/dd/yyyy, HH:MM)
-          : whenDateTime.toRelative({
-              unit: 'seconds'
-            }) /* relative time format if less than 30s away */}
-      </H3>
-    </View>
+      <H3>{_formatDateTime()}</H3>
+    </Fragment>
   )
 }
 
 export const StartButton = () => (
-  <View style={styles.startView}>
-    <Button>
-      <Text>Start Class</Text>
-    </Button>
-  </View>
+  <Button>
+    <Text>Start Class</Text>
+  </Button>
 )
 
 export const UserList = ({attendees}) => (
-  <List>
-    <ListItem itemHeader style={styles.listItem}>
-      <Text style={[styles.email, styles.listHeader]}>Email</Text>
-      <Text style={[styles.age, styles.listHeader]}>Age</Text>
-      <Text style={[styles.sex, styles.listHeader]}>Sex</Text>
-    </ListItem>
-    {attendees.map(({email, age, sex}, i) => (
-      <ListItem
-        key={email}
-        style={[
-          styles.listItem,
-          Math.round(Math.random()) ? styles.selected : null
-        ]}
-      >
-        <Text style={styles.email}>{email} </Text>
-        <Text style={styles.age}>{age}</Text>
-        <Text style={styles.sex}>{userData[sex].icon}</Text>
+  <Fragment>
+    <H3 style={{textAlign: 'center', paddingTop: 20}}>Attendees</H3>
+    <List>
+      <ListItem itemHeader style={styles.listItem}>
+        <Text style={[styles.email, styles.listHeader]}>Email</Text>
+        <Text style={[styles.age, styles.listHeader]}>Age</Text>
+        <Text style={[styles.sex, styles.listHeader]}>Sex</Text>
       </ListItem>
-    ))}
-  </List>
+      {attendees.map(({id: userId, email, age, sex}) => (
+        <ListItem
+          key={userId}
+          style={[
+            styles.listItem,
+            Math.round(Math.random()) ? styles.selected : null
+          ]}
+        >
+          <Text style={styles.email}>{email} </Text>
+          <Text style={styles.age}>{age}</Text>
+          <Text style={styles.sex}>{userData[sex].icon}</Text>
+        </ListItem>
+      ))}
+    </List>
+  </Fragment>
+)
+
+export const Routine = ({routine: {intervals, name}, ...routine}) => (
+  <Fragment>
+    <H3 style={{textAlign: 'center'}}>{`Routine: ${name}`}</H3>
+    <List>
+      <ListItem itemHeader style={styles.listItem}>
+        <Text style={[styles.activityName, styles.listHeader]}>Activity</Text>
+        <Text style={[styles.activityIcon, styles.listHeader]}></Text>
+        <Text style={[styles.cadence, styles.listHeader]}>Cadence</Text>
+        <Text style={[styles.Duration, styles.listHeader]}>Duration</Text>
+      </ListItem>
+      {intervals.map(({id: intervalId, activityType, cadence, duration}, i) => (
+        <ListItem key={intervalId} style={styles.listItem}>
+          <Text style={styles.activityName}>
+            {activityTypes[activityType].display}
+          </Text>
+          <Text style={styles.activityIcon}>
+            {activityTypes[activityType].icon}
+          </Text>
+          <Text style={styles.cadence}>{cadence}</Text>
+          <Text style={styles.Duration}>{duration}</Text>
+        </ListItem>
+      ))}
+    </List>
+  </Fragment>
 )
 
 export default () => {
@@ -152,12 +188,15 @@ export default () => {
   return (
     <Container>
       <Header />
-      {_class.when < curTime ? (
-        <StartButton />
-      ) : (
-        <StartTime when={_class.when} />
-      )}
       <Content>
+        <View style={styles.startView}>
+          {_class.when < curTime ? (
+            <StartButton />
+          ) : (
+            <StartTime when={_class.when} />
+          )}
+        </View>
+        <Routine routine={routine} />
         <UserList attendees={attendees} />
       </Content>
     </Container>
@@ -176,6 +215,10 @@ const styles = StyleSheet.create({
   email: {flex: 5, textAlign: 'left'},
   age: {flex: 2, textAlign: 'center'},
   sex: {flex: 1, textAlign: 'right'},
+  activityName: {flex: 2, textAlign: 'left'},
+  activityIcon: {flex: 1, textAlign: 'center'},
+  cadence: {flex: 2, textAlign: 'center'},
+  duration: {flex: 2, textAlign: 'right'},
   selected: {
     backgroundColor: 'rgba(0,255,0,0.25)'
   },
@@ -184,6 +227,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     paddingTop: 20,
-    paddingBottom: 10
+    paddingBottom: 20
   }
 })
