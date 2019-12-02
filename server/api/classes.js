@@ -6,12 +6,17 @@ const {leaderValidate, authenticatedUser} = require('./authFunctions')
 
 // Quick and dirty testing DO NOT USE IN PRODUCTION
 router.use(async (req, res, next) => {
-  if (process.env.NODE_ENV === 'test') {
-    req.login((await Class.findOne({include: [User]})).user, err =>
-      err ? next(err) : 'good!'
-    )
+  try {
+    if (process.env.NODE_ENV === 'test') {
+      req.login((await Class.findOne({include: [User]})).user, err =>
+        err ? next(err) : 'good!'
+      )
+    }
+    console.log(await req.user.getClasses())
+    next()
+  } catch (err) {
+    next(err)
   }
-  next()
 })
 
 // GET all classes at /api/class (for populating the class list for search)
