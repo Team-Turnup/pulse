@@ -7,17 +7,15 @@ import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import CommunityScreen from '../screens/CommunityScreen'
 import HistoryScreen from '../screens/HistoryScreen'
-import SelectRoutineScreen from '../screens/SelectRoutineScreen'
 //delete the select workout screen after development.
 import PreviousRoutine from '../screens/PreviousRoutine'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import InProgressScreen from '../screens/InProgressScreen'
 import LoginScreen from '../screens/LoginScreen'
-import SignupScreen from '../screens/SignupScreen'
 import ClassesScreen from '../screens/ClassesScreen'
-import UserWaitingScreen from '../screens/UserWaitingScreen'
-import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
-
+import CreateClassScreen from '../screens/CreateClassScreen'
+import BuildClassScreen from '../screens/BuildClassScreen'
+import OptionsScreen from '../screens/OptionsScreen'
 
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -109,7 +107,7 @@ HistoryStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: SettingsScreen
+    Settings: OptionsScreen
   },
   config
 )
@@ -135,9 +133,11 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
   // AccelerometerStack,
   // SelectWorkoutStack,
-  // BuildRoutineScreen: BuildRoutineScreen,
-  //PreviousRoutine
+  BuildRoutineScreen,
+  PreviousRoutine,
+  CreateClassScreen,
   // InProgressStack,
+  BuildClassScreen
 })
 
 tabNavigator.path = ''

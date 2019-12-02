@@ -1,149 +1,104 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity} from 'react-native'
-import {Container, Content, Button, Item, Label, Input, Text} from 'native-base'
+import {Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
-import RoutineBarGraphic from '../components/RoutineBarGraphic'
-import activityTypes from '../assets/images/activityTypes'
 import {
-  getRoutineThunk,
-  createRoutineThunk,
-  createAndStartRoutineThunk,
-  updateRoutineThunk
-} from '../store/routines'
+  changeUserInfoThunk
+} from '../store/user'
+import {haptic} from '../assets/options/haptics'
 
-class BuildRoutineScreen extends Component {
+class OptionsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      routineType: '',
-      routineName: '',
-      index: 0,
-      cadence: 100,
-      duration: 60,
-      intervalType: '',
-      routine: [],
-      makePublic: false
-      //dirty: false,
+        name: this.props.user.name || '',
+        age: this.props.user.age || 0,
+        gender: this.props.user.gender || '',
+        hapticWhat: this.props.option.hapticWhat || 'singlebeat'
     }
-    this.createRoutine = this.createRoutine.bind(this)
-    this.createAndStartRoutine = this.createAndStartRoutine.bind(this)
-    this.addInterval = this.addInterval.bind(this)
-    this.removeInterval = this.removeInterval.bind(this)
-    this.saveInterval = this.saveInterval.bind(this)
-    this.changeIndex = this.changeIndex.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.updateUserInfo = this.updateUserInfo.bind(this)
+    this.handleHaptic = this.handleHaptic.bind(this)
+    this.clear = null
   }
 
   handleChange(key, value) {
     this.setState({[key]: value})
-    if (key === 'routineType' && value !== 'combo') {
-      const newRoutine = this.state.routine.map(interval => ({
-        cadence: interval.cadence,
-        duration: interval.duration,
-        intervalType: value
-      }))
-      this.setState({intervalType: value, routine: newRoutine})
+  }
+
+  updateUserInfo() {
+    const {name, age, gender} = this.state
+    this.props.changeUserInfoThunk({name, age, gender})
+  }
+
+  handleHaptic(value) {
+    this.setState({hapticWhat: value})
+    if (value) {
+        if (this.clear) {
+            clearInterval(this.clear)
+        }
+        this.clear = setInterval(haptic(value, 100), 600)
+        setTimeout(()=>clearInterval(this.clear), 5000)
     }
   }
 
-  createRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
-    this.props.createRoutineThunk({
-      routineName,
-      routineType,
-      routine,
-      makePublic
-    })
-    this.props.navigation.navigate('HomeScreen')
-  }
-
-  async createAndStartRoutine() {
-    const {routineName, routineType, routine, makePublic} = this.state
-    await this.props.createAndStartRoutineThunk({
-      routineName,
-      routineType,
-      routine,
-      makePublic
-    })
-    this.props.navigation.navigate('StartRoutineScreen')
-  }
-
-  addInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
-    const newRoutine = [
-      ...routine.slice(0, index + 1),
-      {cadence, duration, intervalType},
-      ...routine.slice(index + 1)
-    ]
-    this.setState({
-      routine: newRoutine,
-      index: routine.length === 0 ? index : index + 1
-    })
-  }
-
-  saveInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
-    const newRoutine = [
-      ...routine.slice(0, index),
-      {cadence, duration, intervalType},
-      ...routine.slice(index + 1)
-    ]
-    this.setState({routine: newRoutine})
-  }
-
-  removeInterval() {
-    const {routine, index} = this.state
-    const newRoutine = [...routine.slice(0, index), ...routine.slice(index + 1)]
-    this.setState({routine: newRoutine, index: index === 0 ? index : index - 1})
-  }
-
-  changeIndex(index) {
-    const interval = this.state.routine[index]
-    this.setState({
-      index,
-      cadence: interval.cadence,
-      duration: interval.duration,
-      intervalType: interval.intervalType
-    })
-  }
-
   render() {
-    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
-      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
-      value: activity
-    }))
-
     return (
       <Container>
-        {/* <Header>
-          <Text style={styles.header}>Build Routine</Text>
-        </Header> */}
         <Content>
-          <Text style={styles.sectionHeader}>Routine</Text>
+          <Text style={styles.sectionHeader}>User Info</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
             <Input
               placeholder=""
               autoCapitalize="none"
               autoCorrect={false}
-              value={this.state.routineName}
-              onChangeText={routineName => this.setState({routineName})}
+              value={this.state.name}
+              onChangeText={name=> this.setState({name})}
               style={styles.name}
             />
           </Item>
-          {/* <Item fixedLabel style={styles.item}> */}
-          <Label>Activity Type</Label>
+          <Item fixedLabel style={styles.item}>
+                <Label>Age</Label>
+                <NumericInput
+                  value={this.state.age}
+                  onChange={value => this.handleChange('age', value)}
+                />
+              </Item>
+          <Label>Gender</Label>
           <RNPickerSelect
-            onValueChange={value => this.handleChange('routineType', value)}
+            onValueChange={value => this.handleChange('gender', value)}
             style={{display: 'flex', alignItems: 'center'}}
-            value={this.state.routineType}
-            items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
+            value={this.state.gender}
+            items={[{label: 'Female', value: 'female'},
+            {label: 'Male', value: 'male'},
+            {label: 'Non-binary', value: 'non-binary'}]}
           />
-          {/* </Item> */}
-          <Item fixedLabel style={styles.checkBox}>
+               <TouchableOpacity
+                    style={{
+                      ...styles.button,
+                      backgroundColor: 'blue'
+                    }}
+                    onPress={this.updateUserInfo
+                    }
+                  >
+                    <Text style={styles.buttonText}>
+                      Save User Info
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={styles.sectionHeader}>Cadence Settings</Text>
+                  <Label>Vibration Style</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleHaptic(value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.hapticWhat}
+            items={
+            [{label: 'Single Beat', value: 'singlebeat'}, {label: 'Heartbeat', value: 'heartbeat'}, {label: 'Triplet', value: 'triplet'}, {label: 'Double-time', value: 'doubletime'}, {label: 'Triple-time', value:'tripletime'}, {label:'Quadruple-time', value:'quadrupletime'}]}
+          />
+          {/* <Item fixedLabel style={styles.checkBox}>
             <CheckBox
               onClick={() =>
                 this.setState(prevState => ({
@@ -285,7 +240,7 @@ class BuildRoutineScreen extends Component {
             </View>
           ) : (
             <View></View>
-          )}
+          )} */}
         </Content>
       </Container>
     )
@@ -351,13 +306,10 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({routines}) => ({routines})
+const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  getRoutineThunk,
-  createRoutineThunk,
-  updateRoutineThunk,
-  createAndStartRoutineThunk
+  changeUserInfoThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen)

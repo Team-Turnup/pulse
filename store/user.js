@@ -1,19 +1,24 @@
 import axios from 'axios'
 import {ngrok} from '../ngrok'
+import {getOption} from './option'
 
 //ACTION TYPES
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const CHANGE_USER_INFO = 'CHANGE_USER_INFO'
 const ADD_USER = 'ADD_USER'
+const GET_MY_CLASSES = 'GET_MY_CLASSES'
 
 //ACTION CREATORS
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
-const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
+const changeUserInfo = info => ({type: CHANGE_USER_INFO, info})
+const getMyClasses = myClasses => ({
+  type: GET_MY_CLASSES,
+  myClasses
+})
 
 //THUNKS
-
 export const me = () => async dispatch => {
   try {
     const response = await axios.get(`${ngrok}/auth/me`)
@@ -23,35 +28,14 @@ export const me = () => async dispatch => {
   }
 }
 
-// export const auth = (
-//   email,
-//   password,
-//   method
-//   // firstName,
-//   // lastName
-// ) => async dispatch => {
-//   let res
-//   try {
-//     if (method === 'signup') {
-//       res = await axios.post('/auth/signup', {
-//         email,
-//         password
-//         // firstName,
-//         // lastName
-//       })
-//     } else if (method === 'login') {
-//       res = await axios.post('/auth/login', {email, password})
-//     }
-//   } catch (authError) {
-//     return dispatch(getUser({error: authError}))
-//   }
-//   try {
-//     dispatch(getUser(res.data))
-//     //history.push('/home')
-//   } catch (dispatchOrHistoryErr) {
-//     console.error(dispatchOrHistoryErr)
-//   }
-// }
+export const getUserClassesThunk = userId => async dispatch => {
+  try {
+    const response = await axios.get(`${ngrok}/api/users/${userId}/myClasses`)
+    dispatch(getMyClasses(response.data))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 export const auth = (user, method) => async dispatch => {
   let res
@@ -75,8 +59,9 @@ export const auth = (user, method) => async dispatch => {
     return dispatch(getUser({error: authError}))
   }
   try {
-    dispatch(getUser(res.data))
-    //history.push('/home')
+    dispatch(getUser(res.data.user))
+    dispatch(getOption(res.data.option))
+    return res.data.user
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
   }
@@ -84,18 +69,18 @@ export const auth = (user, method) => async dispatch => {
 
 export const logout = () => async dispatch => {
   try {
-    await axios.post('/auth/logout')
+    await axios.post(`${ngrok}/auth/logout`)
     dispatch(removeUser())
-    history.push('/login')
+    //history.push('/login')
   } catch (err) {
     console.error(err)
   }
 }
 
-export const changeUserInfoThunk = userId => async dispatch => {
+export const changeUserInfoThunk = info => async dispatch => {
   try {
-    const response = await axios.put(`api/users/${userId}`, {userId})
-    dispatch(changeUserInfo(userId))
+    await axios.put(`${ngrok}/api/users`, info)
+    dispatch(changeUserInfo(info))
   } catch (error) {
     console.error(error)
   }
@@ -112,9 +97,9 @@ const defaultUser = {}
     case REMOVE_USER:
       return defaultUser
     case CHANGE_USER_INFO:
-      return state.map(user => {
-        return user
-      })
+      return {...state, ...action.info}
+    case GET_MY_CLASSES:
+      return action.myClasses
     default:
       return state
   }

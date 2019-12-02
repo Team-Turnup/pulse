@@ -34,6 +34,7 @@ User.hasMany(Workout)
 User.hasMany(Routine)
 User.hasMany(Class) // class leader
 User.belongsToMany(Class, {as: 'attendee', through: 'Attendees'})
+User.hasOne(Option)
 
 Workout.belongsTo(Class)
 Workout.belongsTo(User)
