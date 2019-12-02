@@ -124,7 +124,6 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = ''
 
-
 const tabNavigator = createBottomTabNavigator({
   LoginStack,
   ClassesScreen,

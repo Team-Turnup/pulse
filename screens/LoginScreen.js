@@ -28,10 +28,10 @@ class LoginScreen extends React.Component {
     this.state = {
       email: '',
       password: '',
-      message: ''
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
+      message: '',
+      signedIn: false,
+      name: '',
+      photoUrl: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
     this.loginWithGoogle = this.loginWithGoogle.bind(this)
@@ -47,10 +47,10 @@ class LoginScreen extends React.Component {
     this.setState({
       email: '',
       password: '',
-      message: ''
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
+      message: '',
+      signedIn: false,
+      name: '',
+      photoUrl: ''
     })
     if (result.user && result.user.error) {
       this.setState({message: 'Wrong username and/or password'})
@@ -70,6 +70,9 @@ class LoginScreen extends React.Component {
       })
       if (result.type === 'success') {
         this.setState({
+          email: result.user.email,
+          password: '',
+          message: '',
           signedIn: true,
           name: result.user.name,
           photoUrl: result.user.photoUrl
