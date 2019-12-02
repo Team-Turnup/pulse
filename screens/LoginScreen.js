@@ -2,8 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store/users'
-import {Image} from 'react-native'
-import {StyleSheet, View, Linking} from 'react-native'
+import {StyleSheet, View, Linking, Image} from 'react-native'
 import {
   Container,
   Header,
@@ -29,6 +28,9 @@ class LoginScreen extends React.Component {
     this.state = {
       email: '',
       password: ''
+      // signedIn: false,
+      // name: '',
+      // photoUrl: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
     this.loginWithGoogle = this.loginWithGoogle.bind(this)
@@ -44,6 +46,9 @@ class LoginScreen extends React.Component {
     this.setState({
       email: '',
       password: ''
+      // signedIn: false,
+      // name: '',
+      // photoUrl: ''
     })
     this.props.navigation.navigate('HomeStack')
   }
