@@ -37,7 +37,12 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 
       User.findOrCreate({
         where: {googleId},
-        defaults: {email, imageUrl, name, role: 'user'}
+        defaults: {
+          email,
+          imageUrl,
+          name
+          //role: 'user'
+        }
       })
         .then(([user]) => done(null, user))
         .catch(done)
