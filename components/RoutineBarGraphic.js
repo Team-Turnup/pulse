@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import routine from "../dummyIntervals";
 import activityTypes from '../assets/images/activityTypes'
 
 export default RoutineBarGraphic = props => {

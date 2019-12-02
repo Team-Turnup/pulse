@@ -1,17 +1,11 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {
   Container,
-  Button,
   Text,
-  Header,
-  Grid,
-  Title,
   Content,
   Card,
   CardItem,
-  Row,
-  Col
 } from 'native-base'
 import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
@@ -79,7 +73,7 @@ class InProgressScreen extends React.Component {
         cadences,
         avgCadences
       })
-      socket.emit('workoutTimestamp', {workoutTimestamp, workoutId: this.props.workout.id})
+      socket.emit('workoutTimestamp', {workoutTimestamp: {...workoutTimestamp, goalCadence: this.state.intervals[this.state.currentInterval].cadence}, workoutId: this.props.workout.id})
     })
 
     Pedometer.isAvailableAsync().then(

@@ -31,6 +31,21 @@ router.get('/myClasses', authenticatedUser, async (req, res, next) => {
   }
 })
 
+router.get('/myWorkouts', authenticatedUser, async (req, res, next) => {
+  try {
+    const myWorkouts = await Workout.findAll({
+      where: {
+        userId: req.user.id
+      },
+      include: [Routine]
+    })
+    if (!myWorkouts) res.status(404).send("can't find user's workouts")
+    res.json(myWorkouts)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.put('/', authenticatedUser, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.user.id)
@@ -43,7 +58,6 @@ router.put('/', authenticatedUser, async (req, res, next) => {
 
 router.put('/options', authenticatedUser, async (req, res, next) => {
   try {
-    console.log(req.body)
     const option = await Option.findOne({where: {userId: req.user.id}})
     await option.update(req.body)
     res.sendStatus(200)

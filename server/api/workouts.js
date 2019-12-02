@@ -46,7 +46,7 @@ router.post('/', authenticatedUser, async (req, res, next) => {
       workout.setRoutine(routine),
       // ...((classId && workout.setClass(classId)) || [])
     ])
-    res.status(200).json(workout)
+    res.status(200).json({workout, routine})
   } catch (err) {
     next(err)
   }
