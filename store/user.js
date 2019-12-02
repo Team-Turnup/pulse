@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {ngrok} from '../ngrok'
+import {getOption} from './option'
 
 //ACTION TYPES
 const GET_USER = 'GET_USER'
@@ -11,7 +12,7 @@ const GET_MY_CLASSES = 'GET_MY_CLASSES'
 //ACTION CREATORS
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
-const changeUserInfo = userId => ({type: CHANGE_USER_INFO, userId})
+const changeUserInfo = info => ({type: CHANGE_USER_INFO, info})
 const getMyClasses = myClasses => ({
   type: GET_MY_CLASSES,
   myClasses
@@ -58,8 +59,9 @@ export const auth = (user, method) => async dispatch => {
     return dispatch(getUser({error: authError}))
   }
   try {
-    dispatch(getUser(res.data))
-    //history.push('/home')
+    dispatch(getUser(res.data.user))
+    dispatch(getOption(res.data.option))
+    return res.data.user
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
   }
@@ -75,10 +77,10 @@ export const logout = () => async dispatch => {
   }
 }
 
-export const changeUserInfoThunk = userId => async dispatch => {
+export const changeUserInfoThunk = info => async dispatch => {
   try {
-    const response = await axios.put(`api/users/${userId}`, {userId})
-    dispatch(changeUserInfo(userId))
+    await axios.put(`${ngrok}/api/users`, info)
+    dispatch(changeUserInfo(info))
   } catch (error) {
     console.error(error)
   }
@@ -95,9 +97,7 @@ export default function(state = defaultUser, action) {
     case REMOVE_USER:
       return defaultUser
     case CHANGE_USER_INFO:
-      return state.map(user => {
-        return user
-      })
+      return {...state, ...action.info}
     case GET_MY_CLASSES:
       return action.myClasses
     default:

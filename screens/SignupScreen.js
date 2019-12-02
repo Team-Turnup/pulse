@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {auth} from '../store/users'
+import {auth} from '../store/user'
 import {Image} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {
@@ -29,9 +29,9 @@ class SignupScreen extends React.Component {
     this.handleSignup = this.handleSignup.bind(this)
   }
 
-  handleSignup() {
+  async handleSignup() {
     const formName = 'signup'
-    this.props.doHandleSignup(this.state, formName)
+    await this.props.doHandleSignup(this.state, formName)
     this.setState({
       email: '',
       password: ''
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
 
 const mapSignup = state => {
   return {
-    users: state.users,
+    user: state.user,
     name: 'signup',
     displayName: 'Sign Up'
     //error: state.user.error
