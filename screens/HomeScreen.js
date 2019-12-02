@@ -11,7 +11,8 @@ import {
   Card,
   CardItem
 } from 'native-base'
-import {me, getUserClassesThunk} from '../store/users'
+import {me} from '../store/user'
+import {getMyClassesThunk} from '../store/myClasses'
 
 class HomeScreen extends Component {
   constructor() {
@@ -19,10 +20,9 @@ class HomeScreen extends Component {
     this.state = {}
   }
   async componentDidMount() {
-    await this.props.me()
-    this.props.getUserClassesThunk(this.props.user.id)
+    // await this.props.me()
+    await this.props.getMyClassesThunk()
     //user information is not persisting
-    console.log(this.props.user)
   }
 
   render() {
@@ -90,7 +90,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   me: () => dispatch(me()),
-  getUserClassesThunk: userId => dispatch(getUserClassesThunk(userId))
+  getMyClassesThunk: () => dispatch(getMyClassesThunk())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

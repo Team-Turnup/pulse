@@ -4,25 +4,35 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
 
-router.get(`/:id`, async (req, res, next) => {
-  try {
-    const user = await findById(req.params.id)
-    res.json(user)
-  } catch (error) {
-    console.error(error)
-  }
-})
+// router.get(`/:id`, async (req, res, next) => {
+//   try {
+//     const user = await User.findById(req.params.id)
+//     res.json(user)
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })
 
 //hopefully it finds the user's classes
-router.get('/:userId/myClasses', authenticatedUser, async (req, res, next) => {
+router.get('/myClasses', authenticatedUser, async (req, res, next) => {
   try {
     const myClasses = await Class.findAll({
       where: {
-        userId: req.params.userId
+        userId: req.user.id
       }
     })
     if (!myClasses) res.status(404).send("can't find user's classes")
     res.json(myClasses)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/', authenticatedUser, async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.user.id)
+    await user.update(req.body)
+    res.sendStatus(200)
   } catch (err) {
     next(err)
   }
