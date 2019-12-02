@@ -14,21 +14,17 @@ import {
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 
-
-
 class HomeScreen extends Component {
-  componentDidMount(){
-
+  async componentDidMount() {
     this.props.me()
     // await this.props.me()
-    this.props.getMyClassesThunk()
+    await this.props.getMyClassesThunk()
   }
 
   render() {
-    console.log('HOMEPROPSS.user::', this.props.user)
-
     const {navigation} = this.props
-
+    // console.log('this.props.user', this.props.user)
+    console.log('myClasses', this.props.myClasses)
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>
@@ -41,9 +37,7 @@ class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={() =>
-              navigation.navigate('SelectRoutineScreen')
-            }
+            onPress={() => navigation.navigate('SelectRoutineScreen')}
           >
             <Text>Add New Workout</Text>
           </Button>
@@ -51,9 +45,11 @@ class HomeScreen extends Component {
             block
             danger
             style={{margin: 7}}
-            onPress={()=> navigation.navigate('ClassesScreen', {
-              loggedInUserId: this.props.user.id
-            })}
+            onPress={() =>
+              navigation.navigate('ClassesScreen', {
+                loggedInUserId: this.props.user.id
+              })
+            }
           >
             <Text>Join A Class</Text>
           </Button>
@@ -70,13 +66,14 @@ class HomeScreen extends Component {
             <Text>My Classes List</Text>
             {/* I need to be able to persist user information to be able to call on user's classes */}
             {/* {this.props.user.classes.map((aClass, i) => { */}
-            {/* {this.props.myClasses.map((aClass, i) => {
+            {this.props.myClasses.map((aClass, i) => {
+              console.log('aClass', aClass)
               return (
                 <CardItem key={i}>
                   <Text>{aClass.name}</Text>
                 </CardItem>
               )
-            })} */}
+            })}
           </Card>
         </Content>
       </Container>
@@ -90,7 +87,8 @@ HomeScreen.navigationOptions = {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  myClasses: state.myClasses
 })
 
 const mapDispatchToProps = dispatch => ({

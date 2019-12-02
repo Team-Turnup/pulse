@@ -17,9 +17,9 @@ export default createAppContainer(
       Main: MainTabNavigator,
       ScreenNavigator,
       LoginScreen
-    },
-    {
-      initialRouteName: 'LoginScreen'
     }
+    // {
+    //   initialRouteName: 'LoginScreen'
+    // }
   )
 )
