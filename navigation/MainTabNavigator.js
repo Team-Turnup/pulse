@@ -13,21 +13,21 @@ const config = Platform.select({
   default: {}
 })
 
-const TakePhotoStack = createStackNavigator({TakePhoto: TakePhotoScreen})
+// const TakePhotoStack = createStackNavigator({TakePhoto: TakePhotoScreen})
 
-TakePhotoStack.navigationOptions = {
-  tabBarLabel: 'TakePhoto',
-  tabBarIcon: ({focused}) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  )
-}
+// TakePhotoStack.navigationOptions = {
+//   tabBarLabel: 'TakePhoto',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
 
 const LoginStack = createStackNavigator({Login: LoginScreen})
 
@@ -88,7 +88,7 @@ const tabNavigator = createBottomTabNavigator({
   HomeStack,
   SettingsStack,
   TrainerWorkScreen,
-  TakePhotoStack
+  // TakePhotoStack
 })
 
 tabNavigator.path = ''
