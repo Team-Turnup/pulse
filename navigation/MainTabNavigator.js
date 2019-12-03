@@ -85,8 +85,7 @@ SettingsStack.path = ''
 const tabNavigator = createBottomTabNavigator({
   LoginStack,
   HomeStack,
-  SettingsStack,
-  // TrainerWorkScreen,
+  SettingsStack
   // TakePhotoStack
 })
 
