@@ -10,7 +10,7 @@ import {
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import {dummyClass} from './WaitingScreenComponents'
-import dummyWorkout from '../dummyWorkout.json'
+// import dummyWorkout from '../dummyWorkout.json'
 import WorkoutGraph from './WorkoutGraph'
 import {useSelector} from 'react-redux'
 import {useInterval} from 'use-interval'
