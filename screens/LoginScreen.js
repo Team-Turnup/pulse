@@ -23,7 +23,6 @@ import * as Google from 'expo-google-app-auth'
 import {me} from '../store/user'
 import {tsImportEqualsDeclaration} from '@babel/types'
 
-
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -58,7 +57,6 @@ class LoginScreen extends React.Component {
       this.setState({message: 'Wrong username and/or password'})
       setTimeout(() => this.setState({message: ''}), 2000)
     } else {
-      console.log('hey')
       this.props.navigation.navigate('HomeStack')
     }
   }

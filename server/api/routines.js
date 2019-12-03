@@ -5,11 +5,10 @@ const Op = Sequelize.Op
 const db = require('../db')
 
 router.get('/', async (req, res, next) => {
-  console.log('entering api')
   try {
     const routines = await Routine.findAll({
-      where:{
-        userId:req.user.id
+      where: {
+        userId: req.user.id
       },
       include: [{model: Interval}, {model: User}, {model: Workout}]
     })
@@ -42,7 +41,6 @@ router.post('/', async (req, res, next) => {
       )
     )
     newRoutine = await Routine.findByPk(newRoutine.id, {include: [Interval]})
-    console.log('newRoutine', newRoutine)
     res.status(201).json(newRoutine)
   } catch (err) {
     next(err)
