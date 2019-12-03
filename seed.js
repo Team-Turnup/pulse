@@ -85,10 +85,12 @@ const createWorkoutstamp = async () => {
     timestamp: new Date()
   })
 }
+
 const createClass = async () => {
   return await Class.create({
     name: `Class # ${faker.random.number()}`,
     canEnroll: true,
+    when: `Class # ${faker.date.between('2016-12-05', '2022-12-05')}`,
     live: true
   })
 }
