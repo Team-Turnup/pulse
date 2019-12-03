@@ -117,17 +117,18 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
     next(err)
   }
 })
-//working - save here
+
 router.post('/', authenticatedUser, async (req, res, next) => {
   try {
-    const {user, body} = req
-    const {name, canEnroll, when, attendees, classPasscode} = body
+    const {body} = req
+    const {name, canEnroll, when, attendees, classPasscode, routineId} = body
     let currentClass = await Class.create({
       name,
       canEnroll,
       when,
       attendees,
-      classPasscode
+      classPasscode,
+      routineId
     })
     if (!currentClass) throw new Error(`Class not found.`)
     res.status(200).json(currentClass)
@@ -135,32 +136,5 @@ router.post('/', authenticatedUser, async (req, res, next) => {
     next(err)
   }
 })
-
-// //posts a class
-// //should modify more to also
-// //associate a class with a routine
-// router.post('/', authenticatedUser, async (req, res, next) => {
-//   try {
-//     const {user, body} = req
-//     const {name, canEnroll, when, attendees, classPasscode} = body
-//     let currentClass = await Class.create({
-//       name,
-//       canEnroll,
-//       when,
-//       attendees,
-//       classPasscode
-//     })
-//     // let routine = await Routine.findByPk(req.routineId)
-//     // await Promise.all([currentClass.setRoutine(routine)])
-
-//     if (!currentClass) throw new Error(`Class not found.`)
-//     res.status(200).json(
-//       currentClass
-//       //routine
-//     )
-//   } catch (err) {
-//     next(err)
-//   }
-// })
 
 module.exports = router

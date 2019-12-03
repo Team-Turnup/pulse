@@ -65,7 +65,6 @@ export const getClassThunk = id => async dispatch => {
   }
 }
 
-//working create class without trying to attach routine
 export const createClassThunk = singleClass => async dispatch => {
   try {
     const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
@@ -74,19 +73,6 @@ export const createClassThunk = singleClass => async dispatch => {
     console.error(err)
   }
 }
-
-// //buggy
-// export const createClassThunk = (singleClass, routine) => async dispatch => {
-//   try {
-//     const {data} = await axios.post(`${ngrok}/api/classes/`, {
-//       singleClass,
-//       routine
-//     })
-//     dispatch(createClass(data))
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
 
 // this no longer means that the instructor is deleting the class now with
 // leaveClass thunk sending a DELETE to :classId. May need to clean this up
