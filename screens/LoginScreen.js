@@ -37,7 +37,7 @@ class LoginScreen extends React.Component {
       // photoUrl: ''
     }
     this.clear = null
-    this.handleLogin = this.handleLogin.bind(this)
+    this.handleAuth = this.handleAuth.bind(this)
     this.loginWithGoogle = this.loginWithGoogle.bind(this)
   }
 
@@ -57,9 +57,8 @@ class LoginScreen extends React.Component {
     // }
   }
 
-  async handleLogin() {
-    const formName = 'login'
-    const result = await this.props.doHandleLogin(this.state, formName)
+  async handleAuth(formName) {
+    const result = await this.props.doHandleAuth(this.state, formName)
     this.setState({
       email: '',
       password: '',
@@ -167,7 +166,7 @@ class LoginScreen extends React.Component {
           {!isUser ? (
             <Button
               style={styles.button}
-              onPress={() => this.handleLogin()}
+              onPress={()=>this.handleAuth('login')}
             >
               <Text>Sign In</Text>
             </Button>
@@ -175,7 +174,7 @@ class LoginScreen extends React.Component {
           {!isUser ? (
             <Button
               style={styles.button}
-              onPress={() => this.props.navigation.navigate('SignupScreen')}
+              onPress={()=>this.handleAuth('signup')}
             >
               <Text>Create an Account</Text>
             </Button>
@@ -279,7 +278,7 @@ const mapLogin = state => {
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method)),
+  doHandleAuth: (user, method) => dispatch(auth(user, method)),
   me: () => dispatch(me()),
   handleClick() {
     dispatch(logout())
