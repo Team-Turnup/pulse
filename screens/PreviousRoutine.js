@@ -1,3 +1,4 @@
+//buggy?
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet} from 'react-native'
@@ -21,7 +22,7 @@ class PreviousRoutine extends Component {
     )
   }
   componentDidMount() {
-    this.props.getAllRoutinesThunk()
+    this.props.getAllMyRoutinesThunk()
   }
 
   handleChange(value) {
@@ -32,7 +33,9 @@ class PreviousRoutine extends Component {
   handleSubmitPreviousRoutine() {
     this.props.setRoutine(this.state.selectedRoutine)
     //this.props.updateRoutineThunk();
-    this.props.navigation.navigate('BuildRoutineScreen')
+    this.props.navigation.navigate('CreateClassScreen', {
+      routine: this.state.selectedRoutine
+    })
     this.setState({
       selectedRoutine: {}
     })
@@ -86,7 +89,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
   //updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine))
-  getAllRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
+  getAllMyRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
   setRoutine: routine => dispatch(setRoutine(routine))
 })
 

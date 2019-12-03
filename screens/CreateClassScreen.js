@@ -1,13 +1,32 @@
+//buggy?
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {Container, Header, Button, Text} from 'native-base'
+//import {getRoutineThunk} from '../store/routines'
 
 class CreateClassScreen extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      routine: []
+    }
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.routine !== prevProps.routine) {
+      //this.fetchData(this.props.routine);
+      this.setState({
+        routine: this.props.navigation.getParam('routine')
+      })
+    }
+  }
+  // static getDerivedStateFromProps(props, state) {
+  //   return {
+  //     routine: this.props.navigation.getParam('routine')
+  //   }
+  // }
+
   render() {
     return (
       <Container>
@@ -16,22 +35,47 @@ class CreateClassScreen extends Component {
             How would you like to Create your Class?
           </Text>
         </Header>
-        <Button
-          style={{
-            ...styles.button
-          }}
-          onPress={() => this.props.navigation.navigate('PreviousRoutine')}
-        >
-          <Text>Create a Class using a Previous Routine</Text>
-        </Button>
-        <Button
-          style={{
-            ...styles.button
-          }}
-          onPress={() => this.props.navigation.navigate('BuildClassScreen')}
-        >
-          <Text>Create a Class using a New Routine</Text>
-        </Button>
+        {this.state.routine.length ? (
+          <Text>Your Selected Routine is: {this.props.routine}</Text>
+        ) : (
+          <View />
+        )}
+        {!this.state.routine.length ? (
+          <Button
+            style={{
+              ...styles.button
+            }}
+            onPress={() => this.props.navigation.navigate('PreviousRoutine')}
+          >
+            <Text>Select Previous Routine</Text>
+          </Button>
+        ) : (
+          <View />
+        )}
+        {!this.state.routine.length ? (
+          <Button
+            style={{
+              ...styles.button
+            }}
+            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+          >
+            <Text>Select New Routine</Text>
+          </Button>
+        ) : (
+          <View />
+        )}
+        {this.state.routine.length ? (
+          <Button
+            style={{
+              ...styles.button
+            }}
+            onPress={() => this.props.navigation.navigate('BuildClassScreen')}
+          >
+            <Text>Start Creating Class</Text>
+          </Button>
+        ) : (
+          <View />
+        )}
       </Container>
     )
   }
@@ -96,8 +140,12 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+  routine: state.routine
+})
 
-const mapDispatchToProps = dispatch => ({})
+// const mapDispatchToProps = dispatch => ({
+//   getRoutineThunk: id => dispatch(getRoutineThunk(id))
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateClassScreen)
+export default connect(mapStateToProps)(CreateClassScreen)
