@@ -6,7 +6,7 @@ import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import LoginScreen from '../screens/LoginScreen'
 import OptionsScreen from '../screens/OptionsScreen'
-import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
+// import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -86,7 +86,7 @@ const tabNavigator = createBottomTabNavigator({
   LoginStack,
   HomeStack,
   SettingsStack,
-  TrainerWorkScreen,
+  // TrainerWorkScreen,
   // TakePhotoStack
 })
 
