@@ -105,7 +105,7 @@ class LoginScreen extends React.Component {
       <Container>
         <Content>
                 <View style={{backgroundColor: 'rgb(84, 130, 53)', width: '100%', paddingTop: 5, paddingBottom: 5}}>
-                <Text style={{fontFamily: 'Verdana' ,fontSize: 30, fontWeight: "600", color: 'white',  textAlign: 'center'}}>Stride</Text>
+                <Text style={{fontSize: 30, fontWeight: "600", color: 'white',  textAlign: 'center'}}>Stride</Text>
                 </View>
           <Card transparent style={{margin: 0, padding: 0}}>
             <CardItem
@@ -119,12 +119,12 @@ class LoginScreen extends React.Component {
               }}
             >
               <View style={{backgroundColor: 'rgba(84, 130, 53, 0.3)', paddingTop: 20, paddingBottom: 20, width: "100%", borderBottomLeftRadius: 10, borderBottomRightRadius: 10, overflow: 'hidden'}}>
-              <Text style={{fontFamily: 'Georgia', textAlign: 'center'}}>A solo- or group-based tempo trainer</Text>
-              <Text style={{fontFamily: 'Georgia', textAlign: 'center'}}>with visual and vibrational feedback</Text>
+              <Text style={{textAlign: 'center'}}>A solo- or group-based tempo trainer</Text>
+              <Text style={{textAlign: 'center'}}>with visual and vibrational feedback</Text>
               <View style={{display: 'flex', flexDirection: 'row', alignItems: "center", justifyContent: "center", marginTop: 20}}>
                 <View style={{display: 'flex', flexDirection: 'column', width: 175, alignItems: 'center'}}>
-            <Text style={{fontFamily: 'Georgia'}}>For</Text>
-            <Text style={{fontFamily: 'Verdana', fontSize: 18, fontWeight: "600", color: 'rgb(84, 130, 53)', marginTop: 10}}>{this.state.forArray[this.state.for]}</Text>
+            <Text>For</Text>
+            <Text style={{fontSize: 18, fontWeight: "600", color: 'rgb(84, 130, 53)', marginTop: 10}}>{this.state.forArray[this.state.for]}</Text>
 
                 </View>
               <Image
