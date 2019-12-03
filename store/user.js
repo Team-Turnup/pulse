@@ -79,6 +79,7 @@ export const logout = () => async dispatch => {
 
 export const changeUserInfoThunk = info => async dispatch => {
   try {
+    console.log(info)
     await axios.put(`${ngrok}/api/users`, info)
     dispatch(changeUserInfo(info))
   } catch (error) {

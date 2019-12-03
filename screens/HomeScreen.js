@@ -25,7 +25,6 @@ class HomeScreen extends Component {
 
   render() {
     const {navigation} = this.props
-    console.log('this.props.myClasses', this.props.myClasses)
     return (
       <Container>
         <Content style={{backgroundColor: 'midnightblue'}}>

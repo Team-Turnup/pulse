@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
 import {Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
@@ -9,6 +9,7 @@ import {changeUserInfoThunk} from '../store/user'
 import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
+import {encode} from 'base-64'
 
 class OptionsScreen extends Component {
   constructor(props) {
@@ -82,10 +83,26 @@ class OptionsScreen extends Component {
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
+  arrayBufferToBase64( buffer) {
+    return btoa(
+      new Uint8Array(buffer)
+        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+
+
   render() {
+    // console.log(this.props.user.image.data)
+    // console.log(encode(this.props.user.image)
+    const imageSrc = `data:image/jpeg;base64,${encode(this.props.user.image)}`
+    // const arrayBufferView = new Uint8Array(this.props.user.image.data)
+    // const imageSrc = new Blob( [arrayBufferView], {type: "image/jpeg"})
+    // // const imageSrc =this.props.user.image
+    // console.log(imageSrc.slice(0,50))
     return (
       <Container>
         <Content>
+          <Image source={{uri: imageSrc, isStatic: true}} style={{width: 500, height: 500, borderColor: 'black', borderWidth: 1}}/>
           <Text style={styles.sectionHeader}>User Info</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
@@ -180,7 +197,7 @@ class OptionsScreen extends Component {
           <ColorPicker
             onColorSelected={color => this.handleVisualColor(color)}
             onColorChange={color => this.handleChange('visualColor', color)}
-            style={{ height: 200, marginBottom: 100}}
+            style={{ height: 400,marginBottom: 100}}
             color={this.state.visualColor}
             // hideSliders={true}
           />
