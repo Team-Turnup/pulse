@@ -63,10 +63,6 @@ class SelectRoutineScreen extends Component {
     })
   }
 
-  static navigationOptions = {
-    header: null
-  }
-
   render() {
     const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
       label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
@@ -83,19 +79,6 @@ class SelectRoutineScreen extends Component {
               items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
             />
           </Form>
-          <ListItem>
-            <CheckBox
-              onClick={() =>
-                this.setState(prevState => ({
-                  hapticCheckBox: !prevState.hapticCheckBox
-                }))
-              }
-              isChecked={this.state.hapticCheckBox}
-            />
-            <Body>
-              <Text>Use Default Haptic Settings</Text>
-            </Body>
-          </ListItem>
           <Button
             bordered
             style={styles.button}
@@ -116,10 +99,6 @@ class SelectRoutineScreen extends Component {
   }
 }
 
-SelectRoutineScreen.navigationOptions = {
-  // title:'Select Exercise',
-  header: null
-}
 const styles = StyleSheet.create({
   header: {
     fontSize: 20,
