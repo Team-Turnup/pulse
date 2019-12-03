@@ -13,7 +13,7 @@ const userCount = 100
 const routineCount = 100
 const intervalCount = 300
 const workoutCount = 100
-const WorkoutTimestampCount = 100
+const WorkoutTimestampCount = 3000
 
 const classCount = 100
 
@@ -81,6 +81,7 @@ const createWorkout = async () => {
 const createWorkoutstamp = async () => {
   return await WorkoutTimestamp.create({
     cadence: faker.random.number({min: -1, max: 999}),
+    goalCadence: Math.round(faker.random.number({min: -1, max: 999})),
     timestamp: new Date()
   })
 }
@@ -148,7 +149,11 @@ async function seed() {
 
   const workoutTimeStamps = await Promise.all(
     Array.from({length: WorkoutTimestampCount}, (d, i) =>
-      createWorkoutstamp().then(d => d.setWorkout(i + 1))
+      createWorkoutstamp().then(d =>
+        d.setWorkout(
+          Math.ceil((i + 1) / (WorkoutTimestampCount / workoutCount))
+        )
+      )
     )
   )
 
