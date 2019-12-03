@@ -180,13 +180,13 @@ class LoginScreen extends React.Component {
             </Button>
           ) : null}
 
-{!isUser ? (<Button
+{/* {!isUser ? (<Button
           style={styles.button}
             onPress={() => this.loginWithGoogle()}
             title="login with google"
           >
             <Text>Login with Google </Text>
-          </Button>) : null}
+          </Button>) : null} */}
           {/* </View> */}
         </Content>
       </Container>
