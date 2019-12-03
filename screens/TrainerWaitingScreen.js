@@ -38,9 +38,7 @@ export default () => {
   return (
     <Container>
       <Header>
-        <Text style={{verticalAlign: 'center', fontWeight: 'bold'}}>
-          {name}
-        </Text>
+        <Text style={{fontWeight: 'bold'}}>{name}</Text>
       </Header>
       <Content>
         {name && routine && attendees ? (

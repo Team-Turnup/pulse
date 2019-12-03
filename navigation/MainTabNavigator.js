@@ -104,11 +104,17 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
+<<<<<<< HEAD
   // LoginStack,
   HomeWorkoutsStack,
   HomeClassesStack,
   SettingsStack,
   // TrainerWorkScreen,
+=======
+  LoginStack,
+  HomeStack,
+  SettingsStack
+>>>>>>> master
   // TakePhotoStack
 },{headerMode:'screen'})
 

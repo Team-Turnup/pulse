@@ -49,18 +49,18 @@ export default ({
     )
   }, [])
 
-  useInterval(() => {
+  useEffect(() => {
     // update chart domain every second to keep current time in the middle
     const now = DateTime.local()
     setDomain([
       now.minus({seconds: timeWindow * (2 / 3)}),
       now.plus({seconds: timeWindow * (1 / 3)})
     ])
-  }, 1000)
+  }, [workoutData])
   return tsIntervals && tsIntervals.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
-      domain={domainSetting ? {x: domain, y: [80, 120]} : {}}
+      domain={domainSetting ? {x: domain} : {}}
       domainPadding={{y: 10}}
       scale={{x: 'time'}}
     >
