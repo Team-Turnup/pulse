@@ -1,74 +1,45 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React, {useEffect, useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import useInterval from 'use-interval'
 import {
   Container,
   Button,
   Text,
   Header,
-  Title,
   Content,
   Body,
-  Card,
-  CardItem,
   ListItem,
   CheckBox,
   View
 } from 'native-base'
-import {StyleSheet} from 'react-native'
 
-import {StartTime} from './TrainerWorkoutScreen'
+import {StartTime, styles, dummyClass} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
 
+import socket from '../socket'
 import {leaveClass} from '../store/singleClass'
 
-const dummyClass = {
-  id: 11,
-  name: 'Class # 21459',
-  canEnroll: true,
-  when: Date.now() + 1000 * 60 * 3,
-  routine: {
-    id: 21,
-    name: 'Eloise',
-    activityType: 'pushups',
-    intervals: [
-      {
-        id: 62,
-        activityType: 'dancing',
-        cadence: 930,
-        duration: 10
-      },
-      {
-        id: 61,
-        activityType: 'stairs',
-        cadence: 829,
-        duration: 10
-      },
-      {
-        id: 63,
-        activityType: 'dancing',
-        cadence: 32,
-        duration: 20
-      }
-    ]
-  }
-}
+export default ({navigation}) => {
+  // get user from store
+  const user = useSelector(({user}) => user)
+  // get dummy data for class right now
+  const {routine, attendees, when, name, ..._class} = dummyClass
+  const dispatch = useDispatch()
+  const [curTime, setCurTime] = useState(Date.now())
 
-class UserWaitingScreen extends React.Component {
-  render() {
-    const {navigation, leaveClass} = this.props
-    let classId = navigation.getParam('classId', 'NA')
-    let studentId = navigation.getParam('studentId', 'NA')
+  useEffect(() => {
+    socket.emit('subscribe', _class.id, user.id)
+    return () => socket.emit('unsubscribe', _class.id, user.id)
+  }, [])
 
-    console.log('..................................................')
-    console.log('WAITING classId', classId)
-    console.log('WAITING studentId', studentId)
+  useInterval(() => setCurTime(Date.now()), 1000)
 
-    // console.log(JSON.stringify(navigation.getParam('trainerId')))
-    return (
-      <Container>
-        <Header>
-          <Text>Trainer's Class</Text>
-        </Header>
+  return (
+    <Container>
+      <Header>
+        <Text style={{fontWeight: 'bold'}}>{name}</Text>
+      </Header>
+      <Content>
         <ListItem>
           <CheckBox Checked={true} />
           <Body>
@@ -76,7 +47,11 @@ class UserWaitingScreen extends React.Component {
           </Body>
         </ListItem>
         <View style={styles.startView}>
-          <StartTime when={dummyClass.when} />
+          {when < curTime ? (
+            <Text>Waiting for Trainer</Text>
+          ) : (
+            <StartTime when={dummyClass.when} />
+          )}
         </View>
         <RoutineBarDisplay routine={dummyClass.routine.intervals} />
         <Button
@@ -84,29 +59,13 @@ class UserWaitingScreen extends React.Component {
           danger
           style={{margin: 7}}
           onPress={() => {
-            leaveClass(classId, studentId)
-            this.props.navigation.navigate('HomeScreen')
+            dispatch(leaveClass(_class.id, user.id))
+            navigation.navigate('HomeScreen')
           }}
         >
           <Text>Leave Class</Text>
         </Button>
-      </Container>
-    )
-  }
+      </Content>
+    </Container>
+  )
 }
-
-const mapDispatchToProps = dispatch => ({
-  leaveClass: (classId, studentId) => dispatch(leaveClass(classId, studentId))
-})
-
-export default connect(null, mapDispatchToProps)(UserWaitingScreen)
-
-const styles = StyleSheet.create({
-  startView: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20
-  }
-})
