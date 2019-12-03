@@ -7,7 +7,6 @@ import RNPickerSelect from 'react-native-picker-select'
 import {getAllRoutinesThunk} from '../store/routines'
 import {setRoutine} from '../store/routine'
 //import { getRoutineThunk } from '../store/routines';
-//import { updateRoutineThunk } from '../store/routines';
 
 class PreviousRoutine extends Component {
   constructor(props) {
@@ -32,9 +31,8 @@ class PreviousRoutine extends Component {
   }
   handleSubmitPreviousRoutine() {
     this.props.setRoutine(this.state.selectedRoutine)
-    //this.props.updateRoutineThunk();
     this.props.navigation.navigate('CreateClassScreen', {
-      routine: this.state.selectedRoutine
+      // routine: this.state.selectedRoutine
     })
     this.setState({
       selectedRoutine: {}
@@ -88,7 +86,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  //updateRoutineThunk: routine => dispatch(updateRoutineThunk(routine))
   getAllMyRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
   setRoutine: routine => dispatch(setRoutine(routine))
 })

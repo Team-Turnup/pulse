@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
 import {Container, Header, Button, Text} from 'native-base'
-//import {getRoutineThunk} from '../store/routines'
+import {getRoutineThunk} from '../store/routines'
 
 class CreateClassScreen extends Component {
   constructor() {
@@ -13,14 +13,14 @@ class CreateClassScreen extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.routine !== prevProps.routine) {
-      //this.fetchData(this.props.routine);
-      this.setState({
-        routine: this.props.navigation.getParam('routine')
-      })
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.props.routine !== prevProps.routine) {
+  //     //this.fetchData(this.props.routine);
+  //     this.setState({
+  //       // routine: this.props.navigation.getParam('routine')
+  //     })
+  //   }
+  // }
   // static getDerivedStateFromProps(props, state) {
   //   return {
   //     routine: this.props.navigation.getParam('routine')
@@ -29,6 +29,7 @@ class CreateClassScreen extends Component {
 
   render() {
     console.log('this.state.routine', this.state.routine)
+    console.log('this.props.routine', this.props.routine)
     return (
       <Container>
         <Header>
@@ -36,12 +37,12 @@ class CreateClassScreen extends Component {
             How would you like to Create your Class?
           </Text>
         </Header>
-        {Object.keys(this.state.routine).length ? (
+        {Object.keys(this.props.routine).length ? (
           <Text>Your Selected Routine is: {this.props.routine}</Text>
         ) : (
           <View />
         )}
-        {!Object.keys(this.state.routine).length ? (
+        {!Object.keys(this.props.routine).length ? (
           <Button
             style={{
               ...styles.button
@@ -53,7 +54,7 @@ class CreateClassScreen extends Component {
         ) : (
           <View />
         )}
-        {!Object.keys(this.state.routine).length ? (
+        {!Object.keys(this.props.routine).length ? (
           <Button
             style={{
               ...styles.button
@@ -65,7 +66,7 @@ class CreateClassScreen extends Component {
         ) : (
           <View />
         )}
-        {Object.keys(this.state.routine).length ? (
+        {Object.keys(this.props.routine).length ? (
           <Button
             style={{
               ...styles.button
@@ -145,8 +146,8 @@ const mapStateToProps = state => ({
   routine: state.routine
 })
 
-// const mapDispatchToProps = dispatch => ({
-//   getRoutineThunk: id => dispatch(getRoutineThunk(id))
-// })
+const mapDispatchToProps = dispatch => ({
+  getRoutineThunk: id => dispatch(getRoutineThunk(id))
+})
 
 export default connect(mapStateToProps)(CreateClassScreen)
