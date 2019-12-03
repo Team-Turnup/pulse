@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native'
 import {Container, Button, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import {getAllRoutinesThunk} from '../store/routines'
-import {setRoutine} from '../store/routine'
+//import {setRoutine} from '../store/routine'
 import {getRoutineThunk} from '../store/routine'
 
 class PreviousRoutine extends Component {
@@ -89,8 +89,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  getAllMyRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
-  setRoutine: routine => dispatch(setRoutine(routine))
+  getAllMyRoutinesThunk: () => dispatch(getAllRoutinesThunk())
+  //setRoutine: routine => dispatch(setRoutine(routine))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreviousRoutine)

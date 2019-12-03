@@ -65,8 +65,6 @@ class BuildClassScreen extends Component {
   }
 
   render() {
-    console.log('this.state.routine', this.state.routine)
-    console.log('this.props.routine', this.props.routine)
     return (
       <Container>
         <Content>

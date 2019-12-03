@@ -12,23 +12,25 @@ import UserWaitingScreen from '../screens/UserWaitingScreen'
 import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import BuildClassScreen from '../screens/BuildClassScreen'
 import LoginScreen from '../screens/LoginScreen'
+import TrainerBuildRoutineScreen from '../screens/TrainerBuildRoutineScreen'
 
-
-
-const ScreenNavigator = createStackNavigator({
-  SelectRoutineScreen,
-  HomeScreen,
-  BuildRoutineScreen,
-  StartRoutineScreen,
-  InProgressScreen,
-  ClassesScreen,
-  PreviousRoutine,
-  UserWaitingScreen,
-  TrainerWaitingScreen,
-  CreateClassScreen,
-  BuildClassScreen,
-  LoginScreen
-
-},{headerMode:'none'})
+const ScreenNavigator = createStackNavigator(
+  {
+    SelectRoutineScreen,
+    HomeScreen,
+    BuildRoutineScreen,
+    StartRoutineScreen,
+    InProgressScreen,
+    ClassesScreen,
+    PreviousRoutine,
+    UserWaitingScreen,
+    TrainerWaitingScreen,
+    CreateClassScreen,
+    BuildClassScreen,
+    LoginScreen,
+    TrainerBuildRoutineScreen
+  },
+  {headerMode: 'none'}
+)
 
 export default ScreenNavigator

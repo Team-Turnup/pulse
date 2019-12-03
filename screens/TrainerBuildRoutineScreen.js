@@ -14,7 +14,7 @@ import {
   updateRoutineThunk
 } from '../store/routines'
 
-class BuildRoutineScreen extends Component {
+class TrainerBuildRoutineScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -57,6 +57,7 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
+    //this.props.navigation.navigate('HomeScreen')
     this.props.navigation.navigate('HomeScreen')
   }
 
@@ -68,7 +69,8 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    this.props.navigation.navigate('StartRoutineScreen')
+    // this.props.navigation.navigate('StartRoutineScreen')
+    this.props.navigation.navigate('CreateClassScreen')
   }
 
   addInterval() {
@@ -360,4 +362,7 @@ const mapDispatchToProps = {
   createAndStartRoutineThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildRoutineScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TrainerBuildRoutineScreen)
