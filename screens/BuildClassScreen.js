@@ -41,6 +41,8 @@ class BuildClassScreen extends Component {
       classPasscode
     })
     this.props.navigation.navigate('BuildRoutineScreen')
+    //below is causing a crash because you're trying to start routine without a routine
+    //this.props.navigation.navigate('StartRoutineScreen')
     this.setState({
       name: '',
       canEnroll: true,
