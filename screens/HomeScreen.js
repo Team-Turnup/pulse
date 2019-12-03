@@ -15,8 +15,10 @@ import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
 import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
+import AppHeader from '../components/AppHeader'
 
 class HomeScreen extends Component {
+
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
@@ -27,6 +29,7 @@ class HomeScreen extends Component {
     const {navigation} = this.props
     return (
       <Container>
+        <AppHeader navigation={this.props.navigation}/>
         <Content style={{backgroundColor: 'midnightblue'}}>
           <Button
             block
@@ -46,7 +49,7 @@ class HomeScreen extends Component {
               })
             }
           >
-            <Text>Join A Class</Text>
+            <Text>Join Class</Text>
           </Button>
 
           <Button
@@ -55,7 +58,7 @@ class HomeScreen extends Component {
             style={{margin: 7}}
             onPress={() => this.props.navigation.navigate('CreateClassScreen')}
           >
-            <Text>Create A Class</Text>
+            <Text>Create Class</Text>
           </Button>
           <Card>
             <CardItem header>

@@ -47,6 +47,7 @@ const User = db.define('user', {
   gender: Sequelize.ENUM(['male', 'female', 'non-binary']),
   height: Sequelize.INTEGER,
   weight: Sequelize.INTEGER,
+  image: Sequelize.BLOB
 })
 
 module.exports = User
