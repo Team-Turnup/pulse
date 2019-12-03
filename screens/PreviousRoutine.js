@@ -6,7 +6,7 @@ import {Container, Button, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import {getAllRoutinesThunk} from '../store/routines'
 import {setRoutine} from '../store/routine'
-//import { getRoutineThunk } from '../store/routines';
+import {getRoutineThunk} from '../store/routine'
 
 class PreviousRoutine extends Component {
   constructor(props) {
@@ -30,7 +30,8 @@ class PreviousRoutine extends Component {
     })
   }
   handleSubmitPreviousRoutine() {
-    this.props.setRoutine(this.state.selectedRoutine)
+    //this.props.setRoutine(this.state.selectedRoutine)
+    this.props.getRoutineThunk(this.state.selectedRoutine)
     this.props.navigation.navigate('CreateClassScreen', {
       // routine: this.state.selectedRoutine
     })
@@ -44,7 +45,7 @@ class PreviousRoutine extends Component {
       //const mappedRoutines = [].map(routine => {
       return {
         label: `${routine.name}`,
-        value: `${routine.name}`
+        value: `${routine.id}`
       }
     })
 
@@ -81,11 +82,12 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  routines: state.routines
+  routines: state.routines,
+  routine: state.routine
 })
 
 const mapDispatchToProps = dispatch => ({
-  //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
+  getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
   getAllMyRoutinesThunk: () => dispatch(getAllRoutinesThunk()),
   setRoutine: routine => dispatch(setRoutine(routine))
 })

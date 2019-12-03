@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
 import {Container, Header, Button, Text} from 'native-base'
-import {getRoutineThunk} from '../store/routines'
+import {getRoutineThunk} from '../store/routine'
 
 class CreateClassScreen extends Component {
   constructor() {
@@ -38,34 +38,34 @@ class CreateClassScreen extends Component {
           </Text>
         </Header>
         {Object.keys(this.props.routine).length ? (
-          <Text>Your Selected Routine is: {this.props.routine}</Text>
+          <Text>Your Selected Routine is: {this.props.routine.name}</Text>
         ) : (
           <View />
         )}
-        {!Object.keys(this.props.routine).length ? (
-          <Button
-            style={{
-              ...styles.button
-            }}
-            onPress={() => this.props.navigation.navigate('PreviousRoutine')}
-          >
-            <Text>Select Previous Routine</Text>
-          </Button>
-        ) : (
+        {/* {!Object.keys(this.props.routine).length ? ( */}
+        <Button
+          style={{
+            ...styles.button
+          }}
+          onPress={() => this.props.navigation.navigate('PreviousRoutine')}
+        >
+          <Text>Select Previous Routine</Text>
+        </Button>
+        {/* ) : (
           <View />
-        )}
-        {!Object.keys(this.props.routine).length ? (
-          <Button
-            style={{
-              ...styles.button
-            }}
-            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
-          >
-            <Text>Select New Routine</Text>
-          </Button>
-        ) : (
+        )} */}
+        {/* {!Object.keys(this.props.routine).length ? ( */}
+        <Button
+          style={{
+            ...styles.button
+          }}
+          onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+        >
+          <Text>Select New Routine</Text>
+        </Button>
+        {/* ) : (
           <View />
-        )}
+        )} */}
         {Object.keys(this.props.routine).length ? (
           <Button
             style={{

@@ -3,9 +3,14 @@ import {ngrok} from '../ngrok'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const SET_ROUTINE = 'SET_ROUTINE'
+const GET_ROUTINE = 'GET_ROUTINE'
 
 export const setRoutine = routine => ({
   type: SET_ROUTINE,
+  routine
+})
+const getRoutine = routine => ({
+  type: GET_ROUTINE,
   routine
 })
 
@@ -18,12 +23,23 @@ export const setRoutine = routine => ({
 //   }
 // };
 
+export const getRoutineThunk = id => async dispatch => {
+  try {
+    const response = await axios.get(`${ngrok}/api/routines/${id}`)
+    dispatch(getRoutine(response.data))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const initialState = {}
 
 //should be a GET_ROUTINES probably
 const routineReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_ROUTINE:
+      return action.routine
+    case GET_ROUTINE:
       return action.routine
     default:
       return state
