@@ -9,7 +9,7 @@ class CreateClassScreen extends Component {
   constructor() {
     super()
     this.state = {
-      routine: []
+      routine: {}
     }
   }
 
@@ -28,6 +28,7 @@ class CreateClassScreen extends Component {
   // }
 
   render() {
+    console.log('this.state.routine', this.state.routine)
     return (
       <Container>
         <Header>
@@ -35,12 +36,12 @@ class CreateClassScreen extends Component {
             How would you like to Create your Class?
           </Text>
         </Header>
-        {this.state.routine.length ? (
+        {Object.keys(this.state.routine).length ? (
           <Text>Your Selected Routine is: {this.props.routine}</Text>
         ) : (
           <View />
         )}
-        {!this.state.routine.length ? (
+        {!Object.keys(this.state.routine).length ? (
           <Button
             style={{
               ...styles.button
@@ -52,7 +53,7 @@ class CreateClassScreen extends Component {
         ) : (
           <View />
         )}
-        {!this.state.routine.length ? (
+        {!Object.keys(this.state.routine).length ? (
           <Button
             style={{
               ...styles.button
@@ -64,7 +65,7 @@ class CreateClassScreen extends Component {
         ) : (
           <View />
         )}
-        {this.state.routine.length ? (
+        {Object.keys(this.state.routine).length ? (
           <Button
             style={{
               ...styles.button
