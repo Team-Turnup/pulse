@@ -13,23 +13,7 @@ class CreateClassScreen extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.routine !== prevProps.routine) {
-  //     //this.fetchData(this.props.routine);
-  //     this.setState({
-  //       // routine: this.props.navigation.getParam('routine')
-  //     })
-  //   }
-  // }
-  // static getDerivedStateFromProps(props, state) {
-  //   return {
-  //     routine: this.props.navigation.getParam('routine')
-  //   }
-  // }
-
   render() {
-    console.log('this.state.routine', this.state.routine)
-    console.log('this.props.routine', this.props.routine)
     return (
       <Container>
         <Header>

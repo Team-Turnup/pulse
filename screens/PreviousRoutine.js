@@ -32,17 +32,18 @@ class PreviousRoutine extends Component {
   handleSubmitPreviousRoutine() {
     //this.props.setRoutine(this.state.selectedRoutine)
     this.props.getRoutineThunk(this.state.selectedRoutine)
-    this.props.navigation.navigate('CreateClassScreen', {
+    this.props.navigation.navigate(
+      'CreateClassScreen'
+      //{
       // routine: this.state.selectedRoutine
-    })
+      //}
+    )
     this.setState({
       selectedRoutine: {}
     })
   }
   render() {
-    //at the moment this just puts out all routines that exist
     const mappedRoutines = this.props.routines.map(routine => {
-      //const mappedRoutines = [].map(routine => {
       return {
         label: `${routine.name}`,
         value: `${routine.id}`
