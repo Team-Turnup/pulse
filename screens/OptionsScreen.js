@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
 import {Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
@@ -9,6 +9,7 @@ import {changeUserInfoThunk} from '../store/user'
 import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
+import {encode} from 'base-64'
 
 class OptionsScreen extends Component {
   constructor(props) {
@@ -51,13 +52,8 @@ class OptionsScreen extends Component {
     if (value) {
       this.props.updateOptionThunk({hapticWhat: value})
       this.setState({hapticWhat: value})
-      // if (value) {
-      //     if (this.clear.length) {
-      //         clearInterval(this.clear.shift())
-      //     }
       this.clear.push(setInterval(haptic(value, 100), 600))
       setTimeout(() => clearInterval(this.clear.shift()), 5000)
-
     }
   }
 
@@ -87,10 +83,26 @@ class OptionsScreen extends Component {
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
+  arrayBufferToBase64( buffer) {
+    return btoa(
+      new Uint8Array(buffer)
+        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+
+
   render() {
+    // console.log(this.props.user.image.data)
+    // console.log(encode(this.props.user.image)
+    // const imageSrc = `data:image/jpeg;base64,${encode(this.props.user.image)}`
+    // const arrayBufferView = new Uint8Array(this.props.user.image.data)
+    // const imageSrc = new Blob( [arrayBufferView], {type: "image/jpeg"})
+    // // const imageSrc =this.props.user.image
+    // console.log(imageSrc.slice(0,50))
     return (
       <Container>
         <Content>
+          {/* <Image source={{uri: imageSrc, isStatic: true}} style={{width: 500, height: 500, borderColor: 'black', borderWidth: 1}}/> */}
           <Text style={styles.sectionHeader}>User Info</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
@@ -185,7 +197,7 @@ class OptionsScreen extends Component {
           <ColorPicker
             onColorSelected={color => this.handleVisualColor(color)}
             onColorChange={color => this.handleChange('visualColor', color)}
-            style={{ height: 200, marginBottom: 100}}
+            style={{ height: 400,marginBottom: 100}}
             color={this.state.visualColor}
             // hideSliders={true}
           />
@@ -200,149 +212,6 @@ class OptionsScreen extends Component {
               {label: 'Mute', value: 'mute'}
             ]}
           />
-          {/* <Item fixedLabel style={styles.checkBox}>
-            <CheckBox
-              onClick={() =>
-                this.setState(prevState => ({
-                  makePublic: !prevState.makePublic
-                }))
-              }
-              isChecked={this.state.makePublic}
-            />
-            <Text>Make Public</Text>
-          </Item>
-
-          {this.state.routineName.length && this.state.routineType ? (
-            <View>
-              <Text style={styles.sectionHeader}>Intervals</Text>
-              {this.state.routineType === 'combo' ? (
-                <Item fixedLabel style={styles.item}>
-                  <Label>Activity Type</Label>
-                  <RNPickerSelect
-                    onValueChange={value =>
-                      this.handleChange('intervalType', value)
-                    }
-                    value={this.state.intervalType}
-                    items={activityTypeSelects}
-                  />
-                </Item>
-              ) : (
-                <Item></Item>
-              )}
-              <Item fixedLabel style={styles.item}>
-                <Label>Cadence</Label>
-                <NumericInput
-                  value={this.state.cadence}
-                  onChange={value => this.handleChange('cadence', value)}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Duration</Label>
-                <NumericInput
-                  value={this.state.duration}
-                  onChange={value => this.handleChange('duration', value)}
-                />
-              </Item>
-
-              <View style={styles.buttons}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.intervalType ? 'blue' : 'gray'
-                  }}
-                  onPress={() =>
-                    this.state.intervalType ? this.addInterval() : {}
-                  }
-                >
-                  <Text style={styles.buttonText}>Insert Next Interval</Text>
-                </TouchableOpacity>
-
-                {this.state.index < this.state.routine.length ? (
-                  <TouchableOpacity
-                    style={{
-                      ...styles.button,
-                      backgroundColor: this.state.intervalType ? 'blue' : 'gray'
-                    }}
-                    onPress={() =>
-                      this.state.intervalType ? this.saveInterval() : {}
-                    }
-                  >
-                    <Text style={styles.buttonText}>
-                      Save Changes to Current Interval
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-
-                {this.state.index < this.state.routine.length ? (
-                  <TouchableOpacity
-                    style={{...styles.button, backgroundColor: 'blue'}}
-                    onPress={() => this.removeInterval()}
-                  >
-                    <Text style={styles.buttonText}>
-                      Remove Current Interval
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-
-              <View style={styles.barGraphic}>
-                {this.state.index < this.state.routine.length ? (
-                  <Text style={styles.message}>
-                    Current interval is highlighted in blue
-                  </Text>
-                ) : null}
-
-                <RoutineBarGraphic
-                  routine={this.state.routine}
-                  changeIndex={this.changeIndex}
-                  index={this.state.index}
-                />
-              </View>
-
-              <View style={styles.buttons}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
-                  disabled={!this.state.routine.length}
-                  // onPress={() => this.navigation.navigate('PlaylistScreen')}
-                >
-                  <Text style={styles.buttonText}>Generate Playlist</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
-                  onPress={
-                    this.state.routine.length ? this.createRoutine : null
-                  }
-                >
-                  <Text style={styles.buttonText}>
-                    Create Routine & Return Home
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
-                  onPress={
-                    this.state.routine.length
-                      ? this.createAndStartRoutine
-                      : null
-                  }
-                >
-                  <Text style={styles.buttonText}>
-                    Create and Start Routine
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View></View>
-          )} */}
         </Content>
       </Container>
     )

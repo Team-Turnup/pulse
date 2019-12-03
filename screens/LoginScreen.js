@@ -29,22 +29,36 @@ class LoginScreen extends React.Component {
     this.state = {
       email: '',
       password: '',
-      message: ''
+      message: '',
+      for: 0,
+      forArray:['coaches', 'runners', 'swimmers', 'trainers', 'musicians', 'conductors', 'rowers', 'cyclists', 'calisthenics', 'meditation', 'Lamaze', 'dancers', 'choreographers'].sort(() => Math.random() - 0.5)
       // signedIn: false,
       // name: '',
       // photoUrl: ''
     }
-    this.handleLogin = this.handleLogin.bind(this)
+    this.clear = null
+    this.handleAuth = this.handleAuth.bind(this)
     this.loginWithGoogle = this.loginWithGoogle.bind(this)
   }
 
-  componentDidMount() {
-    this.props.me()
+  componentWillUnmount() {
+    clearInterval(this.clear)
   }
 
-  async handleLogin() {
-    const formName = 'login'
-    const result = await this.props.doHandleLogin(this.state, formName)
+  componentDidMount() {
+    setInterval(()=>this.setState(prevState => ({for: (prevState.for+1)%this.state.forArray.length})), 2000)
+    // const user = await this.props.me()
+    // const isUser =
+    //   typeof user === 'object' &&
+    //   Object.keys(user).length &&
+    //   !user.error
+    // if (isUser) {
+    //   this.props.navigation.navigate('HomeStack')
+    // }
+  }
+
+  async handleAuth(formName) {
+    const result = await this.props.doHandleAuth(this.state, formName)
     this.setState({
       email: '',
       password: '',
@@ -90,18 +104,36 @@ class LoginScreen extends React.Component {
     return (
       <Container>
         <Content>
-          <Card transparent>
+                <View style={{backgroundColor: 'rgb(84, 130, 53)', width: '100%', paddingTop: 5, paddingBottom: 5}}>
+                <Text style={{fontSize: 30, fontWeight: "600", color: 'white',  textAlign: 'center'}}>Stride</Text>
+                </View>
+          <Card transparent style={{margin: 0, padding: 0}}>
             <CardItem
               style={{
+                display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
-                alignSelf: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                margin: 0,
+                padding: 0
               }}
             >
-              <Thumbnail
+              <View style={{backgroundColor: 'rgba(84, 130, 53, 0.3)', paddingTop: 20, paddingBottom: 20, width: "100%", borderBottomLeftRadius: 10, borderBottomRightRadius: 10, overflow: 'hidden'}}>
+              <Text style={{textAlign: 'center'}}>A solo- or group-based tempo trainer</Text>
+              <Text style={{textAlign: 'center'}}>with visual and vibrational feedback</Text>
+              <View style={{display: 'flex', flexDirection: 'row', alignItems: "center", justifyContent: "center", marginTop: 20}}>
+                <View style={{display: 'flex', flexDirection: 'column', width: 175, alignItems: 'center'}}>
+            <Text>For</Text>
+            <Text style={{fontSize: 18, fontWeight: "600", color: 'rgb(84, 130, 53)', marginTop: 10}}>{this.state.forArray[this.state.for]}</Text>
+
+                </View>
+              <Image
                 medium
-                source={require('../assets/images/strideLogo.png')}
+                source={require('../assets/images/Pic.png')}
+                style={{width: 100, height: 120}}
               />
+              </View>
+              </View>
             </CardItem>
           </Card>
           {!isUser ? (
@@ -130,51 +162,32 @@ class LoginScreen extends React.Component {
             </Form>
           ) : null}
           <Text>{this.state.message}</Text>
+          {/* <View style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent: 'center'}}> */}
           {!isUser ? (
             <Button
-              block
               style={styles.button}
-              onPress={() => this.handleLogin()}
+              onPress={()=>this.handleAuth('login')}
             >
               <Text>Sign In</Text>
             </Button>
           ) : null}
           {!isUser ? (
             <Button
-              block
               style={styles.button}
-              onPress={() => this.props.navigation.navigate('SignupScreen')}
+              onPress={()=>this.handleAuth('signup')}
             >
               <Text>Create an Account</Text>
             </Button>
           ) : null}
 
-          {isUser ? (
-            <Container>
-              <Text>Hello, {this.props.user.email}</Text>
-
-              <Button
-                block
-                style={styles.button}
-                onPress={this.props.handleClick}
-              >
-                <Text>Logout</Text>
-              </Button>
-            </Container>
-          ) : null}
-
-          {/* <Text
-            style={{color: 'blue'}}
-            onPress={() => Linking.openURL(`${ngrok}/auth/google`)}
-          >
-            Google
-          </Text> */}
-          <Button
+{/* {!isUser ? (<Button
+          style={styles.button}
             onPress={() => this.loginWithGoogle()}
             title="login with google"
           >
             <Text>Login with Google </Text>
-          </Button>
+          </Button>) : null} */}
+          {/* </View> */}
         </Content>
       </Container>
       //    )
@@ -202,12 +215,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   button: {
-    //width: '30%',
-    margin: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 15,
+    marginRight: 15,
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   buttonText: {
     fontSize: 12,
@@ -262,7 +278,7 @@ const mapLogin = state => {
 }
 
 const mapDispatch = dispatch => ({
-  doHandleLogin: (user, method) => dispatch(auth(user, method)),
+  doHandleAuth: (user, method) => dispatch(auth(user, method)),
   me: () => dispatch(me()),
   handleClick() {
     dispatch(logout())

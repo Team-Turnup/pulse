@@ -23,6 +23,7 @@ export const me = () => async dispatch => {
   try {
     const response = await axios.get(`${ngrok}/auth/me`)
     dispatch(getUser(response.data || defaultUser))
+    return response.data
   } catch (error) {
     console.error(error)
   }
@@ -79,6 +80,7 @@ export const logout = () => async dispatch => {
 
 export const changeUserInfoThunk = info => async dispatch => {
   try {
+    console.log(info)
     await axios.put(`${ngrok}/api/users`, info)
     dispatch(changeUserInfo(info))
   } catch (error) {
