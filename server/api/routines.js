@@ -18,6 +18,15 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/:routineId', async (req, res, next) => {
+  try {
+    const routine = await Routine.findByPk(req.params.routineId)
+    res.json(routine)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.post('/', async (req, res, next) => {
   try {
     const {user, body} = req

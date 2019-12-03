@@ -68,7 +68,8 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    this.props.navigation.navigate('StartRoutineScreen')
+    // this.props.navigation.navigate('StartRoutineScreen')
+    this.props.navigation.navigate('CreateClassScreen')
   }
 
   addInterval() {
