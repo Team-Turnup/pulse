@@ -23,7 +23,6 @@ import * as Google from 'expo-google-app-auth'
 import {me} from '../store/user'
 import {tsImportEqualsDeclaration} from '@babel/types'
 
-
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props)

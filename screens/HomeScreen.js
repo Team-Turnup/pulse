@@ -59,9 +59,10 @@ class HomeScreen extends Component {
             <Text>Create A Class</Text>
           </Button>
           <Card>
-          <CardItem header>
-            <Text>My Upcoming Classes (follower)</Text>
+            <CardItem header>
+              <Text>My Upcoming Classes (follower)</Text>
             </CardItem>
+            {/* this needs to be capable of displaying newly added classes without a refresh */}
             {this.props.myClasses.map((aClass, i) => {
               return (
                 <CardItem key={i}>
@@ -72,8 +73,8 @@ class HomeScreen extends Component {
           </Card>
 
           <Card>
-          <CardItem header>
-            <Text>My Upcoming Classes (leader)</Text>
+            <CardItem header>
+              <Text>My Upcoming Classes (leader)</Text>
             </CardItem>
             {/* {this.props.myClasses.map((aClass, i) => {
               return (
