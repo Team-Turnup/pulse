@@ -57,20 +57,6 @@ export default class MyPreviousWorkouts extends React.Component {
 
             </Content>
       </Card>
-            <Card>
-            <CardItem header>
-            <Text>My Previous Classes (follower)</Text>
-
-            </CardItem>
-
-            </Card>
-            <Card>
-            <CardItem header>
-            <Text>My Previous Classes (leader)</Text>
-
-            </CardItem>
-
-            </Card>
             </Content>
     )
   }

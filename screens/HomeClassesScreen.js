@@ -15,12 +15,12 @@ import {getMyWorkoutsThunk} from '../store/workouts'
 import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
-class HomeScreen extends Component {
+class HomeClassesScreen extends Component {
 
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
-    this.props.getMyWorkoutsThunk()
+    // this.props.getMyWorkoutsThunk()
   }
 
   render() {
@@ -28,15 +28,7 @@ class HomeScreen extends Component {
     return (
       <Container>
         <AppHeader navigation={this.props.navigation}/>
-        <Content style={{backgroundColor: 'midnightblue'}}>
-          <Button
-            block
-            danger
-            style={{margin: 7}}
-            onPress={() => navigation.navigate('SelectRoutineScreen')}
-          >
-            <Text>Start New Solo Workout</Text>
-          </Button>
+        <Content>
           <Button
             block
             danger
@@ -60,7 +52,7 @@ class HomeScreen extends Component {
           </Button>
           <Card>
             <CardItem header>
-              <Text>My Upcoming Classes (follower)</Text>
+              <Text>My Upcoming Classes</Text>
             </CardItem>
             {this.props.myClasses.map((aClass, i) => {
               return (
@@ -73,27 +65,15 @@ class HomeScreen extends Component {
 
           <Card>
             <CardItem header>
-              <Text>My Upcoming Classes (leader)</Text>
-            </CardItem>
-            {/* {this.props.myClasses.map((aClass, i) => {
-              return (
-                <CardItem key={i}>
-                  <Text>{aClass.name}</Text>
-                </CardItem>
-              )
-            })} */}
-          </Card>
+            <Text>My Previous Classes</Text>
 
-          <MyPreviousWorkouts workouts={this.props.workouts} />
+            </CardItem>
+
+            </Card>
         </Content>
       </Container>
     )
   }
-}
-
-HomeScreen.navigationOptions = {
-  title: '⚡️ Stride ⚡️',
-  header: null
 }
 
 const mapStateToProps = ({user, workouts, myClasses}) => ({
@@ -104,4 +84,4 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
 
 const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk}
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

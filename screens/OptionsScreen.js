@@ -17,7 +17,7 @@ class OptionsScreen extends Component {
     this.state = {
       name: this.props.user.name || '',
       age: this.props.user.age || 0,
-      gender: this.props.user.gender || '',
+      gender: this.props.user.gender ||null,
       weight: this.props.user.weight || 0,
       height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',

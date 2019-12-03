@@ -16,19 +16,19 @@ import LoginScreen from '../screens/LoginScreen'
 
 
 const ScreenNavigator = createStackNavigator({
-  SelectRoutineScreen,
+  // SelectRoutineScreen,
   HomeScreen,
   BuildRoutineScreen,
   StartRoutineScreen,
   InProgressScreen,
   ClassesScreen,
-  PreviousRoutine,
+  // PreviousRoutine,
   UserWaitingScreen,
   TrainerWaitingScreen,
   CreateClassScreen,
   BuildClassScreen,
   LoginScreen
 
-},{headerMode:'none'})
+},{headerMode:'screen'})
 
 export default ScreenNavigator
