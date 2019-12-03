@@ -150,4 +150,4 @@ const mapDispatchToProps = dispatch => ({
   getRoutineThunk: id => dispatch(getRoutineThunk(id))
 })
 
-export default connect(mapStateToProps)(CreateClassScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateClassScreen)
