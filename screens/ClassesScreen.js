@@ -68,14 +68,11 @@ class ClassesScreen extends React.Component {
                   <CardItem
                     onPress={() => {
                       this.props.enrollClass(aClass.id, studentId),
-                      this.props.navigation.navigate('UserWaitingScreen', {
-                        trainerId: aClass.userId,
-                        studentId:studentId,
-                        classId:aClass.id
-                      }),
-                      console.log('THECLASSSS',aClass),
-                      console.log('THECLASSSSIDDD',aClass.id)
-
+                        this.props.navigation.navigate('UserWaitingScreen', {
+                          trainerId: aClass.userId,
+                          studentId: studentId,
+                          classId: aClass.id
+                        })
                     }}
                     button
                     key={i}
@@ -99,7 +96,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  enrollClass: (classId, studentId) => dispatch(enrollClass(classId, studentId)),
+  enrollClass: (classId, studentId) =>
+    dispatch(enrollClass(classId, studentId)),
   getClasses: () => dispatch(getClassesThunk())
 })
 
