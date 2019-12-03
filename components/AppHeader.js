@@ -37,7 +37,6 @@ class AppHeader extends React.Component {
           <Text
             style={{
               marginLeft: 5,
-              fontFamily: 'Verdana',
               fontSize: 20,
               fontWeight: '600'
             }}

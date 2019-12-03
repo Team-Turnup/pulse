@@ -94,7 +94,7 @@ class OptionsScreen extends Component {
   render() {
     // console.log(this.props.user.image.data)
     // console.log(encode(this.props.user.image)
-    const imageSrc = `data:image/jpeg;base64,${encode(this.props.user.image)}`
+    // const imageSrc = `data:image/jpeg;base64,${encode(this.props.user.image)}`
     // const arrayBufferView = new Uint8Array(this.props.user.image.data)
     // const imageSrc = new Blob( [arrayBufferView], {type: "image/jpeg"})
     // // const imageSrc =this.props.user.image
@@ -102,7 +102,7 @@ class OptionsScreen extends Component {
     return (
       <Container>
         <Content>
-          <Image source={{uri: imageSrc, isStatic: true}} style={{width: 500, height: 500, borderColor: 'black', borderWidth: 1}}/>
+          {/* <Image source={{uri: imageSrc, isStatic: true}} style={{width: 500, height: 500, borderColor: 'black', borderWidth: 1}}/> */}
           <Text style={styles.sectionHeader}>User Info</Text>
           <Item fixedLabel style={styles.item}>
             <Label>Name</Label>
