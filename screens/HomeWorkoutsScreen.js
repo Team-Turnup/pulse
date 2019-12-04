@@ -21,21 +21,36 @@ class HomeWorkoutsScreen extends Component {
       <Content>
         <AppHeader navigation={this.props.navigation} />
         <View>
+          <MyPreviousWorkouts workouts={this.props.workouts} />
           <Button
-            block
-            danger
-            style={{margin: 7}}
+            style={styles.button}
+            onPress={() => navigation.navigate('BuildRoutineScreen')}
+          >
+            <Text>Create New Routine</Text>
+          </Button>
+          <Button
+            style={styles.button}
             onPress={() => navigation.navigate('SelectRoutineScreen')}
           >
             <Text>Start New Solo Workout</Text>
           </Button>
 
-          <MyPreviousWorkouts workouts={this.props.workouts} />
         </View>
       </Content>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
+  }
+})
 
 const mapStateToProps = ({user, workouts, myClasses}) => ({
   user,

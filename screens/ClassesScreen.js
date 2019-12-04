@@ -66,13 +66,9 @@ class ClassesScreen extends React.Component {
               {allClasses.map((aClass, i) => {
                 return (
                   <CardItem
-                    onPress={() => {
-                      this.props.enrollClass(aClass.id, studentId),
-                        this.props.navigation.navigate('UserWaitingScreen', {
-                          trainerId: aClass.userId,
-                          studentId: studentId,
-                          classId: aClass.id
-                        })
+                    onPress={async () => {
+                      await this.props.enrollClass(aClass.id, studentId),
+                        this.props.navigation.navigate('UserWaitingScreen')
                     }}
                     button
                     key={i}

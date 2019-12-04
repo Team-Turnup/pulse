@@ -13,6 +13,8 @@ import {
   createAndStartRoutineThunk,
   updateRoutineThunk
 } from '../store/routines'
+import AppHeader from '../components/AppHeader'
+import { Platform } from '@unimodules/core'
 
 class BuildRoutineScreen extends Component {
   constructor(props) {
@@ -25,7 +27,10 @@ class BuildRoutineScreen extends Component {
       duration: 60,
       intervalType: '',
       routine: [],
-      makePublic: false
+      makePublic: false,
+      showAddIntervals: false,
+      addAnotherInterval: false,
+      finished: false
       //dirty: false,
     }
     this.createRoutine = this.createRoutine.bind(this)
@@ -57,7 +62,7 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    this.props.navigation.navigate('HomeScreen')
+    this.props.navigation.navigate('HomeWorkoutsScreen')
   }
 
   async createAndStartRoutine() {
@@ -80,7 +85,8 @@ class BuildRoutineScreen extends Component {
     ]
     this.setState({
       routine: newRoutine,
-      index: routine.length === 0 ? index : index + 1
+      index: routine.length === 0 ? index : index + 1,
+      addAnotherInterval: false
     })
   }
 
@@ -91,7 +97,7 @@ class BuildRoutineScreen extends Component {
       {cadence, duration, intervalType},
       ...routine.slice(index + 1)
     ]
-    this.setState({routine: newRoutine})
+    this.setState({routine: newRoutine, addAnotherInterval: false})
   }
 
   removeInterval() {
@@ -118,15 +124,27 @@ class BuildRoutineScreen extends Component {
 
     return (
       <Container>
+        <AppHeader navigation={this.props.navigation}/>
+        <View style={{margin: 15}}>
+        <Text style={{
+          textAlign: 'center',
+          fontWeight: "600",
+          fontSize: 20,
+          color: 'rgb(84, 130, 53)'
+        }}>Create Routine{"\n"}for New Solo Workout</Text>
+        <Text style={{
+          textAlign: 'center', ...styles.message
+        }}>You can reuse your routines for future workouts</Text>
+        </View>
         {/* <Header>
           <Text style={styles.header}>Build Routine</Text>
         </Header> */}
         <Content>
-          <Text style={styles.sectionHeader}>Routine</Text>
-          <Item fixedLabel style={styles.item}>
-            <Label>Name</Label>
+          {!this.state.showAddIntervals ? <View>
+            <Item fixedLabel style={styles.item}>
+            <Text>Name</Text>
             <Input
-              placeholder=""
+              placeholder="(ex. Marathon Prep - Week 5)"
               autoCapitalize="none"
               autoCorrect={false}
               value={this.state.routineName}
@@ -135,15 +153,18 @@ class BuildRoutineScreen extends Component {
             />
           </Item>
           {/* <Item fixedLabel style={styles.item}> */}
-          <Label>Activity Type</Label>
+          <Item fixedLabel style={styles.item}>
+          <Text>Activity Type</Text>
           <RNPickerSelect
             onValueChange={value => this.handleChange('routineType', value)}
-            style={{display: 'flex', alignItems: 'center'}}
             value={this.state.routineType}
             items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
           />
+          </Item>
           {/* </Item> */}
-          <Item fixedLabel style={styles.checkBox}>
+          <Item fixedLabel style={styles.item}>
+            <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
+              <Text>Make Public</Text>
             <CheckBox
               onClick={() =>
                 this.setState(prevState => ({
@@ -152,15 +173,53 @@ class BuildRoutineScreen extends Component {
               }
               isChecked={this.state.makePublic}
             />
-            <Text>Make Public</Text>
-          </Item>
 
-          {this.state.routineName.length && this.state.routineType ? (
+            </View>
+            <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>Allows other users to search for and workout to your routine</Text>
+          </Item>
+          </View> : null }
+
+          {this.state.routineName.length && this.state.routineType && !this.state.showAddIntervals
+          ? <Button style={styles.button} onPress={()=>this.setState({showAddIntervals: true})}>
+            <Text>Submit</Text>
+          </Button> : null}
+
+          {this.state.showAddIntervals ? (
             <View>
-              <Text style={styles.sectionHeader}>Intervals</Text>
-              {this.state.routineType === 'combo' ? (
+              <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 10}}>
+              <Text>Routine Name: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineName}</Text></Text>
+              <Text>Activity Type: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineType!=='combo' ? activityTypes[this.state.routineType].icon : 'Combo'}</Text></Text>
+              
+              <View style={styles.barGraphic}>
+                {this.state.index < this.state.routine.length && !this.state.finished ? (
+                  <View>
+                  <Text style={styles.message}>
+                    Click to select an interval - Hold to delete an interval 
+                  </Text>
+                  <Text style={styles.message}>
+                  Currently selected interval is highlighted in green
+                </Text>
+                </View>
+                ) : null}
+
+                {this.state.routine.length ? <RoutineBarGraphic
+                  routine={this.state.routine}
+                  changeIndex={this.changeIndex}
+                  index={this.state.index}
+                  removeInterval={this.removeInterval}
+                  finished={this.state.finished}
+                  routineType={this.state.routineType}
+                /> : <Text style={{color: 'rgb(84, 130, 53)'}}>Your routine doesn't have any intervals yet!</Text>}
+              </View>
+              
+              </View>
+              
+
+              {!this.state.finished ?
+              <View style={{marginBottom: 15}}>
+                {this.state.routineType === 'combo' ? (
                 <Item fixedLabel style={styles.item}>
-                  <Label>Activity Type</Label>
+                  <Text>Activity Type</Text>
                   <RNPickerSelect
                     onValueChange={value =>
                       this.handleChange('intervalType', value)
@@ -173,115 +232,96 @@ class BuildRoutineScreen extends Component {
                 <Item></Item>
               )}
               <Item fixedLabel style={styles.item}>
-                <Label>Cadence</Label>
+                <Text>Cadence <Text style={{fontStyle: "italic"}}>(bpm)</Text></Text>
                 <NumericInput
                   value={this.state.cadence}
                   onChange={value => this.handleChange('cadence', value)}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
-                <Label>Duration</Label>
+                <Text>Duration <Text style={{fontStyle: "italic"}}>(s)</Text></Text>
                 <NumericInput
                   value={this.state.duration}
                   onChange={value => this.handleChange('duration', value)}
                 />
               </Item>
+              </View> : null}
 
-              <View style={styles.buttons}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.intervalType ? 'blue' : 'gray'
-                  }}
+                {!this.state.routine.length || (this.state.addAnotherInterval && !this.state.finished) ?
+              <View>
+                <Button
+                  style={
+                    styles.button
+                  }
                   onPress={() =>
                     this.state.intervalType ? this.addInterval() : {}
                   }
                 >
-                  <Text style={styles.buttonText}>Insert Next Interval</Text>
-                </TouchableOpacity>
+                  <Text>Insert {this.state.routine.length ? 'Next ' : ''}Interval</Text>
+                </Button>
 
                 {this.state.index < this.state.routine.length ? (
-                  <TouchableOpacity
-                    style={{
-                      ...styles.button,
-                      backgroundColor: this.state.intervalType ? 'blue' : 'gray'
-                    }}
+                  <Button
+                    style={styles.button}
                     onPress={() =>
                       this.state.intervalType ? this.saveInterval() : {}
                     }
                   >
-                    <Text style={styles.buttonText}>
+                    <Text>
                       Save Changes to Current Interval
                     </Text>
-                  </TouchableOpacity>
+                  </Button>
                 ) : null}
 
-                {this.state.index < this.state.routine.length ? (
-                  <TouchableOpacity
-                    style={{...styles.button, backgroundColor: 'blue'}}
-                    onPress={() => this.removeInterval()}
-                  >
-                    <Text style={styles.buttonText}>
-                      Remove Current Interval
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
+              </View> :
+              (!this.state.finished ? <View>
+              <Button
+              style={styles.button}
+              onPress={() => this.setState({addAnotherInterval: true})}
+            >
+              <Text>
+                Continue Editing Routine
+              </Text>
+            </Button>
+            <Button
+              style={styles.button}
+              onPress={() => this.setState({finished: true})}
+            >
+              <Text>
+                Finished Editing Routine
+              </Text>
+            </Button>
+            </View> : null)}
 
-              <View style={styles.barGraphic}>
-                {this.state.index < this.state.routine.length ? (
-                  <Text style={styles.message}>
-                    Current interval is highlighted in blue
-                  </Text>
-                ) : null}
-
-                <RoutineBarGraphic
-                  routine={this.state.routine}
-                  changeIndex={this.changeIndex}
-                  index={this.state.index}
-                />
-              </View>
-
-              <View style={styles.buttons}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
-                  disabled={!this.state.routine.length}
-                  // onPress={() => this.navigation.navigate('PlaylistScreen')}
+              {this.state.finished ? <View>
+                {/* <Button
+                  style={styles.button}
                 >
-                  <Text style={styles.buttonText}>Generate Playlist</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
+                  <Text>Generate Playlist</Text>
+                </Button> */}
+                <Button
+                  style={styles.button}
                   onPress={
                     this.state.routine.length ? this.createRoutine : null
                   }
                 >
-                  <Text style={styles.buttonText}>
+                  <Text>
                     Create Routine & Return Home
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: this.state.routine.length ? 'blue' : 'gray'
-                  }}
+                </Button>
+                <Button
+                  style={styles.button}
                   onPress={
                     this.state.routine.length
                       ? this.createAndStartRoutine
                       : null
                   }
                 >
-                  <Text style={styles.buttonText}>
+                  <Text>
                     Create and Start Routine
                   </Text>
-                </TouchableOpacity>
-              </View>
+                </Button>
+              </View> : null}
             </View>
           ) : (
             <View></View>
@@ -306,12 +346,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   button: {
-    width: '30%',
-    margin: 5,
+    margin: 15,
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   buttonText: {
     fontSize: 12,

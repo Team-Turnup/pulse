@@ -59,9 +59,9 @@ export const deleteRoutineThunk = routineId => async dispatch => {
   }
 }
 
-export const getAllRoutinesThunk = () => async dispatch => {
+export const getMyRoutinesThunk = () => async dispatch => {
   try {
-    const response = await axios.get(`${ngrok}/api/routines`)
+    const response = await axios.get(`${ngrok}/api/users/myRoutines`)
     dispatch(getAllRoutines(response.data))
   } catch (err) {
     console.error(err)

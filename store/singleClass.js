@@ -3,19 +3,11 @@ import {ngrok} from '../ngrok'
 import {setRoutine} from './routine'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
-const GET_CLASS = 'GET_CLASS'
-const CREATE_CLASS = 'CREATE_CLASS'
+const SET_CLASS = 'SET_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
-const ENROLL_INTO_CLASS = 'ENROLL_INTO_CLASS'
-const LEAVE_CLASS = 'LEAVE_CLASS'
 
-const getClass = singleClass => ({
-  type: GET_CLASS,
-  singleClass
-})
-
-const createClass = singleClass => ({
-  type: CREATE_CLASS,
+const setClass = singleClass => ({
+  type: SET_CLASS,
   singleClass
 })
 
@@ -23,31 +15,23 @@ const removeClass = () => ({
   type: REMOVE_CLASS
 })
 
-const enrollIntoClass = (classId, studentId) => ({
-  type: ENROLL_INTO_CLASS,
-  classId,
-  studentId
-})
-
-const unenrollFromClass = (classId, studentId) => ({
-  type: LEAVE_CLASS,
-  classId,
-  studentId
-})
-
-export const leaveClass = (classId, studentId) => async dispatch => {
+export const leaveClass = classId => async dispatch => {
   try {
-    const response = await axios.delete(`${ngrok}/api/classes/${classId}`)
-    // dispatch(unenrollFromClass(response.data))
+    await axios.delete(`${ngrok}/api/classes/${classId}`)
+    dispatch(removeClass())
   } catch (error) {
     console.error(error)
   }
 }
 
-export const enrollClass = (classId, studentId) => async dispatch => {
+export const enrollClass = classId => async dispatch => {
   try {
-    const response = await axios.post(`${ngrok}/api/classes/${classId}`)
-    dispatch(enrollIntoClass(response.data))
+    const {
+      data: {routine, ..._class}
+    } = await axios.post(`${ngrok}/api/classes/${classId}`)
+    _class.when = Date.parse(_class.when)
+    dispatch(setClass(_class))
+    dispatch(setRoutine(routine))
   } catch (error) {
     console.error(error)
   }
@@ -56,10 +40,11 @@ export const enrollClass = (classId, studentId) => async dispatch => {
 export const getClassThunk = id => async dispatch => {
   try {
     const {
-      data: {routine, ...singleClass}
+      data: {routine, ..._class}
     } = await axios.get(`${ngrok}/api/classes/${id}`)
-    dispatch(getClass(singleClass))
-    // dispatch(setRoutine(routine))
+    _class.when = Date.parse(_class.when)
+    dispatch(setClass(_class))
+    dispatch(setRoutine(routine))
   } catch (err) {
     console.error(err)
   }
@@ -67,8 +52,12 @@ export const getClassThunk = id => async dispatch => {
 
 export const createClassThunk = singleClass => async dispatch => {
   try {
-    const {data} = await axios.post(`${ngrok}/api/classes/`, singleClass)
-    dispatch(createClass(data))
+    const {
+      data: {routine, ..._class}
+    } = await axios.get(`${ngrok}/api/classes/`, singleClass)
+    _class.when = Date.parse(_class.when)
+    dispatch(setClass(_class))
+    dispatch(setRoutine(routine))
   } catch (err) {
     console.error(err)
   }
@@ -89,27 +78,16 @@ const initialState = {
   id: 0,
   name: '',
   canEnroll: true,
-  when: new Date(null),
+  when: 0,
   attendees: []
 }
 
 const classReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_CLASS:
+    case SET_CLASS:
       return action.singleClass
-    case CREATE_CLASS:
-      return {...state, ...action.singleClass}
     case REMOVE_CLASS:
       return initialState
-    case ENROLL_INTO_CLASS:
-      return {...state, attendees: [...state.attendees, action.studentId]}
-    case LEAVE_CLASS:
-      return {
-        ...state,
-        attendees: state.attendees.filter(
-          student => student.id !== action.studentId
-        )
-      }
     default:
       return state
   }
