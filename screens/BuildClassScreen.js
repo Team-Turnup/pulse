@@ -5,7 +5,6 @@ import {Container, Content, Item, Button, Text, Label, Input} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import DatePicker from 'react-native-datepicker'
 import CheckBox from 'react-native-check-box'
-import {DateTime} from 'luxon'
 import {createClassThunk} from '../store/singleClass'
 
 class BuildClassScreen extends Component {
@@ -18,21 +17,10 @@ class BuildClassScreen extends Component {
       attendees: [],
       setClassPasscode: false,
       classPasscode: '',
-      show: false,
-      mode: 'date'
+      show: false
     }
     this.handleCreateClass = this.handleCreateClass.bind(this)
-    this.showDateTimePicker = this.showDateTimePicker.bind(this)
-    this.hideDateTimePicker = this.hideDateTimePicker.bind(this)
     this.setDate = this.setDate.bind(this)
-  }
-
-  showDateTimePicker() {
-    this.setState({show: true})
-  }
-
-  hideDateTimePicker() {
-    this.setState({show: true})
   }
 
   async handleCreateClass() {
