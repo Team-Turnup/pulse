@@ -1,14 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
-import {
-  Container,
-  Button,
-  Text,
-  Content,
-  Card,
-  CardItem
-} from 'native-base'
+import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
@@ -16,7 +9,6 @@ import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
-
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
@@ -27,7 +19,7 @@ class HomeClassesScreen extends Component {
     const {navigation} = this.props
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation}/>
+        <AppHeader navigation={this.props.navigation} />
         <Content>
           <Button
             block
@@ -56,7 +48,16 @@ class HomeClassesScreen extends Component {
             </CardItem>
             {this.props.myClasses.map((aClass, i) => {
               return (
-                <CardItem key={i}>
+                <CardItem
+                  button
+                  onPress={() => {
+                    console.log('aClass.id', aClass.id)
+                    navigation.navigate('UserWaitingScreen', {
+                      classId: aClass.id
+                    })
+                  }}
+                  key={i}
+                >
                   <Text>{aClass.name}</Text>
                 </CardItem>
               )
@@ -65,11 +66,9 @@ class HomeClassesScreen extends Component {
 
           <Card>
             <CardItem header>
-            <Text>My Previous Classes</Text>
-
+              <Text>My Previous Classes</Text>
             </CardItem>
-
-            </Card>
+          </Card>
         </Content>
       </Container>
     )

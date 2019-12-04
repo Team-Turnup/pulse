@@ -40,12 +40,6 @@ export default ({navigation}) => {
         <Text style={{fontWeight: 'bold'}}>{name}</Text>
       </Header>
       <Content>
-        <ListItem>
-          <CheckBox Checked={true} />
-          <Body>
-            <Text>Use Class Haptic Settings</Text>
-          </Body>
-        </ListItem>
         <View style={styles.startView}>
           {when < curTime ? (
             <Text>Waiting for Trainer</Text>
@@ -60,7 +54,7 @@ export default ({navigation}) => {
           style={{margin: 7}}
           onPress={() => {
             dispatch(leaveClass(_class.id, user.id))
-            navigation.navigate('HomeScreen')
+            navigation.navigate('HomeClassesScreen')
           }}
         >
           <Text>Leave Class</Text>
