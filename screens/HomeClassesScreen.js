@@ -17,6 +17,10 @@ class HomeClassesScreen extends Component {
     // this.props.getMyWorkoutsThunk()
   }
 
+  static navigationOptions = {
+    header:null
+  }
+
   render() {
     const {navigation, myClasses} = this.props
     let aDate = Date.parse(new Date().toString())
@@ -68,7 +72,6 @@ class HomeClassesScreen extends Component {
                       }}
                     >
                       <Text style={{textAlign: 'center'}}>
-                        {/* Name:{' '} */}
                         <Text
                           style={{
                             color: 'rgb(84, 130, 53)',
@@ -124,6 +127,10 @@ class HomeClassesScreen extends Component {
               </Text>
               {pastClasses.length ? (
                 pastClasses.map((aClass, i) => {
+                  const duration = aClass.routine.intervals.reduce(
+                    (sum,interval) => sum + interval.duration,
+                    0
+                  )
                   return (
                     <TouchableOpacity
                       key={i}
@@ -137,7 +144,6 @@ class HomeClassesScreen extends Component {
                       }}
                     >
                       <Text style={{textAlign: 'center'}}>
-                        {/* Name:{' '} */}
                         <Text
                           style={{
                             color: 'rgb(84, 130, 53)',
@@ -145,20 +151,34 @@ class HomeClassesScreen extends Component {
                             fontSize: 18
                           }}
                         >
-                          {aClass.name}
+                          {aClass.name} {activityTypes[aClass.routine.activityType].icon}
                         </Text>
                       </Text>
-                      <Text>
-                          Class Activity :{' '}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly'
+                        }}
+                      >
+                        <Text>
+                          Trainer:{' '}
                           <Text
                             style={{
                               color: 'rgb(84, 130, 53)',
                               fontStyle: 'italic'
                             }}
                           >
-                            {activityTypes[aClass.routine.activityType].icon}
+                            {aClass.user.name.split(' ')[0]}
                           </Text>
                         </Text>
+                      </View>
+                       <RoutineBarMini
+                          routine={aClass.routine.intervals}
+                          totalDuration={duration}
+                          activityType={aClass.routine.activityType}
+                        />
+
                     </TouchableOpacity>
                   )
                 })
@@ -189,6 +209,7 @@ class HomeClassesScreen extends Component {
     )
   }
 }
+
 
 const styles = StyleSheet.create({
   button: {
