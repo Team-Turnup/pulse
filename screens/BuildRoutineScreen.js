@@ -15,21 +15,21 @@ import {
   updateRoutineThunk
 } from '../store/routines'
 import AppHeader from '../components/AppHeader'
-import { Platform } from '@unimodules/core'
 
 class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props)
+    const {routine} = props
     this.state = {
-      routineType: '',
-      routineName: '',
+      routineType: routine.activityType || '',
+      routineName: routine.name || '',
       index: 0,
       cadence: 100,
       duration: 60,
-      intervalType: '',
-      routine: [],
-      makePublic: false,
-      showAddIntervals: false,
+      activityType: '',
+      routine: routine.intervals || [],
+      makePublic: routine.makePublic || false,
+      showAddIntervals: (routine.activityType && routine.name) || false,
       addAnotherInterval: false,
       finished: false
       //dirty: false,
@@ -49,9 +49,9 @@ class BuildRoutineScreen extends Component {
       const newRoutine = this.state.routine.map(interval => ({
         cadence: interval.cadence,
         duration: interval.duration,
-        intervalType: value
+        activityType: value
       }))
-      this.setState({intervalType: value, routine: newRoutine})
+      this.setState({activityType: value, routine: newRoutine})
     }
   }
 
@@ -78,10 +78,10 @@ class BuildRoutineScreen extends Component {
   }
 
   addInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
+    const {cadence, duration, routine, index, activityType} = this.state
     const newRoutine = [
       ...routine.slice(0, index + 1),
-      {cadence, duration, intervalType},
+      {cadence, duration, activityType},
       ...routine.slice(index + 1)
     ]
     this.setState({
@@ -92,10 +92,10 @@ class BuildRoutineScreen extends Component {
   }
 
   saveInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
+    const {cadence, duration, routine, index, activityType} = this.state
     const newRoutine = [
       ...routine.slice(0, index),
-      {cadence, duration, intervalType},
+      {cadence, duration, activityType},
       ...routine.slice(index + 1)
     ]
     this.setState({routine: newRoutine, addAnotherInterval: false})
@@ -113,7 +113,7 @@ class BuildRoutineScreen extends Component {
       index,
       cadence: interval.cadence,
       duration: interval.duration,
-      intervalType: interval.intervalType
+      activityType: interval.activityType
     })
   }
 
@@ -233,9 +233,9 @@ class BuildRoutineScreen extends Component {
                   <Text>Activity Type</Text>
                   <RNPickerSelect
                     onValueChange={value =>
-                      this.handleChange('intervalType', value)
+                      this.handleChange('activityType', value)
                     }
-                    value={this.state.intervalType}
+                    value={this.state.activityType}
                     items={activityTypeNoComboSelects}
                     userNativeAndroidPickerStyle={false}
                   />
@@ -266,7 +266,7 @@ class BuildRoutineScreen extends Component {
                     styles.button
                   }
                   onPress={() =>
-                    this.state.intervalType ? this.addInterval() : {}
+                    this.state.activityType ? this.addInterval() : {}
                   }
                 >
                   <Text>Insert {this.state.routine.length ? 'Next ' : ''}Interval</Text>
@@ -276,7 +276,7 @@ class BuildRoutineScreen extends Component {
                   <Button
                     style={styles.button}
                     onPress={() =>
-                      this.state.intervalType ? this.saveInterval() : {}
+                      this.state.activityType ? this.saveInterval() : {}
                     }
                   >
                     <Text>
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({routines}) => ({routines})
+const mapStateToProps = ({routine}) => ({routine})
 
 const mapDispatchToProps = {
   getRoutineThunk,

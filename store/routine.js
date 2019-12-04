@@ -32,8 +32,9 @@ const initialState = {}
 //should be a GET_ROUTINES probably
 const routineReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_ROUTINE:
+    case SET_ROUTINE: {
       return action.routine
+    }
     default:
       return state
   }

@@ -28,7 +28,7 @@ export default RoutineBarGraphic = props => {
             {width > 10 ? (
               <View style={styles.intervalInfo}>
       <Text style={styles.text}>Interval #{i+1}</Text>
-                  {routineType==='combo' ? <Text style={styles.text}>{activityTypes[interval.intervalType].icon}</Text> : null}
+                  {routineType==='combo' ? <Text style={styles.text}>{activityTypes[interval.activityType].icon}</Text> : null}
                 <Text style={styles.text}>{Math.floor(interval.duration/60) ? `${Math.floor(interval.duration/60)}m` : ''} {interval.duration%60 ? `${interval.duration%60}s` : ''}</Text>
                 <Text style={styles.text}>{interval.cadence}bpm</Text>
               </View>
