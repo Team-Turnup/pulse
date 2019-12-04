@@ -14,10 +14,20 @@ class SelectRoutineScreen extends Component {
     this.state = {
       page: 1,
       numPerPage: 4,
+      numResults: 0,
+      numPages: 0,
       filter: null,
       sort: null,
       search: ''
     }
+  }
+
+  componentWillReceiveProps(newProps) {
+    const {numPerPage} = this.state
+    const numResults = newProps.routines.length
+    const numPages = Math.ceil(numResults/numPerPage)
+    const page = 1
+    this.setState({page, numPages, numResults})
   }
 
   componentDidMount() {
@@ -25,6 +35,9 @@ class SelectRoutineScreen extends Component {
   }
 
   render() {
+    const {page, numPerPage, numResults} = this.state
+    let viewRoutines = [...this.props.routines]
+    viewRoutines = viewRoutines.slice((page-1)*numPerPage, page*numPerPage)
     return (
       <Container>
         <Content>
@@ -74,8 +87,11 @@ class SelectRoutineScreen extends Component {
                 <Text style={{fontWeight: '600', marginBottom: 10}}>
                   Select One of Your Previous Routines
                 </Text>
-                {this.props.routines.length ? (
-                  this.props.routines.map((routine, i) => {
+                <Text style={{fontWeight: '600', marginBottom: 10}}>
+                  Showing {(page-1)*numPerPage+1}-{Math.min(numResults,page*numPerPage)}
+                </Text>
+                {viewRoutines.length ? (
+                  viewRoutines.map((routine, i) => {
                     const duration = routine.intervals.reduce(
                       (sum, interval) => sum + interval.duration,
                       0
