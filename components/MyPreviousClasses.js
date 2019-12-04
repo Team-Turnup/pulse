@@ -22,27 +22,21 @@ export default class MyPreviousClasses extends React.Component {
     return (
       <Content>
         <Card>
-          <CardItem header>
-            <Text>My Previous Solo Workouts</Text>
-          </CardItem>
+          {/* <CardItem header>
+            <Text>My Previous Solo myClasses</Text>
+          </CardItem> */}
           {this.state.showAll
-            ? this.props.workouts.map(workout => {
+            ? this.props.myClasses.map(myClass => {
                 return (
-                  <Content key={workout.id} style={{width: '100%'}}>
-                    <Text>
-                      {activityTypes[workout.routine.activityType].icon} -{' '}
-                      {workout.routine.name} - {workout.timestamp.split('T')[0]}
-                    </Text>
+                  <Content key={myClass.id} style={{width: '100%'}}>
+                    <Text>{myClass.name}</Text>
                   </Content>
                 )
               })
-            : this.props.workouts.slice(0, 5).map(workout => {
+            : this.props.myClasses.slice(0, 5).map(myClass => {
                 return (
-                  <Content key={workout.id} style={{width: '100%'}}>
-                    <Text>
-                      {activityTypes[workout.routine.activityType].icon} -{' '}
-                      {workout.routine.name} - {workout.timestamp.split('T')[0]}
-                    </Text>
+                  <Content key={myClass.id} style={{width: '100%'}}>
+                    <Text>{myClass.name}</Text>
                   </Content>
                 )
               })}
@@ -52,7 +46,7 @@ export default class MyPreviousClasses extends React.Component {
                 this.setState(prevState => ({showAll: !prevState.showAll}))
               }}
             >
-              {this.state.showAll ? 'Show 5 most recent workouts' : 'Show all'}
+              {this.state.showAll ? 'Show 5 most recent classes' : 'Show all'}
             </Text>
           </Content>
         </Card>

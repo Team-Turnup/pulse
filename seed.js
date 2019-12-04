@@ -102,8 +102,13 @@ async function seed() {
   const cody = await User.create({
     email: 'cody@email.com',
     password: '123',
-    //username: 'MrCody',
-    role: 'leader'
+    name: 'MrCody',
+    role: 'leader',
+    age: 99,
+    gender: 'male',
+    height: 9,
+    weight: 9,
+    image: 'https://robohash.org/cody'
   })
 
   const users = await Promise.all(

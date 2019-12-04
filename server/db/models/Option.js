@@ -3,33 +3,40 @@ const db = require('../db')
 
 const Option = db.define('option', {
   hapticWhat: {
-      type: Sequelize.ENUM(['singlebeat', 'heartbeat', 'triplet', 'doubletime', 'tripletime', 'quadrupletime']),
-      defaultValue: 'singlebeat'
+    type: Sequelize.ENUM([
+      'singlebeat',
+      'heartbeat',
+      'triplet',
+      'doubletime',
+      'tripletime',
+      'quadrupletime'
+    ]),
+    defaultValue: 'singlebeat'
   },
   hapticWhen: {
     type: Sequelize.ENUM(['everybeat', 'mute', 'muteAtGoal']),
     defaultValue: 'muteAtGoal'
-},
-audioWhat: {
+  },
+  audioWhat: {
     type: Sequelize.ENUM(['tick', 'chirp', 'bass']),
     defaultValue: 'tick'
-},
-audioWhen: {
+  },
+  audioWhen: {
     type: Sequelize.ENUM(['everybeat', 'mute', 'muteAtGoal']),
     defaultValue: 'muteAtGoal'
-},
-visualWhat: {
+  },
+  visualWhat: {
     type: Sequelize.ENUM(['blink']),
     defaultValue: 'blink'
-},
-visualColor: {
+  },
+  visualColor: {
     type: Sequelize.STRING,
     defaultValue: '#0000FF'
-},
-visualWhen: {
+  },
+  visualWhen: {
     type: Sequelize.ENUM(['everybeat', 'mute', 'muteAtGoal']),
     defaultValue: 'muteAtGoal'
-}
+  }
 })
 
 module.exports = Option

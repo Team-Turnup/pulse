@@ -7,6 +7,7 @@ import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
 import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
+import MyPreviousClasses from '../components/MyPreviousClasses'
 
 class HomeClassesScreen extends Component {
   componentDidMount() {
@@ -17,9 +18,6 @@ class HomeClassesScreen extends Component {
 
   render() {
     const {navigation} = this.props
-    //seems myClasses have null date
-    // console.log('this.props.myClasses', this.props.myClasses)
-
     return (
       <Container>
         <AppHeader navigation={this.props.navigation} />
@@ -62,6 +60,12 @@ class HomeClassesScreen extends Component {
             <CardItem header>
               <Text>My Previous Classes</Text>
             </CardItem>
+            <MyPreviousClasses myClasses={this.props.myClasses} />
+            {/* {this.props.myClasses.when < dateNow ? (
+                <Text>less</Text>
+              ) : (
+                <Text>more</Text>
+              )} */}
           </Card>
         </Content>
       </Container>
