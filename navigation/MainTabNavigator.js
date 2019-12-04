@@ -75,9 +75,8 @@ const HomeClassesStack = createStackNavigator({
   HomeClassesScreen,
   ClassesScreen,
   UserWaitingScreen,
-  CreateClassScreen,
-  TrainerWaitingScreen,
-  TrainerWorkoutScreen
+  CreateClassScreen
+
 })
 
 HomeClassesStack.navigationOptions = {
