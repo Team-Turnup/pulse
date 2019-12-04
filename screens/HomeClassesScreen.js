@@ -4,6 +4,10 @@ import {View, StyleSheet} from 'react-native'
 import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
+import {TouchableOpacity} from 'react-native-gesture-handler'
+import activityTypes from '../assets/images/activityTypes'
+
+
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
@@ -13,6 +17,7 @@ class HomeClassesScreen extends Component {
   }
 
   render() {
+    console.log("this.props", this.props)
     const {navigation} = this.props
     return (
       <Content>
@@ -32,7 +37,63 @@ class HomeClassesScreen extends Component {
               </Text>
               {this.props.myClasses.length ? (
                 this.props.myClasses.map((aClass, i) => {
-                  return <Text key={i}>{aClass.name}</Text>
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      style={{
+                        marginTop: 5,
+                        marginBottom: 5,
+                        borderColor: 'gray',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                        overflow: 'hidden'
+                      }}
+                    >
+                      <Text style={{textAlign: 'center'}}>
+                        {/* Name:{' '} */}
+                        <Text
+                          style={{
+                            color: 'rgb(84, 130, 53)',
+                            fontWeight: '600',
+                            fontSize: 18
+                          }}
+                        >
+                          {aClass.name}
+                        </Text>
+                      </Text>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly'
+                        }}
+                      >
+                        <Text>
+                          Class Activity :{' '}
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontStyle: 'italic'
+                            }}
+                          >
+                            {activityTypes[aClass.routine.activityType].icon}
+
+                          </Text>
+                        </Text>
+                        <Text>
+                          Trainer:{' '}
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontStyle: 'italic'
+                            }}
+                          >
+                            {aClass.user.name.split(' ')[0]}
+                          </Text>
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
                 })
               ) : (
                 <Text>- No upcoming classes</Text>
@@ -76,33 +137,6 @@ class HomeClassesScreen extends Component {
           >
             <Text>Create Class</Text>
           </Button>
-          <Card>
-            <CardItem header>
-              <Text>My Upcoming Classes</Text>
-            </CardItem>
-            {this.props.myClasses.map((aClass, i) => {
-              return (
-                <CardItem
-                  button
-                  onPress={() => {
-                    console.log('aClass.id', aClass.id)
-                    navigation.navigate('UserWaitingScreen', {
-                      classId: aClass.id
-                    })
-                  }}
-                  key={i}
-                >
-                  <Text>{aClass.name}</Text>
-                </CardItem>
-              )
-            })}
-          </Card>
-
-          <Card>
-            <CardItem header>
-              <Text>My Previous Classes</Text>
-            </CardItem>
-          </Card>
         </View>
       </Content>
     )
