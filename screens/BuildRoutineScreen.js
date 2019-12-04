@@ -7,6 +7,7 @@ import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
+import activityTypesNoCombo from '../assets/images/activityTypesNoCombo'
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -14,21 +15,21 @@ import {
   updateRoutineThunk
 } from '../store/routines'
 import AppHeader from '../components/AppHeader'
-import { Platform } from '@unimodules/core'
 
 class BuildRoutineScreen extends Component {
   constructor(props) {
     super(props)
+    const {routine} = props
     this.state = {
-      routineType: '',
-      routineName: '',
+      routineType: routine.activityType || '',
+      routineName: routine.name || '',
       index: 0,
       cadence: 100,
       duration: 60,
-      intervalType: '',
-      routine: [],
-      makePublic: false,
-      showAddIntervals: false,
+      activityType: '',
+      routine: routine.intervals || [],
+      makePublic: routine.makePublic || false,
+      showAddIntervals: (routine.activityType && routine.name) || false,
       addAnotherInterval: false,
       finished: false
       //dirty: false,
@@ -48,9 +49,9 @@ class BuildRoutineScreen extends Component {
       const newRoutine = this.state.routine.map(interval => ({
         cadence: interval.cadence,
         duration: interval.duration,
-        intervalType: value
+        activityType: value
       }))
-      this.setState({intervalType: value, routine: newRoutine})
+      this.setState({activityType: value, routine: newRoutine})
     }
   }
 
@@ -77,10 +78,10 @@ class BuildRoutineScreen extends Component {
   }
 
   addInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
+    const {cadence, duration, routine, index, activityType} = this.state
     const newRoutine = [
       ...routine.slice(0, index + 1),
-      {cadence, duration, intervalType},
+      {cadence, duration, activityType},
       ...routine.slice(index + 1)
     ]
     this.setState({
@@ -91,10 +92,10 @@ class BuildRoutineScreen extends Component {
   }
 
   saveInterval() {
-    const {cadence, duration, routine, index, intervalType} = this.state
+    const {cadence, duration, routine, index, activityType} = this.state
     const newRoutine = [
       ...routine.slice(0, index),
-      {cadence, duration, intervalType},
+      {cadence, duration, activityType},
       ...routine.slice(index + 1)
     ]
     this.setState({routine: newRoutine, addAnotherInterval: false})
@@ -112,12 +113,17 @@ class BuildRoutineScreen extends Component {
       index,
       cadence: interval.cadence,
       duration: interval.duration,
-      intervalType: interval.intervalType
+      activityType: interval.activityType
     })
   }
 
   render() {
     const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
+      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
+      value: activity
+    }))
+
+    const activityTypeNoComboSelects = Object.keys(activityTypesNoCombo).map(activity => ({
       label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
       value: activity
     }))
@@ -141,8 +147,10 @@ class BuildRoutineScreen extends Component {
         </Header> */}
         <Content>
           {!this.state.showAddIntervals ? <View>
-            <Item fixedLabel style={styles.item}>
-            <Text>Name</Text>
+            <View style={styles.item}>
+            <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
+            <Text style={{}}>Name</Text>
+            </View>
             <Input
               placeholder="(ex. Marathon Prep - Week 5)"
               autoCapitalize="none"
@@ -151,18 +159,21 @@ class BuildRoutineScreen extends Component {
               onChangeText={routineName => this.setState({routineName})}
               style={styles.name}
             />
-          </Item>
+          </View>
           {/* <Item fixedLabel style={styles.item}> */}
-          <Item fixedLabel style={styles.item}>
+          <View style={{...styles.item, }}>
+          <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
           <Text>Activity Type</Text>
+          </View>
           <RNPickerSelect
             onValueChange={value => this.handleChange('routineType', value)}
             value={this.state.routineType}
-            items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
+            items={activityTypeSelects}
+            userNativeAndroidPickerStyle={false}
           />
-          </Item>
+          </View>
           {/* </Item> */}
-          <Item fixedLabel style={styles.item}>
+          <View style={styles.item}>
             <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
               <Text>Make Public</Text>
             <CheckBox
@@ -176,7 +187,7 @@ class BuildRoutineScreen extends Component {
 
             </View>
             <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>Allows other users to search for and workout to your routine</Text>
-          </Item>
+          </View>
           </View> : null }
 
           {this.state.routineName.length && this.state.routineType && !this.state.showAddIntervals
@@ -188,7 +199,7 @@ class BuildRoutineScreen extends Component {
             <View>
               <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 10}}>
               <Text>Routine Name: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineName}</Text></Text>
-              <Text>Activity Type: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineType!=='combo' ? activityTypes[this.state.routineType].icon : 'Combo'}</Text></Text>
+              <Text>Activity Type: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{activityTypes[this.state.routineType].icon}</Text></Text>
               
               <View style={styles.barGraphic}>
                 {this.state.index < this.state.routine.length && !this.state.finished ? (
@@ -222,10 +233,11 @@ class BuildRoutineScreen extends Component {
                   <Text>Activity Type</Text>
                   <RNPickerSelect
                     onValueChange={value =>
-                      this.handleChange('intervalType', value)
+                      this.handleChange('activityType', value)
                     }
-                    value={this.state.intervalType}
-                    items={activityTypeSelects}
+                    value={this.state.activityType}
+                    items={activityTypeNoComboSelects}
+                    userNativeAndroidPickerStyle={false}
                   />
                 </Item>
               ) : (
@@ -254,7 +266,7 @@ class BuildRoutineScreen extends Component {
                     styles.button
                   }
                   onPress={() =>
-                    this.state.intervalType ? this.addInterval() : {}
+                    this.state.activityType ? this.addInterval() : {}
                   }
                 >
                   <Text>Insert {this.state.routine.length ? 'Next ' : ''}Interval</Text>
@@ -264,7 +276,7 @@ class BuildRoutineScreen extends Component {
                   <Button
                     style={styles.button}
                     onPress={() =>
-                      this.state.intervalType ? this.saveInterval() : {}
+                      this.state.activityType ? this.saveInterval() : {}
                     }
                   >
                     <Text>
@@ -367,7 +379,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1
   },
   checkBox: {
     height: 50,
@@ -391,7 +405,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({routines}) => ({routines})
+const mapStateToProps = ({routine}) => ({routine})
 
 const mapDispatchToProps = {
   getRoutineThunk,

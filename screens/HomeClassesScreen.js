@@ -8,7 +8,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
 
-
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
@@ -18,7 +17,7 @@ class HomeClassesScreen extends Component {
   }
 
   static navigationOptions = {
-    header:null
+    header: null
   }
 
   render() {
@@ -56,7 +55,7 @@ class HomeClassesScreen extends Component {
               {futureClasses.length ? (
                 futureClasses.map((aClass, i) => {
                   const duration = aClass.routine.intervals.reduce(
-                    (sum,interval) => sum + interval.duration,
+                    (sum, interval) => sum + interval.duration,
                     0
                   )
                   return (
@@ -79,7 +78,8 @@ class HomeClassesScreen extends Component {
                             fontSize: 18
                           }}
                         >
-                          {aClass.name} {activityTypes[aClass.routine.activityType].icon}
+                          {aClass.name}{' '}
+                          {activityTypes[aClass.routine.activityType].icon}
                         </Text>
                       </Text>
                       <View
@@ -101,11 +101,11 @@ class HomeClassesScreen extends Component {
                           </Text>
                         </Text>
                       </View>
-                       <RoutineBarMini
-                          routine={aClass.routine.intervals}
-                          totalDuration={duration}
-                          activityType={aClass.routine.activityType}
-                        />
+                      <RoutineBarMini
+                        routine={aClass.routine.intervals}
+                        totalDuration={duration}
+                        activityType={aClass.routine.activityType}
+                      />
                     </TouchableOpacity>
                   )
                 })
@@ -128,7 +128,7 @@ class HomeClassesScreen extends Component {
               {pastClasses.length ? (
                 pastClasses.map((aClass, i) => {
                   const duration = aClass.routine.intervals.reduce(
-                    (sum,interval) => sum + interval.duration,
+                    (sum, interval) => sum + interval.duration,
                     0
                   )
                   return (
@@ -151,7 +151,8 @@ class HomeClassesScreen extends Component {
                             fontSize: 18
                           }}
                         >
-                          {aClass.name} {activityTypes[aClass.routine.activityType].icon}
+                          {aClass.name}{' '}
+                          {activityTypes[aClass.routine.activityType].icon}
                         </Text>
                       </Text>
                       <View
@@ -173,12 +174,11 @@ class HomeClassesScreen extends Component {
                           </Text>
                         </Text>
                       </View>
-                       <RoutineBarMini
-                          routine={aClass.routine.intervals}
-                          totalDuration={duration}
-                          activityType={aClass.routine.activityType}
-                        />
-
+                      <RoutineBarMini
+                        routine={aClass.routine.intervals}
+                        totalDuration={duration}
+                        activityType={aClass.routine.activityType}
+                      />
                     </TouchableOpacity>
                   )
                 })
@@ -209,7 +209,6 @@ class HomeClassesScreen extends Component {
     )
   }
 }
-
 
 const styles = StyleSheet.create({
   button: {

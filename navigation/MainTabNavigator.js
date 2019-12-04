@@ -3,16 +3,15 @@ import {Platform} from 'react-native'
 import {createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import LoginScreen from '../screens/LoginScreen'
 import OptionsScreen from '../screens/OptionsScreen'
 import HomeClassesScreen from '../screens/HomeClassesScreen'
 import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
-import PreviousRoutine from '../screens/PreviousRoutine'
 import UserWaitingScreen from '../screens/UserWaitingScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
+import StartRoutineScreen from '../screens/StartRoutineScreen'
 // import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
@@ -52,7 +51,7 @@ const config = Platform.select({
 //   )
 // }
 
-const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, PreviousRoutine, BuildRoutineScreen})
+const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, BuildRoutineScreen, StartRoutineScreen})
 
 HomeWorkoutsStack.navigationOptions = {
   tabBarLabel: 'Solo Workouts',
