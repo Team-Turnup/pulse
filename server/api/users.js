@@ -37,7 +37,8 @@ router.get('/myWorkouts', authenticatedUser, async (req, res, next) => {
       where: {
         userId: req.user.id
       },
-      include: [Routine]
+      include: [{model: Routine, include: [Interval]}],
+      order: [['timestamp', 'DESC']]
     })
     if (!myWorkouts) res.status(404).send("can't find user's workouts")
     res.json(myWorkouts)
