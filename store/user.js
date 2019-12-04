@@ -61,7 +61,6 @@ export const auth = (user, method) => async dispatch => {
   }
   try {
     dispatch(getUser(res.data.user))
-    console.log(res.data.option)
     dispatch(getOption(res.data.option))
     return res.data.user
   } catch (dispatchOrHistoryErr) {
@@ -73,7 +72,6 @@ export const logout = () => async dispatch => {
   try {
     await axios.post(`${ngrok}/auth/logout`)
     dispatch(removeUser())
-    //history.push('/login')
   } catch (err) {
     console.error(err)
   }
@@ -81,7 +79,6 @@ export const logout = () => async dispatch => {
 
 export const changeUserInfoThunk = info => async dispatch => {
   try {
-    console.log(info)
     await axios.put(`${ngrok}/api/users`, info)
     dispatch(changeUserInfo(info))
   } catch (error) {

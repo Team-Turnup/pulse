@@ -64,7 +64,6 @@ router.get('/myRoutines', authenticatedUser, async (req, res, next) => {
 
 router.put('/', authenticatedUser, async (req, res, next) => {
   try {
-    console.log(req.body)
     const user = await User.findByPk(req.user.id)
     await user.update(req.body)
     res.sendStatus(200)

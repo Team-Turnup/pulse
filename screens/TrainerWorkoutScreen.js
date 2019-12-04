@@ -9,23 +9,9 @@ import {
   View
 } from 'native-base'
 import {StyleSheet} from 'react-native'
-import {dummyClass} from './WaitingScreenComponents'
-// import dummyWorkout from '../dummyWorkout.json'
 import WorkoutGraph from './WorkoutGraph'
 import {useSelector} from 'react-redux'
 import {useInterval} from 'use-interval'
-import socket from '../socket'
-
-let i = 1
-const fakeWorkout = dummyWorkout[0].workoutTimestamps.map(d => {
-  let timestamp = Date.now() + 1000 * i++
-  return {...d, timestamp}
-})
-
-const classStart = Date.now()
-const intervals = dummyClass.routine.intervals
-const totalTime = intervals.reduce((a, b) => a + b.duration, 0)
-let intervalStartTime = Date.now()
 
 export const OverviewStats = ({
   totalTime,
@@ -85,60 +71,64 @@ export const OverviewStats = ({
   )
 }
 
-// this component is expecting a socket to be passed as props from the trainer waiting screen
-export default () => {
-  const {routine, attendees, when, name, ..._class} = dummyClass
-  const userId = useSelector(({user}) => user.id) || 101
-
+const TrainerWorkoutScreen = () => {
+  const {attendees, when, name, ..._class} = useSelector(
+    ({singleClass}) => singleClass
+  )
+  const routine = useSelector(({routine}) => routine)
+  const userId = useSelector(({user}) => user.id)
+  let intervals
   // timekeeping variables
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
 
+  useEffect()
+
   // when the data is live, useInterval might not be necessary
-  useInterval(() => {
-    const timeElapsed = Math.round((Date.now() - classStart) / 1000)
-    const intervalElapsed = Math.round((Date.now() - intervalStartTime) / 1000)
-    setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
-    setIntervalTime(
-      intervalElapsed > intervals[currentInterval].duration
-        ? intervals[currentInterval].duration
-        : intervalElapsed
-    )
-  }, 1000)
+  // useInterval(() => {
+  //   const timeElapsed = Math.round((Date.now() - classStart) / 1000)
+  //   const intervalElapsed = Math.round((Date.now() - intervalStartTime) / 1000)
+  //   setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
+  //   setIntervalTime(
+  //     intervalElapsed > intervals[currentInterval].duration
+  //       ? intervals[currentInterval].duration
+  //       : intervalElapsed
+  //   )
+  // }, 1000)
 
-  // update interval whenever interval time is greater than the duration
-  useEffect(() => {
-    if (intervalTime < intervals[currentInterval].duration) {
-      /* do nothing - happens whenever interval changes */
-    } else {
-      setCurrentInterval(currentInterval + 1)
-      intervalStartTime = Date.now()
-    }
-  }, [
-    currentInterval < intervals.length - 1 &&
-      intervalTime >= intervals[currentInterval].duration
-  ])
-
-  console.log(socket)
+  // // update interval whenever interval time is greater than the duration
+  // useEffect(() => {
+  //   if (intervalTime < intervals[currentInterval].duration) {
+  //     /* do nothing - happens whenever interval changes */
+  //   } else {
+  //     setCurrentInterval(currentInterval + 1)
+  //     intervalStartTime = Date.now()
+  //   }
+  // }, [
+  //   currentInterval < intervals.length - 1 &&
+  //     intervalTime >= intervals[currentInterval].duration
+  // ])
 
   return (
     <Container>
-      <Content>
-        <OverviewStats
-          totalTime={totalTime}
-          totalTimeElapsed={totalTimeElapsed}
-          intervals={intervals}
-          currentInterval={currentInterval}
-          intervalTime={intervalTime}
-          workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
-        />
-        <WorkoutGraph
-          startTime={classStart}
-          intervals={intervals}
-          workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
-        />
-      </Content>
+      {intervals && (
+        <Content>
+          <OverviewStats
+            totalTime={totalTime}
+            totalTimeElapsed={totalTimeElapsed}
+            intervals={intervals}
+            currentInterval={currentInterval}
+            intervalTime={intervalTime}
+            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+          />
+          <WorkoutGraph
+            startTime={classStart}
+            intervals={intervals}
+            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+          />
+        </Content>
+      )}
     </Container>
   )
 }
@@ -165,3 +155,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }
 })
+
+export default props => (
+  <SocketContext.Consumer>
+    {socket => <TrainerWorkoutScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
