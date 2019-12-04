@@ -5,8 +5,6 @@ import {StyleSheet, View, Linking, Image} from 'react-native'
 import {auth, logout} from '../store/user'
 import {
   Container,
-  Header,
-  Thumbnail,
   Content,
   Form,
   Item,
@@ -17,11 +15,9 @@ import {
   Button,
   Text
 } from 'native-base'
-import {ngrok} from '../ngrok'
 import * as Google from 'expo-google-app-auth'
 //import ANDROID_GOOGLE_CLIENT_ID from '../secrets'
 import {me} from '../store/user'
-import {tsImportEqualsDeclaration} from '@babel/types'
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -46,9 +42,6 @@ class LoginScreen extends React.Component {
         'dancers',
         'choreographers'
       ].sort(() => Math.random() - 0.5)
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
     }
     this.clear = null
     this.handleAuth = this.handleAuth.bind(this)
@@ -83,9 +76,6 @@ class LoginScreen extends React.Component {
       email: '',
       password: '',
       message: ''
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
     })
     if (result.user && result.user.error) {
       this.setState({message: 'Wrong username and/or password'})
@@ -160,8 +150,7 @@ class LoginScreen extends React.Component {
                   paddingTop: 20,
                   paddingBottom: 20,
                   width: '100%',
-                  borderBottomLeftRadius: 10,
-                  borderBottomRightRadius: 10,
+                  borderRadius: 10,
                   overflow: 'hidden'
                 }}
               >
@@ -295,7 +284,7 @@ const styles = StyleSheet.create({
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
     backgroundColor: 'rgb(84, 130, 53)'
   },
   buttonText: {

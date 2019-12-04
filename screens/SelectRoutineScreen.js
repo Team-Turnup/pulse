@@ -1,97 +1,39 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   Container,
-  Form,
   Content,
   Button,
-  Body,
   Text,
-  ListItem
 } from 'native-base'
-import RNPickerSelect from 'react-native-picker-select'
-import PreviousRoutine from '../screens/PreviousRoutine'
-import CheckBox from 'react-native-check-box'
-//import { getRoutineThunk } from '../store/routines';
-import {createRoutineThunk} from '../store/routines'
-import {setRoutine} from '../store/routine'
-import activityTypes from '../assets/images/activityTypes'
+import AppHeader from '../components/AppHeader'
 
 class SelectRoutineScreen extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      routineType: '',
-      hapticCheckbox: true,
-      selectedRoutine: {
-        routineType: ''
-      }
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleCreateNewRoutine = this.handleCreateNewRoutine.bind(this)
-  }
-
-  // handleChange(key, value) {
-  //   this.setState({[key]: value})
-  //   if (key === 'routineType' && value !== 'combo') {
-  //     const newRoutine = this.state.routine.map(interval => ({
-  //       cadence: interval.cadence,
-  //       duration: interval.duration,
-  //       intervalType: value
-  //     }))
-  //     this.setState({intervalType: value, routine: newRoutine})
-  //   }
-  // }
-
-  handleChange(value) {
-    this.setState({
-      routineType: value
-    })
-  }
-  handleCreateNewRoutine() {
-    //can you actually set things this way?
-    this.setState({
-      selectedRoutine: {
-        routineType: this.state.routineType
-      }
-    })
-    this.props.setRoutine(this.state.selectedRoutine)
-    this.props.navigation.navigate('BuildRoutineScreen')
-    this.setState({
-      routineType: ''
-    })
-  }
 
   render() {
-    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
-      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
-      value: activity
-    }))
     return (
       <Container>
         <Content>
-          <Form>
-            <RNPickerSelect
-              onValueChange={value => this.handleChange(value)}
-              style={{display: 'flex', alignItems: 'center'}}
-              value={this.state.routineType}
-              items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
-            />
-          </Form>
+        <AppHeader navigation={this.props.navigation}/>
+        <Text style={{
+          padding: 15,
+          textAlign: 'center',
+          fontWeight: "600",
+          fontSize: 20,
+          color: 'rgb(84, 130, 53)'
+        }}>Start New Solo Workout</Text>
           <Button
-            bordered
             style={styles.button}
-            onPress={() => this.handleCreateNewRoutine()}
+            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
           >
             <Text>Create New Routine</Text>
           </Button>
           <Button
             onPress={() => this.props.navigation.navigate('PreviousRoutine')}
-            bordered
             style={styles.button}
           >
-            <Text>Select A Previous Routine</Text>
+            <Text>Select Previous Routine</Text>
           </Button>
         </Content>
       </Container>
@@ -100,72 +42,14 @@ class SelectRoutineScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 20,
-    textAlign: 'center',
-    width: '100%',
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
   button: {
-    //width: '30%',
-    margin: 5,
+    margin: 15,
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
-  buttonText: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: 'white'
-  },
-  message: {
-    fontSize: 10,
-    textAlign: 'center'
-  },
-  item: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'space-between'
-  },
-  checkBox: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center'
-  },
-  name: {
-    textAlign: 'right'
-  },
-  sectionHeader: {
-    width: '100%',
-    backgroundColor: 'blue',
-    color: 'white',
-    textAlign: 'center'
-  },
-  barGraphic: {
-    marginTop: 20,
-    marginBottom: 20
-  }
 })
 
-const mapStateToProps = state => ({
-  routines: state.routines
-})
-
-const mapDispatchToProps = dispatch => ({
-  //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-  setRoutine: routine => dispatch(setRoutine(routine))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SelectRoutineScreen)
+export default SelectRoutineScreen
