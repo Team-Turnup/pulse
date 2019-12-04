@@ -56,7 +56,9 @@ const HomeWorkoutsStack = createStackNavigator({
   HomeWorkoutsScreen,
   SelectRoutineScreen,
   BuildRoutineScreen,
-  StartRoutineScreen
+  StartRoutineScreen,
+  TrainerWaitingScreen,
+  TrainerWorkoutScreen
 })
 
 HomeWorkoutsStack.navigationOptions = {
