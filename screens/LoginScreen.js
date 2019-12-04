@@ -78,7 +78,12 @@ class LoginScreen extends React.Component {
       message: ''
     })
     if (result.user && result.user.error) {
-      this.setState({message: formName==='login' ? 'Wrong username and/or password' : 'Unable to sign up with given username and/or password'})
+      this.setState({
+        message:
+          formName === 'login'
+            ? 'Wrong username and/or password'
+            : 'Unable to sign up with given username and/or password'
+      })
       setTimeout(() => this.setState({message: ''}), 2000)
     } else {
       this.props.navigation.navigate('HomeWorkoutsStack')
@@ -223,7 +228,9 @@ class LoginScreen extends React.Component {
               </Item>
             </Form>
           ) : null}
-          <Text style={{textAlign: 'center', fontSize: 12}}>{this.state.message}</Text>
+          <Text style={{textAlign: 'center', fontSize: 12}}>
+            {this.state.message}
+          </Text>
           {/* <View style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent: 'center'}}> */}
           {!isUser ? (
             <Button

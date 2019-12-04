@@ -47,7 +47,7 @@ class MyPreviousWorkouts extends React.Component {
   }
 
   render() {
-    console.log(this.props.workouts)
+    // console.log(this.props.workouts)
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
@@ -272,10 +272,13 @@ class MyPreviousWorkouts extends React.Component {
                         //   Math.random() * Math.floor(5000)
                         // )
                         //get rid of this math.random filler
-                        workout.routine.intervals.reduce(
-                          (sum, interval) => sum + interval.duration,
-                          0
-                        )
+                        //if workout
+                        workout.routine.intervals
+                          ? workout.routine.intervals.reduce(
+                              (sum, interval) => sum + interval.duration,
+                              0
+                            )
+                          : 0
 
                       return (
                         <View key={i}>
@@ -345,11 +348,13 @@ class MyPreviousWorkouts extends React.Component {
                                 </Text>
                               </Text>
                             </View>
-                            <RoutineBarMini
-                              routine={workout.routine.intervals}
-                              totalDuration={duration}
-                              activityType={workout.routine.activityType}
-                            />
+                            {workout.routine.intervals ? (
+                              <RoutineBarMini
+                                routine={workout.routine.intervals}
+                                totalDuration={duration}
+                                activityType={workout.routine.activityType}
+                              />
+                            ) : null}
                           </TouchableOpacity>
                           {workoutId === workout.routine.id ? (
                             <View
