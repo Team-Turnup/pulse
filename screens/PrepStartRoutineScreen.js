@@ -43,7 +43,11 @@ class PrepStartRoutineScreen extends Component {
   // }
 
   render() {
-    console.log('this.props', this.props)
+    console.log(
+      'this.props.routine.activityType',
+      this.props.routine.activityType
+    )
+
     return (
       <Container>
         <Content>
