@@ -6,11 +6,11 @@ import InProgressScreen from './InProgressScreen'
 import {createWorkoutThunk} from '../store/workout'
 import PrepStartRoutine from './PrepStartRoutine'
 
-//maybe rename to UpdateRoutineScreen
 class StartRoutineScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {count: 4, clearCountdown: null, startPressed: false}
+    this.handleStart = this.handleStart.bind(this)
   }
 
   componentDidMount() {
@@ -45,10 +45,10 @@ class StartRoutineScreen extends Component {
 
   render() {
     return (
-      <View>
-        {this.state.startPressed ? (
+      <Container>
+        {!this.state.startPressed ? (
           <Container>
-            <PrepStartRoutine />
+            <PrepStartRoutine navigation={this.props.navigation} />
             <Button onPress={() => this.handleStart()}>
               <Text>Start</Text>
             </Button>
@@ -66,7 +66,7 @@ class StartRoutineScreen extends Component {
             </Content>
           </Container>
         )}
-      </View>
+      </Container>
     )
   }
 }

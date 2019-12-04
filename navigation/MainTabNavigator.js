@@ -13,6 +13,7 @@ import UserWaitingScreen from '../screens/UserWaitingScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
+import StartRoutineScreen from '../screens/StartRoutineScreen'
 // import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
@@ -52,36 +53,39 @@ const config = Platform.select({
 //   )
 // }
 
-const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, PreviousRoutine, BuildRoutineScreen})
+const HomeWorkoutsStack = createStackNavigator({
+  HomeWorkoutsScreen,
+  SelectRoutineScreen,
+  PreviousRoutine,
+  BuildRoutineScreen,
+  StartRoutineScreen
+})
 
 HomeWorkoutsStack.navigationOptions = {
   tabBarLabel: 'Solo Workouts',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-walk`
-          : 'md-walk'
-      }
+      name={Platform.OS === 'ios' ? `ios-walk` : 'md-walk'}
     />
   )
 }
 
 HomeWorkoutsStack.path = ''
 
-const HomeClassesStack = createStackNavigator({HomeClassesScreen, ClassesScreen, UserWaitingScreen, CreateClassScreen})
+const HomeClassesStack = createStackNavigator({
+  HomeClassesScreen,
+  ClassesScreen,
+  UserWaitingScreen,
+  CreateClassScreen
+})
 
 HomeClassesStack.navigationOptions = {
   tabBarLabel: 'Classes',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-people`
-          : 'md-people'
-      }
+      name={Platform.OS === 'ios' ? `ios-people` : 'md-people'}
     />
   )
 }
@@ -107,14 +111,17 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = ''
 
-const tabNavigator = createBottomTabNavigator({
-  // LoginStack,
-  HomeWorkoutsStack,
-  HomeClassesStack,
-  SettingsStack,
-  // TrainerWorkScreen,
-  // TakePhotoStack
-},{headerMode:'screen'})
+const tabNavigator = createBottomTabNavigator(
+  {
+    // LoginStack,
+    HomeWorkoutsStack,
+    HomeClassesStack,
+    SettingsStack
+    // TrainerWorkScreen,
+    // TakePhotoStack
+  },
+  {headerMode: 'screen'}
+)
 
 tabNavigator.path = ''
 
