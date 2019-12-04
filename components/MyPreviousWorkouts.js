@@ -20,44 +20,46 @@ export default class MyPreviousWorkouts extends React.Component {
 
   render() {
     return (
-        <Content>
-      <Card>
-        <CardItem header>
-          <Text>My Previous Solo Workouts</Text>
-        </CardItem>
-        {this.state.showAll
-          ? this.props.workouts.map(workout => {
-              return (
-                <Content key={workout.id} style={{width: '100%'}}>
-                  <Text>
-                    {activityTypes[workout.routine.activityType].icon} -{' '}
-                    {workout.routine.name} - {workout.timestamp.split('T')[0]}
-                  </Text>
-                </Content>
-              )
-            })
-          : this.props.workouts.slice(0, 5).map(workout => {
-              return (
-                <Content key={workout.id} style={{width: '100%'}}>
-                  <Text>
-                    {activityTypes[workout.routine.activityType].icon} -{' '}
-                    {workout.routine.name} - {workout.timestamp.split('T')[0]}
-                  </Text>
-                </Content>
-              )
-            })}
-            <Content>
-        <Text
-          onPress={() => {
-            this.setState(prevState => ({showAll: !prevState.showAll}))
-          }}
-        >
-          {this.state.showAll ? 'Show 5 most recent workouts' : 'Show all'}
-        </Text>
-
-            </Content>
-      </Card>
-            </Content>
+      <Content style={{margin: 15, }}>
+        <Card style={{borderRadius: 10, overflow: 'hidden', padding: 15}}>
+            <Text style={{fontWeight: '600', marginBottom: 10}}>My Previous Solo Workouts</Text>
+          {this.state.showAll
+            ? this.props.workouts.map(workout => {
+                return (
+                  <Content key={workout.id} style={{width: '100%'}}>
+                    <Text>
+                      {activityTypes[workout.routine.activityType].icon} -{' '}
+                      {workout.routine.name} - {workout.timestamp.split('T')[0]}
+                    </Text>
+                  </Content>
+                )
+              })
+            : this.props.workouts.slice(0, 5).map(workout => {
+                return (
+                  <Content key={workout.id} style={{width: '100%'}}>
+                    <Text>
+                      {activityTypes[workout.routine.activityType].icon} -{' '}
+                      {workout.routine.name} - {workout.timestamp.split('T')[0]}
+                    </Text>
+                  </Content>
+                )
+              })}
+          <Content>
+            <Text
+              onPress={() => {
+                this.setState(prevState => ({showAll: !prevState.showAll}))
+              }}
+            >
+              {this.props.workouts.length > 5
+                ? this.props.workouts.length> 0
+                ? this.state.showAll
+                  ? 'Show 5 most recent workouts'
+                  : 'Show all'
+                : '- No previous solo workouts' : ''}
+            </Text>
+          </Content>
+        </Card>
+      </Content>
     )
   }
 }

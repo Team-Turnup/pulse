@@ -9,6 +9,7 @@ import HomeClassesScreen from '../screens/HomeClassesScreen'
 import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
 import PreviousRoutine from '../screens/PreviousRoutine'
+import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 // import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
@@ -48,7 +49,7 @@ const config = Platform.select({
 //   )
 // }
 
-const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, PreviousRoutine})
+const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, PreviousRoutine, BuildRoutineScreen})
 
 HomeWorkoutsStack.navigationOptions = {
   tabBarLabel: 'Solo Workouts',
@@ -57,8 +58,8 @@ HomeWorkoutsStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-walk`
+          : 'md-walk'
       }
     />
   )
@@ -75,8 +76,8 @@ HomeClassesStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-people`
+          : 'md-people'
       }
     />
   )

@@ -1,97 +1,191 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet} from 'react-native'
-import {
-  Container,
-  Form,
-  Content,
-  Button,
-  Body,
-  Text,
-  ListItem
-} from 'native-base'
-import RNPickerSelect from 'react-native-picker-select'
-import PreviousRoutine from '../screens/PreviousRoutine'
-import CheckBox from 'react-native-check-box'
-//import { getRoutineThunk } from '../store/routines';
-import {createRoutineThunk} from '../store/routines'
-import {setRoutine} from '../store/routine'
+import {StyleSheet, View} from 'react-native'
+import {Container, Content, Button, Text, Card} from 'native-base'
+import AppHeader from '../components/AppHeader'
+import {getMyRoutinesThunk} from '../store/routines'
 import activityTypes from '../assets/images/activityTypes'
+import RoutineBarMini from '../components/RoutineBarMini'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 class SelectRoutineScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      routineType: '',
-      hapticCheckbox: true,
-      selectedRoutine: {
-        routineType: ''
-      }
+      page: 1,
+      numPerPage: 4,
+      filter: null,
+      sort: null,
+      search: ''
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleCreateNewRoutine = this.handleCreateNewRoutine.bind(this)
   }
 
-  // handleChange(key, value) {
-  //   this.setState({[key]: value})
-  //   if (key === 'routineType' && value !== 'combo') {
-  //     const newRoutine = this.state.routine.map(interval => ({
-  //       cadence: interval.cadence,
-  //       duration: interval.duration,
-  //       intervalType: value
-  //     }))
-  //     this.setState({intervalType: value, routine: newRoutine})
-  //   }
-  // }
-
-  handleChange(value) {
-    this.setState({
-      routineType: value
-    })
-  }
-  handleCreateNewRoutine() {
-    //can you actually set things this way?
-    this.setState({
-      selectedRoutine: {
-        routineType: this.state.routineType
-      }
-    })
-    this.props.setRoutine(this.state.selectedRoutine)
-    this.props.navigation.navigate('BuildRoutineScreen')
-    this.setState({
-      routineType: ''
-    })
+  componentDidMount() {
+    this.props.getMyRoutinesThunk()
   }
 
   render() {
-    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
-      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
-      value: activity
-    }))
     return (
       <Container>
         <Content>
-          <Form>
-            <RNPickerSelect
-              onValueChange={value => this.handleChange(value)}
-              style={{display: 'flex', alignItems: 'center'}}
-              value={this.state.routineType}
-              items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
-            />
-          </Form>
+          <AppHeader navigation={this.props.navigation} />
+          <Text
+            style={{
+              paddingTop: 15,
+              textAlign: 'center',
+              fontWeight: '600',
+              fontSize: 20,
+              color: 'rgb(84, 130, 53)'
+            }}
+          >
+            Start New Solo Workout
+          </Text>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: 25,
+                height: 35,
+                backgroundColor: 'rgb(84, 130, 53)',
+                borderRadius: 5,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={()=>this.setState(prevState=>({page: prevState.page-1}))}
+            >
+              <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+            </TouchableOpacity>
+            <Content style={{marginTop: 15, marginBottom: 15}}>
+              <Card
+                style={{
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  padding: 15,
+                  margin: 15
+                }}
+              >
+                <Text style={{fontWeight: '600', marginBottom: 10}}>
+                  Select One of Your Previous Routines
+                </Text>
+                {this.props.routines.length ? (
+                  this.props.routines.map((routine, i) => {
+                    const duration = routine.intervals.reduce(
+                      (sum, interval) => sum + interval.duration,
+                      0
+                    )
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        style={{
+                          marginTop: 5,
+                          marginBottom: 5,
+                          borderColor: 'gray',
+                          borderWidth: 1,
+                          borderRadius: 10,
+                          overflow: 'hidden'
+                        }}
+                      >
+                        <Text style={{textAlign: 'center'}}>
+                          Name:{' '}
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontWeight: '600',
+                              fontSize: 18
+                            }}
+                          >
+                            {routine.name}
+                          </Text>
+                        </Text>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly'
+                          }}
+                        >
+                          <Text>
+                            Activity:{' '}
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                fontStyle: 'italic'
+                              }}
+                            >
+                              {activityTypes[routine.activityType].icon}
+                            </Text>
+                          </Text>
+                          <Text>
+                            Duration:{' '}
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                fontStyle: 'italic'
+                              }}
+                            >
+                              {Math.floor(duration / 60)
+                                ? `${Math.floor(duration / 60)}m`
+                                : ''}{' '}
+                              {duration % 60 ? `${duration % 60}s` : ''}
+                            </Text>
+                          </Text>
+                        </View>
+                        <RoutineBarMini
+                          routine={routine.intervals}
+                          totalDuration={duration}
+                          activityType={routine.activityType}
+                        />
+                      </TouchableOpacity>
+                    )
+                  })
+                ) : (
+                  <Text>- No upcoming classes</Text>
+                )}
+              </Card>
+            </Content>
+            <TouchableOpacity
+              style={{
+                width: 25,
+                height: 35,
+                backgroundColor: 'rgb(84, 130, 53)',
+                borderRadius: 5,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={()=>this.setState(prevState=>({page: prevState.page+1}))}
+            >
+              <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
+          >
+            or
+          </Text>
           <Button
-            bordered
             style={styles.button}
-            onPress={() => this.handleCreateNewRoutine()}
+            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
           >
             <Text>Create New Routine</Text>
           </Button>
+          <Text
+            style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
+          >
+            or
+          </Text>
           <Button
             onPress={() => this.props.navigation.navigate('PreviousRoutine')}
-            bordered
             style={styles.button}
           >
-            <Text>Select A Previous Routine</Text>
+            <Text>Search Public Routines</Text>
           </Button>
         </Content>
       </Container>
@@ -100,72 +194,20 @@ class SelectRoutineScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 20,
-    textAlign: 'center',
-    width: '100%',
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
   button: {
-    //width: '30%',
-    margin: 5,
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
-  },
-  buttonText: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: 'white'
-  },
-  message: {
-    fontSize: 10,
-    textAlign: 'center'
-  },
-  item: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'space-between'
-  },
-  checkBox: {
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center'
-  },
-  name: {
-    textAlign: 'right'
-  },
-  sectionHeader: {
-    width: '100%',
-    backgroundColor: 'blue',
-    color: 'white',
-    textAlign: 'center'
-  },
-  barGraphic: {
-    marginTop: 20,
-    marginBottom: 20
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   }
 })
 
-const mapStateToProps = state => ({
-  routines: state.routines
-})
-
-const mapDispatchToProps = dispatch => ({
-  //getRoutineThunk: routineId => dispatch(getRoutineThunk(routineId)),
-  createRoutineThunk: routine => dispatch(createRoutineThunk(routine)),
-  setRoutine: routine => dispatch(setRoutine(routine))
-})
+const mapStateToProps = ({routines}) => ({routines})
+const mapDispatchToProps = {getMyRoutinesThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectRoutineScreen)
