@@ -32,8 +32,8 @@ class MyPreviousWorkouts extends React.Component {
       filter: null,
       sort: null,
       search: '',
-      workoutId: null,
-      showAll: false
+      workoutId: null
+      //showAll: false
     }
     this.handleChange = this.handleChange.bind(this)
   }
@@ -142,6 +142,7 @@ class MyPreviousWorkouts extends React.Component {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center'
+              //height: 650
             }}
           >
             {page > 1 ? (
@@ -176,6 +177,7 @@ class MyPreviousWorkouts extends React.Component {
                   overflow: 'hidden',
                   padding: 15,
                   margin: 15,
+                  // height: 650
                   height: 435
                 }}
               >
@@ -267,19 +269,12 @@ class MyPreviousWorkouts extends React.Component {
                   </Text>
                   {viewWorkouts.length ? (
                     viewWorkouts.map((workout, i) => {
-                      const duration =
-                        // Math.floor(
-                        //   Math.random() * Math.floor(5000)
-                        // )
-                        //get rid of this math.random filler
-                        //if workout
-                        workout.routine.intervals
-                          ? workout.routine.intervals.reduce(
-                              (sum, interval) => sum + interval.duration,
-                              0
-                            )
-                          : 0
-
+                      const duration = workout.routine.intervals
+                        ? workout.routine.intervals.reduce(
+                            (sum, interval) => sum + interval.duration,
+                            0
+                          )
+                        : 0
                       return (
                         <View key={i}>
                           <TouchableOpacity

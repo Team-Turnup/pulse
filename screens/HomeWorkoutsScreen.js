@@ -1,14 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, StyleSheet} from 'react-native'
-import {
-  Container,
-  Button,
-  Text,
-  Content,
-  Card,
-  CardItem
-} from 'native-base'
+import {View, StyleSheet, ScrollView} from 'react-native'
+import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
@@ -16,7 +9,6 @@ import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
 class HomeWorkoutsScreen extends Component {
-
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
@@ -27,8 +19,16 @@ class HomeWorkoutsScreen extends Component {
     const {navigation} = this.props
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation}/>
-        <View>
+        <AppHeader navigation={this.props.navigation} />
+        <View
+          style={{
+            // display: 'flex',
+            // flexDirection: 'row',
+            // justifyContent: 'center',
+            // alignItems: 'center'
+            height: 650
+          }}
+        >
           <MyPreviousWorkouts workouts={this.props.workouts} />
           <Button
             style={styles.button}
@@ -42,7 +42,6 @@ class HomeWorkoutsScreen extends Component {
           >
             <Text>Start New Solo Workout</Text>
           </Button>
-
         </View>
       </Content>
     )
