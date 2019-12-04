@@ -17,13 +17,8 @@ import PrepStartRoutine from '../screens/PrepStartRoutine'
 
 const ScreenNavigator = createStackNavigator(
   {
-    SelectRoutineScreen,
-    HomeScreen,
-    BuildRoutineScreen,
-    StartRoutineScreen,
     InProgressScreen,
     ClassesScreen,
-    PreviousRoutine,
     UserWaitingScreen,
     TrainerWaitingScreen,
     CreateClassScreen,

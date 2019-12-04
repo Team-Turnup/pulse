@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
           Interval.create({
             cadence: interval.cadence,
             duration: interval.duration,
-            activityType: interval.intervalType
+            activityType: interval.activityType
           })
         )
       )
