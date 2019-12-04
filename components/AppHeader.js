@@ -54,7 +54,7 @@ class AppHeader extends React.Component {
           </Text>
           <TouchableOpacity onPress={()=>{this.props.logout(); this.props.navigation.navigate('LoginScreen')}}>
           <Image
-            style={{width: 25, height: 25}}
+            style={{width: 25, height: 25, margin: 5}}
             source={require('../assets/images/Logout.png')}
           />
           </TouchableOpacity>

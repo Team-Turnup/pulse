@@ -1,19 +1,21 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
-import {Container, Text, Content, Card, CardItem} from 'native-base'
+import {Container, Text, Content, Card, CardItem, Button} from 'native-base'
 import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
 import socket from '../socket'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
+import activityTypes from '../assets/images/activityTypes'
 
 class InProgressScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      startTime: Date.now(),
       clearCadence: null,
-      avgCadences: [{timestamp: Date.now(), cadence: 0}],
+      avgCadences: [{timestamp: 0, cadence: 0}],
       totalTimeElapsed: 0,
       totalTime: props.routine.intervals.reduce(
         (sum, interval) => sum + interval.duration,
@@ -29,7 +31,8 @@ class InProgressScreen extends React.Component {
       isPedometerAvailable: 'checking',
       // pastStepCount: 0,
       currentStepCount: 0,
-      cadences: []
+      cadences: [],
+      paused: false
     }
   }
 
@@ -47,7 +50,7 @@ class InProgressScreen extends React.Component {
   _subscribe = () => {
     this._subscription = Pedometer.watchStepCount(result => {
       let {avgCadences, currentStepCount, cadences} = this.state
-      const timestamp = Date.now()
+      const timestamp = Date.now()-this.state.startTime
       const cadence =
         ((result.steps - currentStepCount) /
           (timestamp - avgCadences[avgCadences.length - 1].timestamp)) *
@@ -203,7 +206,7 @@ class InProgressScreen extends React.Component {
         currentInterval,
         clearCadence
       })
-    }, 1000)
+    }, 100)
     this.setState({pauseTime, clearCadence})
   }
 
@@ -222,6 +225,15 @@ class InProgressScreen extends React.Component {
     this._subscription = null
   }
 
+  hexToRgb(hex, opacity) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    const r = parseInt(result[1], 16)
+    const g = parseInt(result[2], 16)
+    const b = parseInt(result[3], 16)
+    const rgba = `rgba(${r},${g},${b},${opacity})`
+    return rgba
+  }
+
   render() {
     const {
       intervals,
@@ -229,115 +241,177 @@ class InProgressScreen extends React.Component {
       totalTimeElapsed,
       totalTime,
       intervalTime,
-      avgCadences
+      avgCadences,
+      paused
     } = this.state
     const totalTimeLeft = totalTime - totalTimeElapsed
     const intervalTimeLeft = intervals[currentInterval].duration - intervalTime
     const withinGoalCadence =
-        avgCadences[avgCadences.length - 1].cadence >
-          0.85 * intervals[currentInterval].cadence &&
-        avgCadences[avgCadences.length - 1].cadence <
-          1.15 * intervals[currentInterval].cadence
+      avgCadences[avgCadences.length - 1].cadence >
+        0.85 * intervals[currentInterval].cadence &&
+      avgCadences[avgCadences.length - 1].cadence <
+        1.15 * intervals[currentInterval].cadence
     return (
       <Container>
-        <RoutineBarGraphic
-          routine={intervals}
-          changeIndex={() => {}}
-          index={currentInterval}
-          removeInterval={() => {}}
-          finished={false}
-          routineType={this.props.routine.activityType}
-        />
-        <Content>
-          <View style={styles.info}>
-            <View style={styles.col}>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Total Time Elapsed:</Text>
-                <Text style={{color: 'rgb(84, 130, 53)'}}>
-                  {Math.floor(totalTimeElapsed / 60)
-                    ? `${Math.floor(totalTimeElapsed / 60)}m`
-                    : ''}{' '}
-                  {totalTimeElapsed % 60 ? `${totalTimeElapsed % 60}s` : ''}
-                </Text>
-              </Card>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Total Time Left:</Text>
-                <Text style={{color: 'rgb(84, 130, 53)'}}>
-                  {Math.floor(totalTimeLeft / 60)
-                    ? `${Math.floor(totalTimeLeft / 60)}m`
-                    : ''}{' '}
-                  {totalTimeLeft % 60 ? `${totalTimeLeft % 60}s` : ''}
-                </Text>
-              </Card>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Time Left in Interval:</Text>
-                <Text style={{color: 'rgb(84, 130, 53)'}}>
-                  {Math.floor(intervalTimeLeft / 60)
-                    ? `${Math.floor(intervalTimeLeft / 60)}m`
-                    : ''}{' '}
-                  {intervalTimeLeft % 60 ? `${intervalTimeLeft % 60}s` : ''}
-                </Text>
-              </Card>
-            </View>
-
-            <View style={styles.col}>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Goal Cadence:</Text>
-                <Text style={{color: 'rgb(84, 130, 53)'}}>
-                  {intervals[currentInterval].cadence} bpm
-                </Text>
-              </Card>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Current Cadence:</Text>
-                <Text style={{color: withinGoalCadence ? 'rgb(84, 130, 53)' : 'red'}}>
-                  {this.state.avgCadences[
-                    this.state.avgCadences.length - 1
-                  ].cadence.toFixed(0)} bpm
-                </Text>
-              </Card>
-              <Card transparent style={styles.card}>
-                <Text style={{fontSize: 12}}>Total Steps:</Text>
-                <Text style={{color: 'rgb(84, 130, 53)'}}>
-                  {this.state.currentStepCount} steps
-                </Text>
-              </Card>
-            </View>
-          </View>
-          {/* <Row size={4} style={{justifyContent: 'center'}}> */}
-          <WorkoutGraph
-            intervals={this.state.intervals}
-            workoutData={this.state.avgCadences}
-            startTime={this.state.avgCadences[0].timestamp}
-          />
+        <View
+          style={{
+            padding: 20,
+            backgroundColor: this.hexToRgb(
+              this.props.option.visualColor,
+              this.state.opacity
+            ),
+            width: '100%',
+            height: '70%'
+          }}
+        >
           <View
             style={{
-              ...styles.visual,
-              backgroundColor: this.props.option.visualColor,
-              opacity: this.state.opacity
+              backgroundColor: 'white',
+              width: '100%',
+              height: '100%',
+              borderRadius: 10,
+              opacity: 1
             }}
-          ></View>
-          {/* </Row> */}
-        </Content>
-        {/* </Row> */}
+          >
+            <View>
+              <Text style={{textAlign: 'center'}}>
+                Routine Name:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {this.props.routine.name}
+                </Text>
+              </Text>
+              <Text style={{textAlign: 'center'}}>
+                Activity Type:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {this.state.routineType !== 'combo'
+                    ? activityTypes[this.props.routine.activityType].icon
+                    : 'Combo'}
+                </Text>
+              </Text>
+            </View>
+            <RoutineBarGraphic
+              routine={intervals}
+              changeIndex={() => {}}
+              index={currentInterval}
+              removeInterval={() => {}}
+              finished={false}
+              routineType={this.props.routine.activityType}
+            />
+            <View>
+              <View style={styles.info}>
+                <View style={styles.col}>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Time Elapsed:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(totalTimeElapsed / 60)
+                        ? `${Math.floor(totalTimeElapsed / 60)}m`
+                        : ''}{' '}
+                      {totalTimeElapsed % 60 ? `${totalTimeElapsed % 60}s` : ''}
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Time Left:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(totalTimeLeft / 60)
+                        ? `${Math.floor(totalTimeLeft / 60)}m`
+                        : ''}{' '}
+                      {totalTimeLeft % 60 ? `${totalTimeLeft % 60}s` : ''}
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Time Left in Interval:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(intervalTimeLeft / 60)
+                        ? `${Math.floor(intervalTimeLeft / 60)}m`
+                        : ''}{' '}
+                      {intervalTimeLeft % 60 ? `${intervalTimeLeft % 60}s` : ''}
+                    </Text>
+                  </Card>
+                </View>
 
-        {/* <Row
-            size={1.5}
-            style={{
-              flex: 1,
-              justifyContent: 'space-evenly'
-            }}
-          > */}
-        {/* </Row> */}
-        {/* </Grid> */}
+                <View style={styles.col}>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Goal Cadence:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {intervals[currentInterval].cadence} bpm
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Current Cadence:</Text>
+                    <Text
+                      style={{
+                        color: withinGoalCadence ? 'rgb(84, 130, 53)' : 'red'
+                      }}
+                    >
+                      {this.state.avgCadences[
+                        this.state.avgCadences.length - 1
+                      ].cadence.toFixed(0)}{' '}
+                      bpm
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Steps:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {this.state.currentStepCount} steps
+                    </Text>
+                  </Card>
+                </View>
+              </View>
+              {/* <WorkoutGraph
+            intervals={intervals}
+            workoutData={avgCadences}
+            startTime={avgCadences[0].timestamp}
+            paused={paused}
+          /> */}
+              <View style={styles.buttonContainer}>
+                {this.state.paused ? (
+                  <Button
+                    onPress={() => {
+                      this._startWorkout()
+                      this.setState({paused: false})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Resume</Text>
+                  </Button>
+                ) : null}
+                {!this.state.paused ? (
+                  <Button
+                    onPress={() => {
+                      this._pauseWorkout()
+                      this.setState({paused: true})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Pause</Text>
+                  </Button>
+                ) : null}
+                <Button onPress={this._restartWorkout} style={styles.button}>
+                  <Text>Restart</Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  visual: {
-    width: '100%',
-    height: 200
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eee',
+    padding: 5,
+    height: 30,
+    width: '45%',
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   col: {
     width: '50%',

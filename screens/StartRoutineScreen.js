@@ -5,6 +5,7 @@ import {Container, Content, Text, Button} from 'native-base'
 import InProgressScreen from './InProgressScreen'
 import {createWorkoutThunk} from '../store/workout'
 import PrepStartRoutine from './PrepStartRoutine'
+import AppHeader from '../components/AppHeader'
 
 class StartRoutineScreen extends Component {
   constructor(props) {
