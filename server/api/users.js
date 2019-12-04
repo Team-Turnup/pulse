@@ -46,6 +46,22 @@ router.get('/myWorkouts', authenticatedUser, async (req, res, next) => {
   }
 })
 
+router.get('/myRoutines', authenticatedUser, async (req, res, next) => {
+  try {
+    const myRoutines = await Routine.findAll({
+      where: {
+        userId: req.user.id
+      },
+      include: [Interval]
+    })
+    // const myClassRoutines = ...
+    if (!myRoutines) res.status(404).send("can't find user's routines")
+    res.json(myRoutines)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.put('/', authenticatedUser, async (req, res, next) => {
   try {
     console.log(req.body)

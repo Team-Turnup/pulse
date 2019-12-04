@@ -62,7 +62,7 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    this.props.navigation.navigate('HomeScreen')
+    this.props.navigation.navigate('HomeWorkoutsScreen')
   }
 
   async createAndStartRoutine() {
@@ -131,7 +131,7 @@ class BuildRoutineScreen extends Component {
           fontWeight: "600",
           fontSize: 20,
           color: 'rgb(84, 130, 53)'
-        }}>Create Routine for New Solo Workout</Text>
+        }}>Create Routine{"\n"}for New Solo Workout</Text>
         <Text style={{
           textAlign: 'center', ...styles.message
         }}>You can reuse your routines for future workouts</Text>
@@ -181,7 +181,7 @@ class BuildRoutineScreen extends Component {
 
           {this.state.routineName.length && this.state.routineType && !this.state.showAddIntervals
           ? <Button style={styles.button} onPress={()=>this.setState({showAddIntervals: true})}>
-            <Text>Continue</Text>
+            <Text>Submit</Text>
           </Button> : null}
 
           {this.state.showAddIntervals ? (
@@ -209,11 +209,15 @@ class BuildRoutineScreen extends Component {
                   removeInterval={this.removeInterval}
                   finished={this.state.finished}
                   routineType={this.state.routineType}
-                /> : <Text style={{color: 'rgb(84, 130, 53)'}}>Your routine doesn't have any intervals!</Text>}
+                /> : <Text style={{color: 'rgb(84, 130, 53)'}}>Your routine doesn't have any intervals yet!</Text>}
               </View>
               
               </View>
-              {this.state.routineType === 'combo' ? (
+              
+
+              {!this.state.finished ?
+              <View style={{marginBottom: 15}}>
+                {this.state.routineType === 'combo' ? (
                 <Item fixedLabel style={styles.item}>
                   <Text>Activity Type</Text>
                   <RNPickerSelect
@@ -227,9 +231,6 @@ class BuildRoutineScreen extends Component {
               ) : (
                 <Item></Item>
               )}
-
-              {!this.state.finished ?
-              <View style={{marginBottom: 15}}>
               <Item fixedLabel style={styles.item}>
                 <Text>Cadence <Text style={{fontStyle: "italic"}}>(bpm)</Text></Text>
                 <NumericInput

@@ -32,6 +32,12 @@ class HomeWorkoutsScreen extends Component {
           <MyPreviousWorkouts workouts={this.props.workouts} />
           <Button
             style={styles.button}
+            onPress={() => navigation.navigate('BuildRoutineScreen')}
+          >
+            <Text>Create New Routine</Text>
+          </Button>
+          <Button
+            style={styles.button}
             onPress={() => navigation.navigate('SelectRoutineScreen')}
           >
             <Text>Start New Solo Workout</Text>
