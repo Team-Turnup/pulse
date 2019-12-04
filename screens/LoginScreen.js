@@ -53,7 +53,7 @@ class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(
+    this.clear = setInterval(
       () =>
         this.setState(prevState => ({
           for: (prevState.for + 1) % this.state.forArray.length

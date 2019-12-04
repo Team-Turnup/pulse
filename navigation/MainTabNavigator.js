@@ -11,8 +11,9 @@ import UserWaitingScreen from '../screens/UserWaitingScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
+import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
+import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
-// import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -55,7 +56,9 @@ const HomeWorkoutsStack = createStackNavigator({
   HomeWorkoutsScreen,
   SelectRoutineScreen,
   BuildRoutineScreen,
-  StartRoutineScreen
+  StartRoutineScreen,
+  TrainerWaitingScreen,
+  TrainerWorkoutScreen
 })
 
 HomeWorkoutsStack.navigationOptions = {
@@ -75,6 +78,7 @@ const HomeClassesStack = createStackNavigator({
   ClassesScreen,
   UserWaitingScreen,
   CreateClassScreen
+
 })
 
 HomeClassesStack.navigationOptions = {

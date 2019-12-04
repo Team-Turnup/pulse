@@ -1,7 +1,9 @@
 // Core React/Redux libraries
 import React, {useEffect, useState, Fragment} from 'react'
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import useInterval from 'use-interval'
+import {setReadyAttendees, addNewAttendee} from '../store/singleClass'
+import {SocketContext} from '../socket'
 
 // Components
 import {Container, Header, Content, Text, H3, View} from 'native-base'
@@ -10,33 +12,41 @@ import {
   StartButton,
   StartTime,
   UserList,
-  dummyClass,
   styles
 } from './WaitingScreenComponents'
 
-// Utility libraries
-import socket from '../socket'
-// assuming for right now that the class was already fetched from server and is in store?
-// import {getClassThunk} from '../store/singleClass'
-
-export default () => {
+const TrainerWaitingScreen = ({navigation, socket}) => {
+  const dispatch = useDispatch()
   const {attendees, when, name, id: classId, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
 
   const routine = useSelector(({routine}) => routine)
 
-  // const {routine, attendees, when, name, ..._class} = dummyClass
-  const userId = useSelector(({user}) => user.id) || 101
+  const userId = useSelector(({user}) => user.id)
   const [curTime, setCurTime] = useState(Date.now())
 
+  const _onPress = () => {
+    socket.emit('start', classId, userId)
+    navigation.navigate('TrainerWorkoutScreen')
+  }
+
   useEffect(() => {
+    // listen for socket messages
+    socket.on('joined', user => dispatch(addNewAttendee(user)))
+    socket.on('left', user => dispatch(removeAttendee(user)))
+    socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
+  }, [])
+
+  useEffect(() => {
+    // join/create a class when the component sees a valid classId and unsubscribe on unmount
     if (classId) {
       socket.emit('subscribe', classId, userId, true)
       return () => socket.emit('unsubscribe', classId, userId, true)
     }
   }, [classId])
 
+  // tick
   useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
@@ -48,13 +58,32 @@ export default () => {
         {name && routine && attendees ? (
           <Fragment>
             <View style={styles.startView}>
-              {when < curTime ? <StartButton /> : <StartTime when={when} />}
+              {when < curTime ||
+              attendees.length === attendees.filter(a => a.ready).length ? (
+                <StartButton _onPress={_onPress} />
+              ) : (
+                <StartTime when={when} />
+              )}
             </View>
             <H3
               style={{textAlign: 'center', paddingBottom: 20}}
             >{`Routine: ${routine.name}`}</H3>
             <RoutineBarDisplay routine={routine.intervals} />
-            <UserList attendees={attendees} />
+            {attendees && attendees.length && (
+              <UserList
+                attendees={attendees.sort((a, b) =>
+                  !a.ready && b.ready
+                    ? 1
+                    : a.ready && !b.ready
+                    ? -1
+                    : a.name.toUpperCase() < b.name.toUpperCase()
+                    ? -1
+                    : a.name.toUpperCase() > b.name.toUpperCase()
+                    ? 1
+                    : 0
+                )}
+              />
+            )}
           </Fragment>
         ) : (
           <Text>Loading...</Text>
@@ -63,3 +92,9 @@ export default () => {
     </Container>
   )
 }
+
+export default props => (
+  <SocketContext.Consumer>
+    {socket => <TrainerWaitingScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
