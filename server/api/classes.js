@@ -132,21 +132,49 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
   }
 })
 
-router.post('/', authenticatedUser, async (req, res, next) => {
-  try {
-    const {body} = req
-    const {name, canEnroll, when, attendees, classPasscode, routineId} = body
-    let currentClass = await Class.create(
-      {
-        name,
-        canEnroll,
-        when,
-        attendees,
-        classPasscode,
-        routineId
-      },
-      {
-        returning: true,
+router.post('/', authenticatedUser, (req, res, next) => {
+  const {body, user} = req
+  const {name, canEnroll, when, attendees, classPasscode, routineId} = body
+  Class.create(
+    {
+      name,
+      canEnroll,
+      when,
+      attendees,
+      classPasscode
+    }
+    // {
+    //   include: [
+    //     {
+    //       model: Routine,
+    //       attributes: ['id', 'name', 'activityType'],
+    //       include: [
+    //         {
+    //           model: Interval,
+    //           attributes: ['id', 'activityType', 'cadence', 'duration']
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       model: User,
+    //       as: 'attendees',
+    //       attributes: ['id', 'email', 'age', 'gender'],
+    //       through: {
+    //         attributes: []
+    //       }
+    //     }
+    //   ]
+    // }
+  )
+    .then(async c => {
+      await c.setUser(user.id)
+      await c.setRoutine(routineId)
+      if (!c) throw new Error(`Class not found.`)
+      return c.id
+    })
+    .then(id =>
+      Class.findByPk(id, {
+        attributes: ['id', 'name', 'canEnroll', 'when'],
         include: [
           {
             model: Routine,
@@ -167,13 +195,10 @@ router.post('/', authenticatedUser, async (req, res, next) => {
             }
           }
         ]
-      }
+      })
     )
-    if (!currentClass) throw new Error(`Class not found.`)
-    res.status(200).json(currentClass)
-  } catch (err) {
-    next(err)
-  }
+    .then(currentClass => res.status(200).json(currentClass))
+    .catch(e => next(e))
 })
 
 module.exports = router

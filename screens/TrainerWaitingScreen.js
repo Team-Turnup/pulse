@@ -26,15 +26,15 @@ export default () => {
 
   const routine = useSelector(({routine}) => routine)
 
-  console.log('attendees', attendees, 'routine', routine)
-
   // const {routine, attendees, when, name, ..._class} = dummyClass
   const userId = useSelector(({user}) => user.id) || 101
   const [curTime, setCurTime] = useState(Date.now())
 
   useEffect(() => {
-    socket.emit('subscribe', classId, userId, true)
-    return () => socket.emit('unsubscribe', classId, userId, true)
+    if (classId) {
+      socket.emit('subscribe', classId, userId, true)
+      return () => socket.emit('unsubscribe', classId, userId, true)
+    }
   }, [classId])
 
   useInterval(() => setCurTime(Date.now()), 1000)

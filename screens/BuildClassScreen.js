@@ -23,10 +23,10 @@ class BuildClassScreen extends Component {
     this.setDate = this.setDate.bind(this)
   }
 
-  async handleCreateClass() {
+  handleCreateClass() {
     const {name, canEnroll, when, attendees, classPasscode} = this.state
     const routineId = this.props.routine.id
-    await this.props.createClassThunk({
+    this.props.createClassThunk({
       name,
       canEnroll,
       when,
