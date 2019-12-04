@@ -161,7 +161,7 @@ class BuildRoutineScreen extends Component {
             />
           </View>
           {/* <Item fixedLabel style={styles.item}> */}
-          <View style={styles.item}>
+          <View style={{...styles.item, }}>
           <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
           <Text>Activity Type</Text>
           </View>
@@ -169,6 +169,7 @@ class BuildRoutineScreen extends Component {
             onValueChange={value => this.handleChange('routineType', value)}
             value={this.state.routineType}
             items={activityTypeSelects}
+            userNativeAndroidPickerStyle={false}
           />
           </View>
           {/* </Item> */}
@@ -236,6 +237,7 @@ class BuildRoutineScreen extends Component {
                     }
                     value={this.state.intervalType}
                     items={activityTypeNoComboSelects}
+                    userNativeAndroidPickerStyle={false}
                   />
                 </Item>
               ) : (

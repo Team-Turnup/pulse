@@ -61,7 +61,7 @@ class SelectRoutineScreen extends Component {
               alignItems: 'center'
             }}
           >
-            <TouchableOpacity
+            {page>1? <TouchableOpacity
               style={{
                 width: 25,
                 height: 35,
@@ -74,7 +74,9 @@ class SelectRoutineScreen extends Component {
               onPress={()=>this.setState(prevState=>({page: prevState.page-1}))}
             >
               <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> : <View style={{
+                width: 25,
+                height: 35}}></View>}
             <Content style={{marginTop: 15, marginBottom: 15}}>
               <Card
                 style={{
