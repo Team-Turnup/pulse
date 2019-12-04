@@ -25,7 +25,7 @@ class SelectRoutineScreen extends Component {
   }
 
   render() {
-    // console.log('SELECTROUTINEPROPS', this.props)
+    console.log('SELECTROUTINEPROPS', this.props)
     return (
       <Container>
         <Content>

@@ -1,6 +1,6 @@
 export default {
     breathing: {icon: '🧘‍♂️', display: 'Breathing'},
-    combo: {icon: 'Combo', display: 'Combo'},
+    combo: {icon: '🏈🏐🎾', display: 'Combo'},
     cycling: {icon: '🚴‍♂️', display: 'Cycling'},
     dancing: {icon: '🕺', display: 'Dancing'},
     jumpingJacks: {icon: '🐸', display: 'Jumping jacks'},
