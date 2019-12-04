@@ -51,19 +51,19 @@ class MyPreviousWorkouts extends React.Component {
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
-          return A.createdAt < B.createdAt
+          return A.routine.createdAt < B.routine.createdAt
             ? 1
-            : A.createdAt > B.createdAt
+            : A.routine.createdAt > B.routine.createdAt
             ? -1
             : 0
         }
       } else if (sort === 'durationHighLow') {
         return (A, B) => {
-          Aduration = A.intervals.reduce(
+          Aduration = A.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
-          Bduration = B.intervals.reduce(
+          Bduration = B.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
@@ -71,11 +71,11 @@ class MyPreviousWorkouts extends React.Component {
         }
       } else if (sort === 'durationLowHigh') {
         return (A, B) => {
-          Aduration = A.intervals.reduce(
+          Aduration = A.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
-          Bduration = B.intervals.reduce(
+          Bduration = B.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
@@ -83,17 +83,17 @@ class MyPreviousWorkouts extends React.Component {
         }
       } else if (sort === 'ZA') {
         return (A, B) => {
-          return A.name.toLowerCase() > B.name.toLowerCase()
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
             ? -1
-            : A.name.toLowerCase() < B.name.toLowerCase()
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
             ? 1
             : 0
         }
       } else if (sort === 'AZ') {
         return (A, B) => {
-          return A.name.toLowerCase() > B.name.toLowerCase()
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
             ? 1
-            : A.name.toLowerCase() < B.name.toLowerCase()
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
             ? -1
             : 0
         }
@@ -363,9 +363,9 @@ class MyPreviousWorkouts extends React.Component {
                                         workout.routine.id === workoutId
                                     )
                                   )
-                                  this.props.navigation.navigate(
-                                    'StartWorkoutScreen'
-                                  )
+                                  // this.props.navigation.navigate(
+                                  //   'StartWorkoutScreen'
+                                  // )
                                 }}
                                 style={{
                                   ...styles.button,
@@ -384,9 +384,9 @@ class MyPreviousWorkouts extends React.Component {
                                         workout.routine.id === workoutId
                                     )
                                   )
-                                  this.props.navigation.navigate(
-                                    'BuildWorkoutScreen'
-                                  )
+                                  // this.props.navigation.navigate(
+                                  //   'BuildWorkoutScreen'
+                                  // )
                                 }}
                                 style={{
                                   ...styles.button,
