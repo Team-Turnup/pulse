@@ -15,7 +15,7 @@ import {
 } from 'native-base'
 import AppHeader from '../components/AppHeader'
 import {getMyWorkoutsThunk} from '../store/workouts'
-//import RoutineBarMini from '../components/RoutineBarMini'
+import RoutineBarMini from '../components/RoutineBarMini'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
 import {setWorkout} from '../store/workout'
@@ -345,12 +345,11 @@ class MyPreviousWorkouts extends React.Component {
                                 </Text>
                               </Text>
                             </View>
-                            {/* only RoutineBarMini exists
                             <RoutineBarMini
-                              workout={workout.routine.intervals}
+                              routine={workout.routine.intervals}
                               totalDuration={duration}
                               activityType={workout.routine.activityType}
-                            /> */}
+                            />
                           </TouchableOpacity>
                           {workoutId === workout.routine.id ? (
                             <View
