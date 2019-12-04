@@ -4,11 +4,13 @@ import {View, StyleSheet} from 'react-native'
 import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
+import {getClassThunk} from '../store/singleClass'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
   componentDidMount() {
     this.props.getMyClassesThunk()
+    // this.props.getClassThunk(1)
     // this.props.getMyWorkoutsThunk()
   }
 
@@ -18,6 +20,12 @@ class HomeClassesScreen extends Component {
       <Content>
         <AppHeader navigation={this.props.navigation} />
         <View>
+          {/* <Button
+            style={styles.button}
+            onPress={() => navigation.navigate('TrainerWaitingScreen')}
+          >
+            <Text>Start Test Class</Text>
+          </Button> */}
           <Content style={{margin: 15}}>
             <Card
               style={{
@@ -126,6 +134,10 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
   myClasses
 })
 
-const mapDispatchToProps = {getMyClassesThunk, getMyWorkoutsThunk}
+const mapDispatchToProps = {
+  getMyClassesThunk,
+  getMyWorkoutsThunk,
+  getClassThunk
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

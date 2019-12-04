@@ -104,6 +104,8 @@ async function seed() {
     email: 'cody@email.com',
     name: 'Cody Pug',
     password: '123',
+    age: 13,
+    gender: 'non-binary',
     //username: 'MrCody',
     role: 'leader'
   })
@@ -119,11 +121,13 @@ async function seed() {
   )
 
   const classes = await Promise.all(
-    Array.from({length: classCount}, () =>
+    Array.from({length: classCount}, (_, i) =>
       createClass().then(d => {
-        d.setRoutine(faker.random.arrayElement(routines))
+        d.setRoutine(i === 0 ? 1 : faker.random.arrayElement(routines))
         d.setUser(
-          faker.random.arrayElement(users.filter(d => d.role === 'leader'))
+          i === 0
+            ? 1
+            : faker.random.arrayElement(users.filter(d => d.role === 'leader'))
         )
         d.addAttendees(
           Array.from(
@@ -172,6 +176,8 @@ async function seed() {
     email: 'follower@gmail.com',
     password: '123'
   })
+
+  await cody.addRoutine(routines[0])
 }
 
 async function runSeed() {

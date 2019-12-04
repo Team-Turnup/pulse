@@ -116,7 +116,7 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
       include.push({
         model: User,
         as: 'attendees',
-        attributes: ['id', 'email', 'age', 'gender'],
+        attributes: ['id', 'name', 'age', 'gender'],
         through: {
           attributes: []
         }
