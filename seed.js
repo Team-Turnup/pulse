@@ -22,9 +22,12 @@ const createUser = async () => {
   return await User.create({
     role: faker.random.arrayElement(['leader', 'follower']),
     email: faker.internet.email(),
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     password: pass,
     age: faker.random.number({min: 18, max: 65}),
-    sex: faker.random.arrayElement(['male', 'female', 'non-binary'])
+    height: Math.round(faker.random.number({min: 12 * 5, max: 12 * 6.5})),
+    weight: faker.random.number({min: 1200, max: 250}),
+    gender: faker.random.arrayElement(['male', 'female', 'non-binary'])
   })
 }
 
@@ -89,7 +92,7 @@ const createClass = async () => {
   return await Class.create({
     name: `Class # ${faker.random.number()}`,
     canEnroll: true,
-    live: true
+    when: faker.date.recent(-3)
   })
 }
 
@@ -99,6 +102,7 @@ async function seed() {
 
   const cody = await User.create({
     email: 'cody@email.com',
+    name: 'Cody Pug',
     password: '123',
     //username: 'MrCody',
     role: 'leader'

@@ -12,10 +12,8 @@ import {
   CheckBox,
   View
 } from 'native-base'
-
-import {StartTime, styles, dummyClass} from './WaitingScreenComponents'
+import {StartTime, styles} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
-
 import socket from '../socket'
 import {leaveClass} from '../store/singleClass'
 
@@ -23,7 +21,11 @@ export default ({navigation}) => {
   // get user from store
   const user = useSelector(({user}) => user)
   // get dummy data for class right now
-  const {routine, attendees, when, name, ..._class} = dummyClass
+  const {attendees, when, name, ..._class} = useSelector(
+    ({singleClass}) => singleClass
+  )
+  const routine = useSelector(({routine}) => routine)
+
   const dispatch = useDispatch()
   const [curTime, setCurTime] = useState(Date.now())
 
@@ -50,10 +52,14 @@ export default ({navigation}) => {
           {when < curTime ? (
             <Text>Waiting for Trainer</Text>
           ) : (
-            <StartTime when={dummyClass.when} />
+            <StartTime when={when} />
           )}
         </View>
-        <RoutineBarDisplay routine={dummyClass.routine.intervals} />
+        {routine && routine.intervals && routine.intervals.length ? (
+          <RoutineBarDisplay routine={routine.intervals} />
+        ) : (
+          <Text>Loading Routine</Text>
+        )}
         <Button
           block
           danger

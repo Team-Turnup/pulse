@@ -20,18 +20,22 @@ import socket from '../socket'
 // import {getClassThunk} from '../store/singleClass'
 
 export default () => {
-  // for pulling store data when I get there:
-  // const {routine, attendees, when, name, ..._class} = useSelector(
-  //   ({singleClass}) => singleClass
-  // )
-  const {routine, attendees, when, name, ..._class} = dummyClass
+  const {attendees, when, name, id: classId, ..._class} = useSelector(
+    ({singleClass}) => singleClass
+  )
+
+  const routine = useSelector(({routine}) => routine)
+
+  // const {routine, attendees, when, name, ..._class} = dummyClass
   const userId = useSelector(({user}) => user.id) || 101
   const [curTime, setCurTime] = useState(Date.now())
 
   useEffect(() => {
-    socket.emit('subscribe', _class.id, userId, true)
-    return () => socket.emit('unsubscribe', _class.id, userId, true)
-  }, [])
+    if (classId) {
+      socket.emit('subscribe', classId, userId, true)
+      return () => socket.emit('unsubscribe', classId, userId, true)
+    }
+  }, [classId])
 
   useInterval(() => setCurTime(Date.now()), 1000)
 

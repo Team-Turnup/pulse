@@ -12,7 +12,7 @@ export const dummyClass = {
   id: 11,
   name: 'Class # 21459',
   canEnroll: true,
-  when: Date.now() + 1000 * 60 * 3,
+  when: Date.now() + 1000 * 30,
   routine: {
     id: 21,
     name: 'Eloise',
@@ -43,43 +43,43 @@ export const dummyClass = {
       id: 4,
       email: 'Casandra25@yahoo.com',
       age: 44,
-      sex: 'female'
+      gender: 'female'
     },
     {
       id: 15,
       email: 'Hubert.Cronin86@hotmail.com',
       age: 59,
-      sex: 'non-binary'
+      gender: 'non-binary'
     },
     {
       id: 23,
       email: 'Dayne_Raynor@hotmail.com',
       age: 32,
-      sex: 'female'
+      gender: 'female'
     },
     {
       id: 38,
       email: 'Gertrude85@yahoo.com',
       age: 49,
-      sex: 'male'
+      gender: 'male'
     },
     {
       id: 45,
       email: 'Jerel_Kihn52@gmail.com',
       age: 53,
-      sex: 'male'
+      gender: 'male'
     },
     {
       id: 62,
       email: 'Reina.Herman@yahoo.com',
       age: 56,
-      sex: 'non-binary'
+      gender: 'non-binary'
     },
     {
       id: 58,
       email: 'Rigoberto.Schroeder87@gmail.com',
       age: 50,
-      sex: 'female'
+      gender: 'female'
     }
   ]
 }
@@ -109,8 +109,8 @@ export const StartTime = ({when}) => {
   )
 }
 
-export const StartButton = () => (
-  <Button>
+export const StartButton = ({_onPress}) => (
+  <Button onPress={_onPress}>
     <Text>Start Class</Text>
   </Button>
 )
@@ -122,9 +122,9 @@ export const UserList = ({attendees}) => (
       <ListItem itemHeader style={styles.listItem}>
         <Text style={[styles.email, styles.listHeader]}>Email</Text>
         <Text style={[styles.age, styles.listHeader]}>Age</Text>
-        <Text style={[styles.sex, styles.listHeader]}>Sex</Text>
+        <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
       </ListItem>
-      {attendees.map(({id: userId, email, age, sex}) => (
+      {attendees.map(({id: userId, email, age, gender}) => (
         <ListItem
           key={userId}
           style={[
@@ -134,7 +134,7 @@ export const UserList = ({attendees}) => (
         >
           <Text style={styles.email}>{email} </Text>
           <Text style={styles.age}>{age}</Text>
-          <Text style={styles.sex}>{userData[sex].icon}</Text>
+          <Text style={styles.gender}>{userData[gender].icon}</Text>
         </ListItem>
       ))}
     </List>
@@ -152,7 +152,7 @@ export const styles = StyleSheet.create({
   },
   email: {flex: 5, textAlign: 'left'},
   age: {flex: 2, textAlign: 'center'},
-  sex: {flex: 1, textAlign: 'right'},
+  gender: {flex: 1, textAlign: 'right'},
   activityName: {flex: 2, textAlign: 'left'},
   activityIcon: {flex: 1, textAlign: 'center'},
   cadence: {flex: 2, textAlign: 'center'},
