@@ -288,7 +288,10 @@ class BuildRoutineScreen extends Component {
               {!this.state.finished ? (
                 <View style={{marginBottom: 15}}>
                   {this.state.routineType === 'combo' ? (
-                    <Item fixedLabel style={styles.item}>
+                    <View
+                      fixedLabel
+                      //style={styles.item}
+                    >
                       <Text>Activity Type</Text>
                       <RNPickerSelect
                         onValueChange={value =>
@@ -297,7 +300,7 @@ class BuildRoutineScreen extends Component {
                         value={this.state.intervalType}
                         items={activityTypeSelects}
                       />
-                    </Item>
+                    </View>
                   ) : (
                     <Item></Item>
                   )}

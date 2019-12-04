@@ -47,10 +47,10 @@ class StartRoutineScreen extends Component {
     return (
       <Container>
         {!this.state.startPressed ? (
-          <Container>
+          <Container style={{margin: 75}}>
             <PrepStartRoutine navigation={this.props.navigation} />
-            <Button onPress={() => this.handleStart()}>
-              <Text>Start</Text>
+            <Button style={styles.button} onPress={() => this.handleStart()}>
+              <Text style={styles.smallText}>Start</Text>
             </Button>
           </Container>
         ) : (
@@ -83,6 +83,25 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 75,
     color: 'blue'
+  },
+  smallText: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'white'
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   }
 })
 

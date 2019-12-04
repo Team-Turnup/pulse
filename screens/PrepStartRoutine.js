@@ -2,46 +2,103 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
 import {Container, Content, Text, Button} from 'native-base'
-//import {createWorkoutThunk} from '../store/workout'
 
 const PrepStartRoutine = props => {
   //const chestActivity = 'breathing'
   //const ankleActivity = 'cycling'
-  // console.log(props.routine.interval.activityType)
+
   return (
-    <Container>
+    <Container
+    // style={{marginTop: 15}}
+    >
       <Content>
         {props.routine.activityType === 'breathing' ? (
-          <Text>Please mount your phone on your chest</Text>
+          <Text style={styles.text}>Please mount your phone on your chest</Text>
         ) : props.routine.activityType === 'cycling' ? (
-          <Text>Please mount your phone on your ankle</Text>
+          <Text style={styles.text}>Please mount your phone on your ankle</Text>
+        ) : props.routine.activityType === 'combo' ? (
+          <Text style={styles.text}>
+            Please mount your phone on your chest for breathing, ankle for
+            cycling, and wrist for all other locations
+          </Text>
         ) : (
-          <Text>Please mount your phone on your wrist</Text>
+          <Text style={styles.text}>Please mount your phone on your wrist</Text>
         )}
-        {/* <Button onPress={props.navigation.navigate('StartRoutineScreen')}>
-          <Text>Start your workout</Text>
-        </Button> */}
       </Content>
     </Container>
   )
 }
 
+// props.routine.activityType === 'combo'
+// props.routine.intervals  if you want to search through this array
+
 const styles = StyleSheet.create({
-  countdown: {
-    marginTop: '60%',
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)'
+  },
+  header: {
+    fontSize: 20,
+    textAlign: 'center',
     width: '100%',
+    color: 'rgba(255,255,255, 0.9)',
+    backgroundColor: 'gray'
+  },
+  buttons: {
     display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    margin: 15,
+    padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
-  text: {
-    fontSize: 75,
-    color: 'blue'
+  buttonText: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'white'
+  },
+  message: {
+    fontSize: 10,
+    textAlign: 'center'
+  },
+  item: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1
+  },
+  checkBox: {
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
+  name: {
+    textAlign: 'right'
+  },
+  sectionHeader: {
+    width: '100%',
+    backgroundColor: 'blue',
+    color: 'white',
+    textAlign: 'center'
+  },
+  barGraphic: {
+    marginTop: 20,
+    marginBottom: 20
   }
 })
 
 const mapStateToProps = ({routine}) => ({routine})
-//const mapDispatchToProps = {createWorkoutThunk}
 
 export default connect(mapStateToProps)(PrepStartRoutine)
