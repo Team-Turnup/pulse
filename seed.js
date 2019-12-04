@@ -17,9 +17,9 @@ const WorkoutTimestampCount = 3000
 
 const classCount = 100
 
-const createUser = async () => {
+const createUser = () => {
   const pass = faker.internet.password()
-  return await User.create({
+  return User.create({
     role: faker.random.arrayElement(['leader', 'follower']),
     email: faker.internet.email(),
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -31,8 +31,8 @@ const createUser = async () => {
   })
 }
 
-const createRoutine = async () => {
-  return await Routine.create({
+const createRoutine = () => {
+  return Routine.create({
     name: faker.name.firstName(),
     activityType: faker.random.arrayElement([
       'running',
@@ -53,8 +53,8 @@ const createRoutine = async () => {
   })
 }
 
-const createInterval = async () => {
-  return await Interval.create({
+const createInterval = () => {
+  return Interval.create({
     activityType: faker.random.arrayElement([
       'running',
       'walking',
@@ -74,22 +74,22 @@ const createInterval = async () => {
   })
 }
 
-const createWorkout = async () => {
-  return await Workout.create({
+const createWorkout = () => {
+  return Workout.create({
     timestamp: new Date(),
     duration: faker.random.arrayElement([30, 60, 90])
   })
 }
 
-const createWorkoutstamp = async () => {
-  return await WorkoutTimestamp.create({
+const createWorkoutstamp = () => {
+  return WorkoutTimestamp.create({
     cadence: faker.random.number({min: -1, max: 999}),
     goalCadence: Math.round(faker.random.number({min: -1, max: 999})),
     timestamp: new Date()
   })
 }
-const createClass = async () => {
-  return await Class.create({
+const createClass = () => {
+  return Class.create({
     name: `Class # ${faker.random.number()}`,
     canEnroll: true,
     when: faker.date.recent(-3)
