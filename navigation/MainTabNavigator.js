@@ -3,18 +3,17 @@ import {Platform} from 'react-native'
 import {createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import LoginScreen from '../screens/LoginScreen'
 import OptionsScreen from '../screens/OptionsScreen'
 import HomeClassesScreen from '../screens/HomeClassesScreen'
 import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
-import PreviousRoutine from '../screens/PreviousRoutine'
 import UserWaitingScreen from '../screens/UserWaitingScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
+import StartRoutineScreen from '../screens/StartRoutineScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -56,8 +55,8 @@ const config = Platform.select({
 const HomeWorkoutsStack = createStackNavigator({
   HomeWorkoutsScreen,
   SelectRoutineScreen,
-  PreviousRoutine,
-  BuildRoutineScreen
+  BuildRoutineScreen,
+  StartRoutineScreen
 })
 
 HomeWorkoutsStack.navigationOptions = {

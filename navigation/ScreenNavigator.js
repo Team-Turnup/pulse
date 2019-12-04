@@ -16,13 +16,8 @@ import TrainerBuildRoutineScreen from '../screens/TrainerBuildRoutineScreen'
 
 const ScreenNavigator = createStackNavigator(
   {
-    SelectRoutineScreen,
-    HomeScreen,
-    BuildRoutineScreen,
-    StartRoutineScreen,
     InProgressScreen,
     ClassesScreen,
-    PreviousRoutine,
     UserWaitingScreen,
     TrainerWaitingScreen,
     CreateClassScreen,
