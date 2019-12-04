@@ -43,7 +43,10 @@ const User = db.define('user', {
   playlistArtistPrefs: {
     type: Sequelize.ARRAY(Sequelize.STRING)
   },
-  name: Sequelize.STRING,
+  name: {
+    type: Sequelize.STRING,
+    defaultValue: ''
+  },
   age: Sequelize.INTEGER,
   gender: Sequelize.ENUM(['male', 'female', 'non-binary']),
   height: Sequelize.INTEGER,
