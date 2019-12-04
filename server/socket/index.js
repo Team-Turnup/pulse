@@ -9,8 +9,10 @@ module.exports = io => {
     console.log(`A socket connection to the server has been made: ${socket.id}`)
 
     const informLeader = (classId, event, ...payload) => {
-      if (classes[classId].leader)
+      if (classes[classId] && classes[classId].leader) {
+        console.log(`Leader of ${classId} is being informed of ${event}`)
         socket.to(classes[classId].leader.socket).emit(event, ...payload)
+      }
     }
 
     socket.on('disconnect', () => {
@@ -43,6 +45,11 @@ module.exports = io => {
       } else classes[classId].followers.add(userId)
       socket.join(classId)
       informLeader(classId, 'classList', Array.from(classes[classId].followers))
+    })
+
+    socket.on('joined', (classId, user) => {
+      console.log(`${user.name} has joined ${classId}`)
+      informLeader(classId, 'joined', user)
     })
 
     socket.on('unsubscribe', (classId, userId, isLeader = false) => {

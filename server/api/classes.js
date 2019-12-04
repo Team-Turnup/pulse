@@ -189,7 +189,7 @@ router.post('/', authenticatedUser, (req, res, next) => {
           {
             model: User,
             as: 'attendees',
-            attributes: ['id', 'email', 'age', 'gender'],
+            attributes: ['id', 'name', 'age', 'gender'],
             through: {
               attributes: []
             }

@@ -12,7 +12,6 @@ import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
 import {useSelector} from 'react-redux'
 import {useInterval} from 'use-interval'
-import socket from '../socket'
 
 export const OverviewStats = ({
   totalTime,
@@ -72,7 +71,7 @@ export const OverviewStats = ({
   )
 }
 
-export default () => {
+const TrainerWorkoutScreen = () => {
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
@@ -83,6 +82,8 @@ export default () => {
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
+
+  useEffect()
 
   // when the data is live, useInterval might not be necessary
   // useInterval(() => {
@@ -154,3 +155,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }
 })
+
+export default props => (
+  <SocketContext.Consumer>
+    {socket => <TrainerWorkoutScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)

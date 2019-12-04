@@ -10,7 +10,7 @@ import AppHeader from '../components/AppHeader'
 class HomeClassesScreen extends Component {
   componentDidMount() {
     this.props.getMyClassesThunk()
-    // this.props.getClassThunk(1)
+    this.props.getClassThunk(1)
     // this.props.getMyWorkoutsThunk()
   }
 
@@ -20,12 +20,12 @@ class HomeClassesScreen extends Component {
       <Content>
         <AppHeader navigation={this.props.navigation} />
         <View>
-          {/* <Button
+          <Button
             style={styles.button}
             onPress={() => navigation.navigate('TrainerWaitingScreen')}
           >
             <Text>Start Test Class</Text>
-          </Button> */}
+          </Button>
           <Content style={{margin: 15}}>
             <Card
               style={{

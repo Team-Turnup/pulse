@@ -6,6 +6,7 @@ import {setRoutine} from './routine'
 const SET_CLASS = 'SET_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
+const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
 
 const setClass = singleClass => ({
   type: SET_CLASS,
@@ -19,6 +20,16 @@ const removeClass = () => ({
 export const setReadyAttendees = attendees => ({
   type: SET_READY_ATTENDEES,
   attendees
+})
+
+export const addNewAttendee = attendee => ({
+  type: ADD_NEW_ATTENDEE,
+  attendee
+})
+
+export const removeAttendee = id => ({
+  type: REMOVE_ATTENDEE,
+  id
 })
 
 export const leaveClass = classId => async dispatch => {
@@ -102,6 +113,12 @@ const classReducer = (state = initialState, action) => {
             ? {...a, ready: true}
             : {...a, ready: false}
         )
+      }
+    case ADD_NEW_ATTENDEE:
+      console.log(action)
+      return {
+        ...state,
+        attendees: [...state.attendees, action.attendee]
       }
     default:
       return state

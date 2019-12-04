@@ -2,7 +2,8 @@
 import React, {useEffect, useState, Fragment} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import useInterval from 'use-interval'
-import {setReadyAttendees} from '../store/singleClass'
+import {setReadyAttendees, addNewAttendee} from '../store/singleClass'
+import {SocketContext} from '../socket'
 
 // Components
 import {Container, Header, Content, Text, H3, View} from 'native-base'
@@ -14,10 +15,7 @@ import {
   styles
 } from './WaitingScreenComponents'
 
-// Utility libraries
-import socket from '../socket'
-
-export default ({navigation}) => {
+const TrainerWaitingScreen = ({navigation, socket}) => {
   const dispatch = useDispatch()
   const {attendees, when, name, id: classId, ..._class} = useSelector(
     ({singleClass}) => singleClass
@@ -34,19 +32,19 @@ export default ({navigation}) => {
   }
 
   useEffect(() => {
+    // listen for socket messages
+    socket.on('joined', user => dispatch(addNewAttendee(user)))
+    socket.on('left', user => dispatch(removeAttendee(user)))
+    socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
+  }, [])
+
+  useEffect(() => {
     // join/create a class when the component sees a valid classId and unsubscribe on unmount
     if (classId) {
       socket.emit('subscribe', classId, userId, true)
       return () => socket.emit('unsubscribe', classId, userId, true)
     }
   }, [classId])
-
-  useEffect(() => {
-    // listen for socket messages
-    socket.on('classList', attendees => {
-      dispatch(setReadyAttendees(attendees))
-    })
-  }, [])
 
   // tick
   useInterval(() => setCurTime(Date.now()), 1000)
@@ -94,3 +92,9 @@ export default ({navigation}) => {
     </Container>
   )
 }
+
+export default props => (
+  <SocketContext.Consumer>
+    {socket => <TrainerWaitingScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
