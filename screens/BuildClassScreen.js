@@ -13,7 +13,6 @@ import {
 } from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import CheckBox from 'react-native-check-box'
-//import {getClassThunk} from '../store/classes'
 import {createClassThunk} from '../store/singleClass'
 
 class BuildClassScreen extends Component {
@@ -33,14 +32,18 @@ class BuildClassScreen extends Component {
 
   handleCreateClass() {
     const {name, canEnroll, when, attendees, classPasscode} = this.state
+    const routineId = this.props.routine.id
     this.props.createClassThunk({
       name,
       canEnroll,
       when,
       attendees,
-      classPasscode
+      classPasscode,
+      routineId
     })
-    this.props.navigation.navigate('BuildRoutineScreen')
+    this.props.navigation.navigate('TrainerWaitingScreen')
+    //below is causing a crash because you're trying to start routine without a routine
+    //this.props.navigation.navigate('StartRoutineScreen')
     this.setState({
       name: '',
       canEnroll: true,
@@ -211,11 +214,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  singleClass: state.singleClass
+  singleClass: state.singleClass,
+  routine: state.routine
 })
 
 const mapDispatchToProps = dispatch => ({
-  //getClassThunk: () => dispatch(getClassThunk())
   createClassThunk: singleClass => dispatch(createClassThunk(singleClass))
 })
 

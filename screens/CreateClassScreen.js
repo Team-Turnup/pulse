@@ -1,13 +1,18 @@
+//buggy?
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {Container, Header, Button, Text} from 'native-base'
+import {getRoutineThunk} from '../store/routine'
 
 class CreateClassScreen extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      routine: {}
+    }
   }
+
   render() {
     return (
       <Container>
@@ -16,22 +21,47 @@ class CreateClassScreen extends Component {
             How would you like to Create your Class?
           </Text>
         </Header>
+        {Object.keys(this.props.routine).length ? (
+          <Text>Your Selected Routine is: {this.props.routine.name}</Text>
+        ) : (
+          <View />
+        )}
+        {/* {!Object.keys(this.props.routine).length ? ( */}
         <Button
           style={{
             ...styles.button
           }}
           onPress={() => this.props.navigation.navigate('PreviousRoutine')}
         >
-          <Text>Create a Class using a Previous Routine</Text>
+          <Text>Select Previous Routine</Text>
         </Button>
+        {/* ) : (
+          <View />
+        )} */}
+        {/* {!Object.keys(this.props.routine).length ? ( */}
         <Button
           style={{
             ...styles.button
           }}
-          onPress={() => this.props.navigation.navigate('BuildClassScreen')}
+          onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
         >
-          <Text>Create a Class using a New Routine</Text>
+          <Text>Select New Routine</Text>
         </Button>
+        {/* ) : (
+          <View />
+        )} */}
+        {Object.keys(this.props.routine).length ? (
+          <Button
+            style={{
+              ...styles.button
+            }}
+            onPress={() => this.props.navigation.navigate('BuildClassScreen')}
+          >
+            <Text>Start Creating Class</Text>
+          </Button>
+        ) : (
+          <View />
+        )}
       </Container>
     )
   }
@@ -96,8 +126,12 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+  routine: state.routine
+})
 
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = dispatch => ({
+  getRoutineThunk: id => dispatch(getRoutineThunk(id))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateClassScreen)

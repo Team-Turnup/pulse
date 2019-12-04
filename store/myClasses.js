@@ -1,7 +1,6 @@
 import axios from 'axios'
 import {ngrok} from '../ngrok'
 
-// const GET_EXERCISE = 'GET_EXERCISE';
 const SET_MY_CLASSES = 'SET_MY_CLASSES'
 
 export const setMyClasses = myClasses => ({
@@ -20,7 +19,6 @@ export const getMyClassesThunk = () => async dispatch => {
 
 const initialState = []
 
-//should be a GET_MY_CLASSESS probably
 const myClassesReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_MY_CLASSES:
