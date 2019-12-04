@@ -9,6 +9,9 @@ import HomeClassesScreen from '../screens/HomeClassesScreen'
 import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
 import PreviousRoutine from '../screens/PreviousRoutine'
+import UserWaitingScreen from '../screens/UserWaitingScreen'
+import ClassesScreen from '../screens/ClassesScreen'
+import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 // import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
@@ -67,7 +70,7 @@ HomeWorkoutsStack.navigationOptions = {
 
 HomeWorkoutsStack.path = ''
 
-const HomeClassesStack = createStackNavigator({HomeClassesScreen})
+const HomeClassesStack = createStackNavigator({HomeClassesScreen, ClassesScreen, UserWaitingScreen, CreateClassScreen})
 
 HomeClassesStack.navigationOptions = {
   tabBarLabel: 'Classes',
