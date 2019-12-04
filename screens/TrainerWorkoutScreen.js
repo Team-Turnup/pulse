@@ -14,6 +14,7 @@ import {dummyClass} from './WaitingScreenComponents'
 import WorkoutGraph from './WorkoutGraph'
 import {useSelector} from 'react-redux'
 import {useInterval} from 'use-interval'
+import socket from '../socket'
 
 let i = 1
 const fakeWorkout = dummyWorkout[0].workoutTimestamps.map(d => {
@@ -85,7 +86,7 @@ export const OverviewStats = ({
 }
 
 // this component is expecting a socket to be passed as props from the trainer waiting screen
-export default ({socket}) => {
+export default () => {
   const {routine, attendees, when, name, ..._class} = dummyClass
   const userId = useSelector(({user}) => user.id) || 101
 
@@ -118,6 +119,8 @@ export default ({socket}) => {
     currentInterval < intervals.length - 1 &&
       intervalTime >= intervals[currentInterval].duration
   ])
+
+  console.log(socket)
 
   return (
     <Container>

@@ -17,7 +17,9 @@ module.exports = io => {
     // })
 
     socket.on('workoutTimestamp', async ({workoutTimestamp, workoutId}) => {
-      const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
+      const newWorkoutTimestamp = await WorkoutTimestamp.create(
+        workoutTimestamp
+      )
       newWorkoutTimestamp.setWorkout(workoutId)
     })
 
