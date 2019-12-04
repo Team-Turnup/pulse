@@ -5,8 +5,6 @@ import {StyleSheet, View, Linking, Image} from 'react-native'
 import {auth, logout} from '../store/user'
 import {
   Container,
-  Header,
-  Thumbnail,
   Content,
   Form,
   Item,
@@ -17,11 +15,9 @@ import {
   Button,
   Text
 } from 'native-base'
-import {ngrok} from '../ngrok'
 import * as Google from 'expo-google-app-auth'
 //import ANDROID_GOOGLE_CLIENT_ID from '../secrets'
 import {me} from '../store/user'
-import {tsImportEqualsDeclaration} from '@babel/types'
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -31,10 +27,21 @@ class LoginScreen extends React.Component {
       password: '',
       message: '',
       for: 0,
-      forArray:['coaches', 'runners', 'swimmers', 'trainers', 'musicians', 'conductors', 'rowers', 'cyclists', 'calisthenics', 'meditation', 'Lamaze', 'dancers', 'choreographers'].sort(() => Math.random() - 0.5)
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
+      forArray: [
+        'coaches',
+        'runners',
+        'swimmers',
+        'trainers',
+        'musicians',
+        'conductors',
+        'rowers',
+        'cyclists',
+        'calisthenics',
+        'meditation',
+        'Lamaze',
+        'dancers',
+        'choreographers'
+      ].sort(() => Math.random() - 0.5)
     }
     this.clear = null
     this.handleAuth = this.handleAuth.bind(this)
@@ -46,7 +53,13 @@ class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(()=>this.setState(prevState => ({for: (prevState.for+1)%this.state.forArray.length})), 2000)
+    setInterval(
+      () =>
+        this.setState(prevState => ({
+          for: (prevState.for + 1) % this.state.forArray.length
+        })),
+      2000
+    )
     // const user = await this.props.me()
     // const isUser =
     //   typeof user === 'object' &&
@@ -63,15 +76,12 @@ class LoginScreen extends React.Component {
       email: '',
       password: '',
       message: ''
-      // signedIn: false,
-      // name: '',
-      // photoUrl: ''
     })
     if (result.user && result.user.error) {
-      this.setState({message: 'Wrong username and/or password'})
+      this.setState({message: formName==='login' ? 'Wrong username and/or password' : 'Unable to sign up with given username and/or password'})
       setTimeout(() => this.setState({message: ''}), 2000)
     } else {
-      this.props.navigation.navigate('HomeStack')
+      this.props.navigation.navigate('HomeWorkoutsStack')
     }
   }
 
@@ -104,9 +114,25 @@ class LoginScreen extends React.Component {
     return (
       <Container>
         <Content>
-                <View style={{backgroundColor: 'rgb(84, 130, 53)', width: '100%', paddingTop: 5, paddingBottom: 5}}>
-                <Text style={{fontSize: 30, fontWeight: "600", color: 'white',  textAlign: 'center'}}>Stride</Text>
-                </View>
+          <View
+            style={{
+              backgroundColor: 'rgb(84, 130, 53)',
+              width: '100%',
+              paddingTop: 5,
+              paddingBottom: 5
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: '600',
+                color: 'white',
+                textAlign: 'center'
+              }}
+            >
+              Stride
+            </Text>
+          </View>
           <Card transparent style={{margin: 0, padding: 0}}>
             <CardItem
               style={{
@@ -118,21 +144,57 @@ class LoginScreen extends React.Component {
                 padding: 0
               }}
             >
-              <View style={{backgroundColor: 'rgba(84, 130, 53, 0.3)', paddingTop: 20, paddingBottom: 20, width: "100%", borderBottomLeftRadius: 10, borderBottomRightRadius: 10, overflow: 'hidden'}}>
-              <Text style={{textAlign: 'center'}}>A solo- or group-based tempo trainer</Text>
-              <Text style={{textAlign: 'center'}}>with visual and vibrational feedback</Text>
-              <View style={{display: 'flex', flexDirection: 'row', alignItems: "center", justifyContent: "center", marginTop: 20}}>
-                <View style={{display: 'flex', flexDirection: 'column', width: 175, alignItems: 'center'}}>
-            <Text>For</Text>
-            <Text style={{fontSize: 18, fontWeight: "600", color: 'rgb(84, 130, 53)', marginTop: 10}}>{this.state.forArray[this.state.for]}</Text>
-
+              <View
+                style={{
+                  backgroundColor: 'rgba(84, 130, 53, 0.3)',
+                  paddingTop: 20,
+                  paddingBottom: 20,
+                  width: '100%',
+                  borderRadius: 10,
+                  overflow: 'hidden'
+                }}
+              >
+                <Text style={{textAlign: 'center'}}>
+                  A solo- or class-based tempo trainer
+                </Text>
+                <Text style={{textAlign: 'center'}}>
+                  with visual and vibrational feedback
+                </Text>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 20
+                  }}
+                >
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: 175,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text>For</Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: '600',
+                        color: 'rgb(84, 130, 53)',
+                        marginTop: 10
+                      }}
+                    >
+                      {this.state.forArray[this.state.for]}
+                    </Text>
+                  </View>
+                  <Image
+                    medium
+                    source={require('../assets/images/Pic.png')}
+                    style={{width: 100, height: 120}}
+                  />
                 </View>
-              <Image
-                medium
-                source={require('../assets/images/Pic.png')}
-                style={{width: 100, height: 120}}
-              />
-              </View>
               </View>
             </CardItem>
           </Card>
@@ -161,12 +223,12 @@ class LoginScreen extends React.Component {
               </Item>
             </Form>
           ) : null}
-          <Text>{this.state.message}</Text>
+          <Text style={{textAlign: 'center', fontSize: 12}}>{this.state.message}</Text>
           {/* <View style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent: 'center'}}> */}
           {!isUser ? (
             <Button
-              style={styles.button}
-              onPress={()=>this.handleAuth('login')}
+              style={{...styles.button, marginTop: 15}}
+              onPress={() => this.handleAuth('login')}
             >
               <Text>Sign In</Text>
             </Button>
@@ -174,13 +236,13 @@ class LoginScreen extends React.Component {
           {!isUser ? (
             <Button
               style={styles.button}
-              onPress={()=>this.handleAuth('signup')}
+              onPress={() => this.handleAuth('signup')}
             >
               <Text>Create an Account</Text>
             </Button>
           ) : null}
 
-{/* {!isUser ? (<Button
+          {/* {!isUser ? (<Button
           style={styles.button}
             onPress={() => this.loginWithGoogle()}
             title="login with google"
@@ -222,7 +284,7 @@ const styles = StyleSheet.create({
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
     backgroundColor: 'rgb(84, 130, 53)'
   },
   buttonText: {

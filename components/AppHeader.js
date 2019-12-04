@@ -32,12 +32,12 @@ class AppHeader extends React.Component {
           <Image
             medium
             source={require('../assets/images/Pic.png')}
-            style={{width: 25, height: 35}}
+            style={{width: 50, height: 60}}
           />
           <Text
             style={{
               marginLeft: 5,
-              fontSize: 20,
+              fontSize: 24,
               fontWeight: '600'
             }}
           >

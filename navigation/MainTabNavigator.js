@@ -3,9 +3,13 @@ import {Platform} from 'react-native'
 import {createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
-import HomeScreen from '../screens/HomeScreen'
 import LoginScreen from '../screens/LoginScreen'
 import OptionsScreen from '../screens/OptionsScreen'
+import HomeClassesScreen from '../screens/HomeClassesScreen'
+import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
+import SelectRoutineScreen from '../screens/SelectRoutineScreen'
+import PreviousRoutine from '../screens/PreviousRoutine'
+import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 // import TrainerWorkScreen from '../screens/TrainerWorkoutScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
@@ -29,39 +33,57 @@ const config = Platform.select({
 //   )
 // }
 
-const LoginStack = createStackNavigator({Login: LoginScreen})
+// const LoginStack = createStackNavigator({Login: LoginScreen})
 
-LoginStack.navigationOptions = {
-  tabBarLabel: 'Login',
+// LoginStack.navigationOptions = {
+//   tabBarLabel: 'Login',
+//   tabBarIcon: ({focused}) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   )
+// }
+
+const HomeWorkoutsStack = createStackNavigator({HomeWorkoutsScreen, SelectRoutineScreen, PreviousRoutine, BuildRoutineScreen})
+
+HomeWorkoutsStack.navigationOptions = {
+  tabBarLabel: 'Solo Workouts',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-walk`
+          : 'md-walk'
       }
     />
   )
 }
 
-const HomeStack = createStackNavigator({HomeScreen})
+HomeWorkoutsStack.path = ''
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+const HomeClassesStack = createStackNavigator({HomeClassesScreen})
+
+HomeClassesStack.navigationOptions = {
+  tabBarLabel: 'Classes',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-people`
+          : 'md-people'
       }
     />
   )
 }
 
-HomeStack.path = ''
+HomeClassesStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
@@ -83,11 +105,13 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator({
-  LoginStack,
-  HomeStack,
-  SettingsStack
+  // LoginStack,
+  HomeWorkoutsStack,
+  HomeClassesStack,
+  SettingsStack,
+  // TrainerWorkScreen,
   // TakePhotoStack
-})
+},{headerMode:'screen'})
 
 tabNavigator.path = ''
 
