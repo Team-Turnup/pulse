@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
-import {Container, Content, Button, Text, Card} from 'native-base'
+import {Container, Content, Button, Text, Card, Input} from 'native-base'
 import AppHeader from '../components/AppHeader'
 import {getMyRoutinesThunk} from '../store/routines'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
 import {TouchableOpacity} from 'react-native-gesture-handler'
+import RNPickerSelect from 'react-native-picker-select'
 
 class SelectRoutineScreen extends Component {
   constructor(props) {
@@ -14,17 +15,75 @@ class SelectRoutineScreen extends Component {
     this.state = {
       page: 1,
       numPerPage: 4,
+      numPages: 0,
       filter: null,
       sort: null,
       search: ''
     }
+    this.handleChange = this.handleChange.bind(this)
   }
+
+  // componentWillReceiveProps(newProps) {
+  //   const page = 1
+  //   this.setState({page, numPages})
+  // }
 
   componentDidMount() {
     this.props.getMyRoutinesThunk()
   }
 
+  handleChange(key, value) {
+    this.setState({[key]: value})
+  }
+
   render() {
+    const sorter = sort => {
+      if (sort==='dateCreated'){
+        return (A,B) => {
+          return A.createdAt>B.createdAt ? 1 : A.createdAt<B.createdAt ? -1 : 0
+        }
+      }
+      else if (sort==='durationHighLow'){
+        return (A,B) => {
+          Aduration=A.intervals.reduce((sum,interval)=>sum+interval.duration, 0)
+          Bduration=B.intervals.reduce((sum,interval)=>sum+interval.duration, 0)
+          return Aduration>Bduration ? -1 : Aduration<Bduration ? 1 : 0
+        }
+      }
+      else if (sort==='durationLowHigh'){
+        return (A,B) => {
+          Aduration=A.intervals.reduce((sum,interval)=>sum+interval.duration, 0)
+          Bduration=B.intervals.reduce((sum,interval)=>sum+interval.duration, 0)
+          return Aduration>Bduration ? 1 : Aduration<Bduration ? -1 : 0
+        }
+      }
+      else if (sort==='ZA'){
+        return (A,B) => {
+          return A.name.toLowerCase()>B.name.toLowerCase() ? -1 : A.name.toLowerCase()<B.name.toLowerCase() ? 1 : 0
+        }
+      }
+      else if (sort==='AZ'){
+        return (A,B) => {
+          return A.name.toLowerCase()>B.name.toLowerCase() ? 1 : A.name.toLowerCase()<B.name.toLowerCase() ? -1 : 0
+        }
+      }
+    }
+
+    const {page, numPerPage, search, sort, filter} = this.state
+    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
+      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
+      value: activity
+    }))
+    let viewRoutines = [...this.props.routines]
+    viewRoutines=search.length ? viewRoutines.filter(routine=>routine.name.toLowerCase().includes(search.toLowerCase())) : viewRoutines
+    viewRoutines=filter ? viewRoutines.filter(routine=>routine.activityType===filter) : viewRoutines
+    sort ? viewRoutines.sort(sorter(sort)) : {}
+    const numResults = viewRoutines.length
+    const numPages = Math.ceil(numResults / numPerPage)
+    viewRoutines = viewRoutines.slice(
+      (page - 1) * numPerPage,
+      page * numPerPage
+    )
     return (
       <Container>
         <Content>
@@ -48,20 +107,31 @@ class SelectRoutineScreen extends Component {
               alignItems: 'center'
             }}
           >
-            <TouchableOpacity
-              style={{
-                width: 25,
-                height: 35,
-                backgroundColor: 'rgb(84, 130, 53)',
-                borderRadius: 5,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-              onPress={()=>this.setState(prevState=>({page: prevState.page-1}))}
-            >
-              <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-            </TouchableOpacity>
+            {page > 1 ? (
+              <TouchableOpacity
+                style={{
+                  width: 25,
+                  height: 35,
+                  backgroundColor: 'rgb(84, 130, 53)',
+                  borderRadius: 5,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onPress={() =>
+                  this.setState(prevState => ({page: prevState.page - 1}))
+                }
+              >
+                <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  width: 25,
+                  height: 35
+                }}
+              ></View>
+            )}
             <Content style={{marginTop: 15, marginBottom: 15}}>
               <Card
                 style={{
@@ -74,8 +144,68 @@ class SelectRoutineScreen extends Component {
                 <Text style={{fontWeight: '600', marginBottom: 10}}>
                   Select One of Your Previous Routines
                 </Text>
-                {this.props.routines.length ? (
-                  this.props.routines.map((routine, i) => {
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <View style={{width: '33%', margin: 2}}>
+                    <Input
+                      placeholder="Search"
+                      autoCorrect={false}
+                      value={search}
+                      onChangeText={search => this.setState({search})}
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 1,
+                        fontSize: 14,
+                        height: 16,
+                      }}
+                    />
+                  </View>
+                  <View style={{width: '33%', margin: 2, borderWidth: 1, borderColor: 'gray', borderRadius: 5}}>
+                    <RNPickerSelect
+                      placeholder={{label: 'Filter', value: null}}
+                      onValueChange={value =>
+                        this.handleChange('filter', value)
+                      }
+                      value={filter}
+                      items={activityTypeSelects}
+                      userNativeAndroidPickerStyle={false}
+                    />
+                  </View>
+                  <View style={{width: '33%', margin: 2, borderWidth: 1, borderColor: 'gray', borderRadius: 5}}>
+                    <RNPickerSelect
+                      placeholder={{label: 'Sort', value: null}}
+                      onValueChange={value => this.handleChange('sort', value)}
+                      value={sort}
+                      items={[
+                        {label: 'Date created', value: 'dateCreated'},
+                        {
+                          label: 'Duration (low>high)',
+                          value: 'durationLowHigh'
+                        },
+                        {
+                          label: 'Duration (high>low)',
+                          value: 'durationHighLow'
+                        },
+                        {label: 'Alphabetically (A>Z)', value: 'AZ'},
+                        {label: 'Alphabetically (Z>A)', value: 'ZA'}
+                        // {label:'Most used', value:'mostUsed'}
+                      ]}
+                      userNativeAndroidPickerStyle={false}
+                    />
+                  </View>
+                </View>
+                <Text style={{fontSize: 12, textAlign: 'center'}}>
+                  Showing {(page - 1) * numPerPage + 1}-
+                  {Math.min(numResults, page * numPerPage)} of {numResults}
+                </Text>
+                {viewRoutines.length ? (
+                  viewRoutines.map((routine, i) => {
                     const duration = routine.intervals.reduce(
                       (sum, interval) => sum + interval.duration,
                       0
@@ -146,24 +276,35 @@ class SelectRoutineScreen extends Component {
                     )
                   })
                 ) : (
-                  <Text>- No upcoming classes</Text>
+                  <Text>- No routines</Text>
                 )}
               </Card>
             </Content>
-            <TouchableOpacity
-              style={{
-                width: 25,
-                height: 35,
-                backgroundColor: 'rgb(84, 130, 53)',
-                borderRadius: 5,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-              onPress={()=>this.setState(prevState=>({page: prevState.page+1}))}
-            >
-              <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
-            </TouchableOpacity>
+            {page < numPages ? (
+              <TouchableOpacity
+                style={{
+                  width: 25,
+                  height: 35,
+                  backgroundColor: 'rgb(84, 130, 53)',
+                  borderRadius: 5,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onPress={() =>
+                  this.setState(prevState => ({page: prevState.page + 1}))
+                }
+              >
+                <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  width: 25,
+                  height: 35
+                }}
+              ></View>
+            )}
           </View>
           <Text
             style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}

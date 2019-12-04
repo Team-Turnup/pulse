@@ -13,7 +13,7 @@ import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import BuildClassScreen from '../screens/BuildClassScreen'
 import LoginScreen from '../screens/LoginScreen'
 import TrainerBuildRoutineScreen from '../screens/TrainerBuildRoutineScreen'
-import PrepStartRoutineScreen from '../screens/PrepStartRoutineScreen'
+import PrepStartRoutine from '../screens/PrepStartRoutine'
 
 const ScreenNavigator = createStackNavigator(
   {
@@ -30,7 +30,7 @@ const ScreenNavigator = createStackNavigator(
     BuildClassScreen,
     LoginScreen,
     TrainerBuildRoutineScreen,
-    PrepStartRoutineScreen
+    PrepStartRoutine
   },
   {headerMode: 'none'}
 )

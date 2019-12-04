@@ -7,6 +7,7 @@ import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
+import activityTypesNoCombo from '../assets/images/activityTypesNoCombo'
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -73,8 +74,8 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    // this.props.navigation.navigate('StartRoutineScreen')
-    this.props.navigation.navigate('PrepStartRoutineScreen')
+    this.props.navigation.navigate('StartRoutineScreen')
+    //this.props.navigation.navigate('PrepStartRoutine')
   }
 
   addInterval() {
@@ -122,6 +123,13 @@ class BuildRoutineScreen extends Component {
       label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
       value: activity
     }))
+
+    const activityTypeNoComboSelects = Object.keys(activityTypesNoCombo).map(
+      activity => ({
+        label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
+        value: activity
+      })
+    )
 
     return (
       <Container>
@@ -428,7 +436,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1
   },
   checkBox: {
     height: 50,
