@@ -7,6 +7,7 @@ import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
+import activityTypesNoCombo from '../assets/images/activityTypesNoCombo'
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -122,6 +123,11 @@ class BuildRoutineScreen extends Component {
       value: activity
     }))
 
+    const activityTypeNoComboSelects = Object.keys(activityTypesNoCombo).map(activity => ({
+      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
+      value: activity
+    }))
+
     return (
       <Container>
         <AppHeader navigation={this.props.navigation}/>
@@ -141,8 +147,10 @@ class BuildRoutineScreen extends Component {
         </Header> */}
         <Content>
           {!this.state.showAddIntervals ? <View>
-            <Item fixedLabel style={styles.item}>
-            <Text>Name</Text>
+            <View style={styles.item}>
+            <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
+            <Text style={{}}>Name</Text>
+            </View>
             <Input
               placeholder="(ex. Marathon Prep - Week 5)"
               autoCapitalize="none"
@@ -151,18 +159,21 @@ class BuildRoutineScreen extends Component {
               onChangeText={routineName => this.setState({routineName})}
               style={styles.name}
             />
-          </Item>
+          </View>
           {/* <Item fixedLabel style={styles.item}> */}
-          <Item fixedLabel style={styles.item}>
+          <View style={{...styles.item, }}>
+          <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
           <Text>Activity Type</Text>
+          </View>
           <RNPickerSelect
             onValueChange={value => this.handleChange('routineType', value)}
             value={this.state.routineType}
-            items={[{label: 'Combo', value: 'combo'}, ...activityTypeSelects]}
+            items={activityTypeSelects}
+            userNativeAndroidPickerStyle={false}
           />
-          </Item>
+          </View>
           {/* </Item> */}
-          <Item fixedLabel style={styles.item}>
+          <View style={styles.item}>
             <View style={{display: 'flex', flexDirection: 'row', width: 125, justifyContent: 'flex-start', alignItems: "center"}}>
               <Text>Make Public</Text>
             <CheckBox
@@ -176,7 +187,7 @@ class BuildRoutineScreen extends Component {
 
             </View>
             <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>Allows other users to search for and workout to your routine</Text>
-          </Item>
+          </View>
           </View> : null }
 
           {this.state.routineName.length && this.state.routineType && !this.state.showAddIntervals
@@ -188,7 +199,7 @@ class BuildRoutineScreen extends Component {
             <View>
               <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 10}}>
               <Text>Routine Name: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineName}</Text></Text>
-              <Text>Activity Type: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{this.state.routineType!=='combo' ? activityTypes[this.state.routineType].icon : 'Combo'}</Text></Text>
+              <Text>Activity Type: <Text style={{color: 'rgb(84, 130, 53)', fontWeight: "600"}}>{activityTypes[this.state.routineType].icon}</Text></Text>
               
               <View style={styles.barGraphic}>
                 {this.state.index < this.state.routine.length && !this.state.finished ? (
@@ -225,7 +236,8 @@ class BuildRoutineScreen extends Component {
                       this.handleChange('intervalType', value)
                     }
                     value={this.state.intervalType}
-                    items={activityTypeSelects}
+                    items={activityTypeNoComboSelects}
+                    userNativeAndroidPickerStyle={false}
                   />
                 </Item>
               ) : (
@@ -367,7 +379,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1
   },
   checkBox: {
     height: 50,
