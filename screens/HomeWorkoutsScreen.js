@@ -12,6 +12,7 @@ import {
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
+import {setRoutine} from '../store/routine'
 import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
@@ -32,7 +33,10 @@ class HomeWorkoutsScreen extends Component {
           <MyPreviousWorkouts workouts={this.props.workouts} />
           <Button
             style={styles.button}
-            onPress={() => navigation.navigate('BuildRoutineScreen')}
+            onPress={() => {
+              this.props.setRoutine({})
+              navigation.navigate('BuildRoutineScreen')
+            }}
           >
             <Text>Create New Routine</Text>
           </Button>
@@ -66,6 +70,6 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
   myClasses
 })
 
-const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk}
+const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk, setRoutine}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeWorkoutsScreen)

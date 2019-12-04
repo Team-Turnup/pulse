@@ -41,6 +41,7 @@ export default ({
     DateTime.local().minus({seconds: timeWindow * (2 / 3)}),
     DateTime.local().plus({seconds: timeWindow * (1 / 3)})
   ])
+  const [tick, setTick] = useState(true)
 
   useEffect(() => {
     // on mount, convert interval duration data into timestamps for graph
@@ -56,12 +57,13 @@ export default ({
       now.minus({seconds: timeWindow * (2 / 3)}),
       now.plus({seconds: timeWindow * (1 / 3)})
     ])
-  }, [workoutData])
+  })
+  // useInterval(() => setTick(!tick), 1000)
   return tsIntervals && tsIntervals.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain} : {}}
-      domainPadding={{y: 10}}
+      domainPadding={{y: 50}}
       scale={{x: 'time'}}
     >
       <VictoryLine

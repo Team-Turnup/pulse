@@ -11,6 +11,7 @@ import {
 } from 'native-base';
 import InProgressScreen from './InProgressScreen';
 import {createWorkoutThunk} from '../store/workout';
+import AppHeader from '../components/AppHeader';
 
 //maybe rename to UpdateRoutineScreen
 class StartRoutineScreen extends Component {
@@ -37,6 +38,7 @@ componentDidMount() {
   render() {
     return (
       <Container>
+        <AppHeader />
         <Content>
            {this.state.count==='Go!' ? <InProgressScreen routine={this.props.routine}/> : <View style={styles.countdown}>
             <Text style={styles.text}>{this.state.count}</Text>
