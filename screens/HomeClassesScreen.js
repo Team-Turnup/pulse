@@ -5,12 +5,10 @@ import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
-import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
   componentDidMount() {
-    this.props.me()
     this.props.getMyClassesThunk()
     // this.props.getMyWorkoutsThunk()
   }
@@ -18,13 +16,52 @@ class HomeClassesScreen extends Component {
   render() {
     const {navigation} = this.props
     return (
-      <Container>
+      <Content>
         <AppHeader navigation={this.props.navigation} />
-        <Content>
+        <View>
+          <Content style={{margin: 15}}>
+            <Card
+              style={{
+                borderRadius: 10,
+                overflow: 'hidden',
+                padding: 15,
+                margin: 15
+              }}
+            >
+              <Text style={{fontWeight: '600', marginBottom: 10}}>
+                My Upcoming Classes
+              </Text>
+              {this.props.myClasses.length ? (
+                this.props.myClasses.map((aClass, i) => {
+                  return <Text key={i}>{aClass.name}</Text>
+                })
+              ) : (
+                <Text>- No upcoming classes</Text>
+              )}
+            </Card>
+
+            <Card
+              style={{
+                borderRadius: 10,
+                overflow: 'hidden',
+                padding: 15,
+                margin: 15
+              }}
+            >
+              <Text style={{fontWeight: '600', marginBottom: 10}}>
+                My Previous Classes
+              </Text>
+              {this.props.myClasses.length ? (
+                this.props.myClasses.map((aClass, i) => {
+                  return <Text key={i}>{aClass.name}</Text>
+                })
+              ) : (
+                <Text>- No previous classes</Text>
+              )}
+            </Card>
+          </Content>
           <Button
-            block
-            danger
-            style={{margin: 7}}
+            style={styles.button}
             onPress={() =>
               navigation.navigate('ClassesScreen', {
                 loggedInUserId: this.props.user.id
@@ -35,9 +72,7 @@ class HomeClassesScreen extends Component {
           </Button>
 
           <Button
-            block
-            danger
-            style={{margin: 7}}
+            style={styles.button}
             onPress={() => this.props.navigation.navigate('CreateClassScreen')}
           >
             <Text>Create Class</Text>
@@ -69,11 +104,22 @@ class HomeClassesScreen extends Component {
               <Text>My Previous Classes</Text>
             </CardItem>
           </Card>
-        </Content>
-      </Container>
+        </View>
+      </Content>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
+  }
+})
 
 const mapStateToProps = ({user, workouts, myClasses}) => ({
   user,
@@ -81,6 +127,6 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
   myClasses
 })
 
-const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk}
+const mapDispatchToProps = {getMyClassesThunk, getMyWorkoutsThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

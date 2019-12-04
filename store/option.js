@@ -30,7 +30,6 @@ const initialState = {}
 const optionReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_OPTION: {
-      console.log('fetching options')
       return action.option
     }
     case UPDATE_OPTION:
