@@ -17,11 +17,22 @@ class HomeClassesScreen extends Component {
   }
 
   render() {
-    console.log("this.props", this.props)
-    const {navigation} = this.props
+    const {navigation, myClasses} = this.props
+    let aDate = Date.parse(new Date().toString())
+
+    console.log('DATE', typeof(aDate))
+
+    let pastClasses = myClasses.filter(aClass => Date.parse(aClass.when) < aDate)
+    let futureClasses = myClasses.filter(aClass => Date.parse(aClass.when) > aDate)
+
+    // console.log('futureClasses', futureClass)
+    // console.log('PASTCLASSES', pastClasses)
+
+
+
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader/>
         <View>
           <Content style={{margin: 15}}>
             <Card
@@ -35,8 +46,8 @@ class HomeClassesScreen extends Component {
               <Text style={{fontWeight: '600', marginBottom: 10}}>
                 My Upcoming Classes
               </Text>
-              {this.props.myClasses.length ? (
-                this.props.myClasses.map((aClass, i) => {
+              {futureClasses.length ? (
+                futureClasses.map((aClass, i) => {
                   return (
                     <TouchableOpacity
                       key={i}
@@ -58,7 +69,7 @@ class HomeClassesScreen extends Component {
                             fontSize: 18
                           }}
                         >
-                          {aClass.name}
+                          {aClass.when}
                         </Text>
                       </Text>
                       <View
@@ -111,8 +122,8 @@ class HomeClassesScreen extends Component {
               <Text style={{fontWeight: '600', marginBottom: 10}}>
                 My Previous Classes
               </Text>
-              {this.props.myClasses.length ? (
-                this.props.myClasses.map((aClass, i) => {
+              {myClasses.length ? (
+                myClasses.map((aClass, i) => {
                   return <Text key={i}>{aClass.name}</Text>
                 })
               ) : (
@@ -133,7 +144,7 @@ class HomeClassesScreen extends Component {
 
           <Button
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('CreateClassScreen')}
+            onPress={() => navigation.navigate('CreateClassScreen')}
           >
             <Text>Create Class</Text>
           </Button>
