@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ScrollView} from 'react-native'
 import {Container, Content, Button, Text, Card, Input} from 'native-base'
 import AppHeader from '../components/AppHeader'
 import {getMyRoutinesThunk} from '../store/routines'
@@ -161,16 +161,17 @@ class SelectRoutineScreen extends Component {
                 }}
               ></View>
             )}
-            <Content style={{marginTop: 15, marginBottom: 15}}>
+            <Content style={{marginTop: 0, marginBottom: 5}}>
               <Card
                 style={{
                   borderRadius: 10,
                   overflow: 'hidden',
                   padding: 15,
                   margin: 15,
-                  height: 400
+                  height: 435
                 }}
               >
+                <ScrollView>
                 <Text style={{fontWeight: '600', marginBottom: 10}}>
                   Select One of Your Previous Routines
                 </Text>
@@ -182,7 +183,7 @@ class SelectRoutineScreen extends Component {
                     justifyContent: 'space-between'
                   }}
                 >
-                  <View style={{width: '33%', margin: 2}}>
+                  <View style={{width: '30%', margin: 2}}>
                     <Input
                       placeholder="Search"
                       autoCorrect={false}
@@ -198,7 +199,7 @@ class SelectRoutineScreen extends Component {
                   </View>
                   <View
                     style={{
-                      width: '33%',
+                      width: '30%',
                       margin: 2,
                       borderWidth: 1,
                       borderColor: 'gray',
@@ -217,7 +218,7 @@ class SelectRoutineScreen extends Component {
                   </View>
                   <View
                     style={{
-                      width: '33%',
+                      width: '30%',
                       margin: 2,
                       borderWidth: 1,
                       borderColor: 'gray',
@@ -365,6 +366,7 @@ class SelectRoutineScreen extends Component {
                 ) : (
                   <Text>- No routines</Text>
                 )}
+                </ScrollView>
               </Card>
             </Content>
             {page < numPages ? (
@@ -400,11 +402,14 @@ class SelectRoutineScreen extends Component {
           </Text>
           <Button
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('BuildRoutineScreen')}
+            onPress={() => {
+              this.props.setRoutine({})
+              this.props.navigation.navigate('BuildRoutineScreen')
+          }}
           >
             <Text>Create New Routine</Text>
           </Button>
-          <Text
+          {/* <Text
             style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
           >
             or
@@ -414,7 +419,7 @@ class SelectRoutineScreen extends Component {
             style={styles.button}
           >
             <Text>Search Public Routines</Text>
-          </Button>
+          </Button> */}
         </Content>
       </Container>
     )
