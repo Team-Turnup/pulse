@@ -20,11 +20,27 @@ router.use(async (req, res, next) => {
 // POST - Enrolling in a class
 router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
   try {
-    let enrollment = await Attendees.create({
-      classId: req.params.classId,
-      userId: req.user.id
+    const {
+      user,
+      params: {classId}
+    } = req
+    await user.setAttendee(classId)
+    const enrolledClass = await Class.findByPk(classId, {
+      attributes: ['id', 'name', 'canEnroll', 'when'],
+      include: [
+        {
+          model: Routine,
+          attributes: ['id', 'name', 'activityType'],
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'activityType', 'cadence', 'duration']
+            }
+          ]
+        }
+      ]
     })
-    res.json(enrollment).status(200)
+    res.status(200).json(enrolledClass)
   } catch (error) {
     console.error(error)
   }
@@ -100,14 +116,12 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
       include.push({
         model: User,
         as: 'attendees',
-        attributes: ['id', 'email', 'age', 'sex'],
+        attributes: ['id', 'email', 'age', 'gender'],
         through: {
           attributes: []
         }
       })
     const currentClass = await Class.findByPk(classId, {
-      // include age, sex, role of attendees?
-      // used to load up the routine/intervals for every user and class list
       include,
       attributes: ['id', 'name', 'canEnroll', 'when']
     })
@@ -122,14 +136,39 @@ router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {body} = req
     const {name, canEnroll, when, attendees, classPasscode, routineId} = body
-    let currentClass = await Class.create({
-      name,
-      canEnroll,
-      when,
-      attendees,
-      classPasscode,
-      routineId
-    })
+    let currentClass = await Class.create(
+      {
+        name,
+        canEnroll,
+        when,
+        attendees,
+        classPasscode,
+        routineId
+      },
+      {
+        returning: true,
+        include: [
+          {
+            model: Routine,
+            attributes: ['id', 'name', 'activityType'],
+            include: [
+              {
+                model: Interval,
+                attributes: ['id', 'activityType', 'cadence', 'duration']
+              }
+            ]
+          },
+          {
+            model: User,
+            as: 'attendees',
+            attributes: ['id', 'email', 'age', 'gender'],
+            through: {
+              attributes: []
+            }
+          }
+        ]
+      }
+    )
     if (!currentClass) throw new Error(`Class not found.`)
     res.status(200).json(currentClass)
   } catch (err) {

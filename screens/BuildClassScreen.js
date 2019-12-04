@@ -1,18 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
-import {
-  Container,
-  Content,
-  Item,
-  Button,
-  Text,
-  DatePicker,
-  Label,
-  Input
-} from 'native-base'
+import {Container, Content, Item, Button, Text, Label, Input} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
+import DatePicker from 'react-native-datepicker'
 import CheckBox from 'react-native-check-box'
+import {DateTime} from 'luxon'
 import {createClassThunk} from '../store/singleClass'
 
 class BuildClassScreen extends Component {
@@ -21,19 +14,31 @@ class BuildClassScreen extends Component {
     this.state = {
       name: '',
       canEnroll: true,
-      when: new Date().toLocaleString(),
+      when: new Date(),
       attendees: [],
       setClassPasscode: false,
-      classPasscode: ''
+      classPasscode: '',
+      show: false,
+      mode: 'date'
     }
     this.handleCreateClass = this.handleCreateClass.bind(this)
+    this.showDateTimePicker = this.showDateTimePicker.bind(this)
+    this.hideDateTimePicker = this.hideDateTimePicker.bind(this)
     this.setDate = this.setDate.bind(this)
   }
 
-  handleCreateClass() {
+  showDateTimePicker() {
+    this.setState({show: true})
+  }
+
+  hideDateTimePicker() {
+    this.setState({show: true})
+  }
+
+  async handleCreateClass() {
     const {name, canEnroll, when, attendees, classPasscode} = this.state
     const routineId = this.props.routine.id
-    this.props.createClassThunk({
+    await this.props.createClassThunk({
       name,
       canEnroll,
       when,
@@ -47,7 +52,7 @@ class BuildClassScreen extends Component {
     this.setState({
       name: '',
       canEnroll: true,
-      when: new Date().toLocaleString(),
+      when: new Date(),
       attendees: [],
       setClassPasscode: false,
       classPasscode: ''
@@ -61,12 +66,14 @@ class BuildClassScreen extends Component {
   }
 
   setDate(newDate) {
+    // if (this.mode === 'date') this.setState({mode: 'time'})
+    // else {
     this.setState({when: newDate})
+    // this.hideDateTimePicker()
+    // }
   }
 
   render() {
-    console.log('this.state.routine', this.state.routine)
-    console.log('this.props.routine', this.props.routine)
     return (
       <Container>
         <Content>
@@ -94,23 +101,18 @@ class BuildClassScreen extends Component {
           />
           {/* </Item> */}
           <Item>
-            <Label>When is the Class?</Label>
+            <Label>Set Start Time:</Label>
             <DatePicker
               // defaultDate={new Date(2018, 4, 4)}
               // minimumDate={new Date(2018, 1, 1)}
               // maximumDate={new Date(2018, 12, 31)}
-              locale={'en'}
-              timeZoneOffsetInMinutes={undefined}
-              modalTransparent={false}
-              animationType={'fade'}
-              androidMode={'default'}
-              placeHolderText="Select date"
-              textStyle={{color: 'green'}}
-              placeHolderTextStyle={{color: '#d3d3d3'}}
+              date={this.state.when}
+              format="M/D/YYYY h:mm a"
+              locale="en"
+              is24Hour={false}
+              mode="datetime"
               onDateChange={this.setDate}
-              disabled={false}
             />
-            <Text>Date: {this.state.when.toString().substr(4, 12)}</Text>
           </Item>
           <Item fixedLabel style={styles.checkBox}>
             <CheckBox

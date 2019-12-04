@@ -27,7 +27,7 @@ const createUser = async () => {
     age: faker.random.number({min: 18, max: 65}),
     height: Math.round(faker.random.number({min: 12 * 5, max: 12 * 6.5})),
     weight: faker.random.number({min: 1200, max: 250}),
-    sex: faker.random.arrayElement(['male', 'female', 'non-binary'])
+    gender: faker.random.arrayElement(['male', 'female', 'non-binary'])
   })
 }
 
@@ -92,7 +92,7 @@ const createClass = async () => {
   return await Class.create({
     name: `Class # ${faker.random.number()}`,
     canEnroll: true,
-    live: true
+    when: faker.date.recent(-3)
   })
 }
 
