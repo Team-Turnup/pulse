@@ -1,7 +1,15 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
-import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
+import {
+  Container,
+  Button,
+  Text,
+  Content,
+  Card,
+  Input,
+  CardItem
+} from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -11,20 +19,33 @@ import RoutineBarMini from '../components/RoutineBarMini'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
-  componentDidMount() {
-    this.props.getMyClassesThunk()
-    // this.props.getMyWorkoutsThunk()
+  constructor(props) {
+    super(props)
+    this.state = {
+      page: 1,
+      numPerPage: 2,
+      pastClassesPages: 0,
+      sort: null,
+      search: '',
+      classId: null
+    }
+    this.handleChange = this.handleChange.bind(this)
   }
-
   static navigationOptions = {
     header: null
   }
 
+  componentDidMount() {
+    this.props.getMyClassesThunk()
+  }
+
+  handleChange(event) {}
+
   render() {
     const {navigation, myClasses} = this.props
-    let aDate = Date.parse(new Date().toString())
+    const {page, numPerPage, search, sort, classId} = this.state
 
-    console.log('DATE', typeof aDate)
+    let aDate = Date.parse(new Date().toString())
 
     let pastClasses = myClasses.filter(
       aClass => Date.parse(aClass.when) < aDate
@@ -33,8 +54,16 @@ class HomeClassesScreen extends Component {
       aClass => Date.parse(aClass.when) > aDate
     )
 
-    // console.log('futureClasses', futureClass)
+    console.log('FUTURECLASSES', futureClasses)
     console.log('PASTCLASSES', pastClasses)
+
+    let viewPastClasses = [...pastClasses]
+    let pastClassesResults = viewPastClasses.length
+    let pastClassesPages = Math.ceil(pastClassesResults / numPerPage)
+    viewPastClasses = viewPastClasses.slice(
+      (page - 1) * numPerPage,
+      page * numPerPage
+    )
 
     return (
       <Content>
@@ -52,6 +81,20 @@ class HomeClassesScreen extends Component {
               <Text style={{fontWeight: '600', marginBottom: 10}}>
                 My Upcoming Classes
               </Text>
+              {/* <View style={{width: '30%', margin: 2}}>
+                    <Input
+                      placeholder="Search"
+                      autoCorrect={false}
+                      value={search}
+                      onChangeText={search => this.setState({search})}
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 1,
+                        fontSize: 14,
+                        height: 16
+                      }}
+                    />
+                  </View> */}
               {futureClasses.length ? (
                 futureClasses.map((aClass, i) => {
                   const duration = aClass.routine.intervals.reduce(
@@ -122,71 +165,144 @@ class HomeClassesScreen extends Component {
                 margin: 15
               }}
             >
-              <Text style={{fontWeight: '600', marginBottom: 10}}>
-                My Previous Classes
-              </Text>
-              {pastClasses.length ? (
-                pastClasses.map((aClass, i) => {
-                  const duration = aClass.routine.intervals.reduce(
-                    (sum, interval) => sum + interval.duration,
-                    0
-                  )
-                  return (
+              <View>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-evenly'
+                  }}
+                >
+                  {/* <View> */}
+                  {page > 1 ? (
                     <TouchableOpacity
-                      key={i}
                       style={{
-                        marginTop: 5,
-                        marginBottom: 5,
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                        borderRadius: 10,
-                        overflow: 'hidden'
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
+                      onPress={() =>
+                        this.setState(prevState => ({
+                          page: prevState.page - 1
+                        }))
+                      }
                     >
-                      <Text style={{textAlign: 'center'}}>
-                        <Text
+                      <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View
+                    // style={{
+                    //   width: 25,
+                    //   height: 35
+                    // }}
+                    ></View>
+                  )}
+
+                  <Text style={{fontWeight: '600', marginBottom: 10}}>
+                    My Previous Classes
+                  </Text>
+
+                  {page < pastClassesPages ? (
+                    <TouchableOpacity
+                      style={{
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      onPress={() =>
+                        this.setState(prevState => ({
+                          page: prevState.page + 1
+                        }))
+                      }
+                    >
+                      <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View
+                    // style={{
+                    //   width: 25,
+                    //   height: 35
+                    // }}
+                    ></View>
+                  )}
+                  {/* </View> */}
+                </View>
+
+                <View>
+                  {viewPastClasses.length ? (
+                    viewPastClasses.map((aClass, i) => {
+                      const duration = aClass.routine.intervals.reduce(
+                        (sum, interval) => sum + interval.duration,
+                        0
+                      )
+                      return (
+                        <TouchableOpacity
+                          key={i}
                           style={{
-                            color: 'rgb(84, 130, 53)',
-                            fontWeight: '600',
-                            fontSize: 18
+                            marginTop: 5,
+                            marginBottom: 5,
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            overflow: 'hidden'
                           }}
                         >
-                          {aClass.name}{' '}
-                          {activityTypes[aClass.routine.activityType].icon}
-                        </Text>
-                      </Text>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-evenly'
-                        }}
-                      >
-                        <Text>
-                          Trainer:{' '}
-                          <Text
+                          <Text style={{textAlign: 'center'}}>
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                fontWeight: '600',
+                                fontSize: 18
+                              }}
+                            >
+                              {aClass.name}{' '}
+                              {activityTypes[aClass.routine.activityType].icon}
+                            </Text>
+                          </Text>
+                          <View
                             style={{
-                              color: 'rgb(84, 130, 53)',
-                              fontStyle: 'italic'
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-evenly'
                             }}
                           >
-                            {aClass.user.name.split(' ')[0]}
-                          </Text>
-                        </Text>
-                      </View>
-                      <RoutineBarMini
-                        routine={aClass.routine.intervals}
-                        totalDuration={duration}
-                        activityType={aClass.routine.activityType}
-                      />
-                    </TouchableOpacity>
-                  )
-                })
-              ) : (
-                <Text>- No previous classes</Text>
-              )}
+                            <Text>
+                              Trainer:{' '}
+                              <Text
+                                style={{
+                                  color: 'rgb(84, 130, 53)',
+                                  fontStyle: 'italic'
+                                }}
+                              >
+                                {aClass.user.name.split(' ')[0]}
+                              </Text>
+                            </Text>
+                          </View>
+                          <RoutineBarMini
+                            routine={aClass.routine.intervals}
+                            totalDuration={duration}
+                            activityType={aClass.routine.activityType}
+                          />
+                        </TouchableOpacity>
+                      )
+                    })
+                  ) : (
+                    <Text>- No previous classes</Text>
+                  )}
+                </View>
+              </View>
             </Card>
           </Content>
+
           <Button
             style={styles.button}
             onPress={() =>
