@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {VictoryLine, VictoryChart} from 'victory-native'
+import {VictoryLine, VictoryChart, VictoryAxis} from 'victory-native'
 import {Text} from 'native-base'
 
 export default ({
@@ -45,6 +45,13 @@ export default ({
       domain={workoutHistory ? {} : {x: domain}}
       domainPadding={{y: 50}}
     >
+      <VictoryAxis crossAxis label="Workout Time (seconds)" />
+      <VictoryAxis
+        dependentAxis
+        padding={115}
+        label="Cadence (bpm)"
+        style={{axisLabel: {angle: -90, padding: 37}}}
+      />
       {workoutHistory ? null : (
         <VictoryLine
           x={() => totalTimeElapsed}
