@@ -38,8 +38,18 @@ class InProgressScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._subscribe()
-    this._startWorkout()
+    if (this.props.proposedStart) {
+      const wait = setInterval(() => {
+        if (Date.now() >= this.props.proposedStart) {
+          this._subscribe()
+          this._startWorkout()
+          clearInterval(wait)
+        }
+      }, 10)
+    } else {
+      this._subscribe()
+      this._startWorkout()
+    }
   }
 
   componentWillUnmount() {
@@ -70,13 +80,16 @@ class InProgressScreen extends React.Component {
         cadences,
         avgCadences
       })
-      this.props.socket.emit('workoutTimestamp', {
-        workoutTimestamp: {
+      this.props.socket.emit(
+        'workoutTimestamp',
+        this.props.user.id,
+        {
           ...workoutTimestamp,
           goalCadence: this.state.intervals[this.state.currentInterval].cadence
         },
-        workoutId: this.props.workout.id
-      })
+        this.props.workout.id,
+        this.props.singleClass.id || null
+      )
     })
 
     Pedometer.isAvailableAsync().then(
@@ -468,11 +481,12 @@ InProgressScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = ({routine, option, user, workout}) => ({
+const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   routine,
   option,
   user,
-  workout
+  workout,
+  singleClass
 })
 
 const mapDispatchToProps = {setWorkout}

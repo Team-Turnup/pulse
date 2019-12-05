@@ -2,7 +2,11 @@
 import React, {useEffect, useState, Fragment} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import useInterval from 'use-interval'
-import {setReadyAttendees, addNewAttendee} from '../store/singleClass'
+import {
+  setReadyAttendees,
+  addNewAttendee,
+  removeAttendee
+} from '../store/singleClass'
 import {SocketContext} from '../socket'
 
 // Components
@@ -27,21 +31,21 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
-    socket.emit('start', classId, userId)
+    socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
 
   useEffect(() => {
     // listen for socket messages
-    socket.on('joined', user => dispatch(addNewAttendee(user)))
-    socket.on('left', user => dispatch(removeAttendee(user)))
     socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
+    socket.on('joined', user => dispatch(addNewAttendee(user)))
+    socket.on('left', id => dispatch(removeAttendee(id)))
   }, [])
 
   useEffect(() => {
     // join/create a class when the component sees a valid classId and unsubscribe on unmount
     if (classId) {
-      socket.emit('subscribe', classId, userId, true)
+      socket.emit('subscribe', classId, userId, true, Date.now())
       return () => socket.emit('unsubscribe', classId, userId, true)
     }
   }, [classId])
@@ -59,7 +63,8 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
           <Fragment>
             <View style={styles.startView}>
               {when < curTime ||
-              attendees.length === attendees.filter(a => a.ready).length ? (
+              (attendees.length &&
+                attendees.length === attendees.filter(a => a.ready).length) ? (
                 <StartButton _onPress={_onPress} />
               ) : (
                 <StartTime when={when} />

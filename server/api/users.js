@@ -23,11 +23,11 @@ const {leaderValidate, authenticatedUser} = require('./authFunctions')
 //GET all classes where user is attendee
 router.get('/myClasses', authenticatedUser, async (req, res, next) => {
   try {
-    const myClasses = await req.user.getAttendee({attributes: ['id', 'name', 'canEnroll', 'when', 'createdAt', 'routineId', 'userId'], include: [Workout, {model: Routine, include: [Interval]}]})
-    const upcoming = myClasses.filter(thisClass => new Date(thisClass.when)>new Date())
-    const previous = myClasses.filter(thisClass => thisClass.workouts.map(workout=>workout.userId).includes(req.user.id))
+    const myClasses = await req.user.getAttendee({
+      include: [{model: User}, {model: Routine, include: [{model: Interval}]}]
+    })
     if (!myClasses) res.status(404).send("can't find user's classes")
-    res.json({upcoming, previous}).status(200)
+    res.json(myClasses).status(200)
   } catch (err) {
     next(err)
   }

@@ -30,8 +30,22 @@ const UserWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   useEffect(() => {
-    socket.emit('subscribe', _class.id, user.id)
+    socket.emit('subscribe', _class.id, user.id, false, Date.now())
     return () => socket.emit('unsubscribe', _class.id, user.id)
+  }, [_class.id])
+
+  useEffect(() => {
+    socket.on('start', (proposedStart, followers) => {
+      navigation.navigate('StartRoutineScreen', {
+        classStart: proposedStart + followers[user.id]
+      })
+      // const startCheck = setInterval(() => {
+      //   console.log(Platform.OS, 'func Calls', ++funcCalls, 'date', Date.now())
+      //   if (Date.now() >= proposedStart + followers[user.id]) {
+      //     clearInterval(startCheck)
+      //   }
+      // }, 10)
+    })
   }, [])
 
   useInterval(() => setCurTime(Date.now()), 1000)
@@ -59,6 +73,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
           danger
           style={{margin: 7}}
           onPress={() => {
+            socket.emit('left', _class.id, user.id)
             dispatch(leaveClass(_class.id, user.id))
             navigation.navigate('HomeClassesScreen')
           }}

@@ -100,6 +100,7 @@ class SelectRoutineScreen extends Component {
       value: activity
     }))
     let viewRoutines = [...this.props.routines]
+
     viewRoutines = search.length
       ? viewRoutines.filter(routine =>
           routine.name.toLowerCase().includes(search.toLowerCase())
@@ -109,6 +110,7 @@ class SelectRoutineScreen extends Component {
       ? viewRoutines.filter(routine => routine.activityType === filter)
       : viewRoutines
     sort ? viewRoutines.sort(sorter(sort)) : {}
+
     const numResults = viewRoutines.length
     const numPages = Math.ceil(numResults / numPerPage)
     viewRoutines = viewRoutines.slice(

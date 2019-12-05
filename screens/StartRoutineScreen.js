@@ -12,9 +12,18 @@ class StartRoutineScreen extends Component {
     super(props)
     this.state = {count: 4, clearCountdown: null, startPressed: false}
     this.handleStart = this.handleStart.bind(this)
+    this.classStart = this.props.navigation.getParam('classStart', null)
   }
 
   componentDidMount() {
+    if (this.classStart) {
+      this.setState({startPressed: true, count: 'Go!'})
+      // const clearCountdown = setInterval(() => {
+      //   if (Date.now() >= this.classStart)
+      //     this.setState({startPressed: true, count: 'Go!'})
+      // }, 10)
+      // this.setState({clearCountdown})
+    }
     // this.props.createWorkoutThunk(this.props.routine.id)
     //     const clearCountdown = setInterval(() => {
     //         let {count} = this.state
@@ -60,6 +69,7 @@ class StartRoutineScreen extends Component {
             <Content>
               {this.state.count === 'Go!' ? (
                 <InProgressScreen
+                  proposedStart={this.classStart}
                   routine={this.props.routine}
                   navigation={this.props.navigation}
                 />

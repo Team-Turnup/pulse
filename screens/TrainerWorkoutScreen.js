@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import {
   Container,
   Text,
@@ -10,8 +11,6 @@ import {
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
-import {useSelector} from 'react-redux'
-import {useInterval} from 'use-interval'
 
 export const OverviewStats = ({
   totalTime,
@@ -75,15 +74,13 @@ const TrainerWorkoutScreen = () => {
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
-  const routine = useSelector(({routine}) => routine)
+  const routine = useSelector(({intervals, ...routine}) => routine)
   const userId = useSelector(({user}) => user.id)
-  let intervals
+
   // timekeeping variables
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
-
-  useEffect()
 
   // when the data is live, useInterval might not be necessary
   // useInterval(() => {
