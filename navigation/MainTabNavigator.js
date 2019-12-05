@@ -15,6 +15,9 @@ import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import PreviousWorkoutScreen from '../screens/PreviousWorkoutScreen'
+import OptionUserInfoScreen from '../screens/OptionsUserInfoScreen'
+import OptionsCadenceVibrationScreen from '../screens/OptionsCadenceVibrationScreen'
+import OptionsVisualSettingsScreen from '../screens/OptionsVisualSettingsScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -99,7 +102,10 @@ HomeClassesStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: OptionsScreen
+    Settings: OptionsScreen,
+    UserInfo:OptionUserInfoScreen,
+    CadenceVibration: OptionsCadenceVibrationScreen,
+    VisualSettings:OptionsVisualSettingsScreen
   },
   config
 )
@@ -121,7 +127,7 @@ const tabNavigator = createBottomTabNavigator(
     // LoginStack,
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack
+    SettingsStack,
     // TrainerWorkScreen,
     // TakePhotoStack
   },
