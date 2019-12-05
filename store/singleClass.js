@@ -9,12 +9,12 @@ const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
 const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
 const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE'
 
-const setClass = singleClass => ({
+export const setClass = singleClass => ({
   type: SET_CLASS,
   singleClass
 })
 
-const removeClass = () => ({
+export const removeClass = () => ({
   type: REMOVE_CLASS
 })
 
