@@ -335,7 +335,6 @@ class BuildRoutineScreen extends Component {
                   <Button
                     style={styles.button}
                     onPress={() => {
-                      console.log(this.state.activityType)
                       this.state.activityType ? this.addInterval() : {}
                     }}
                   >

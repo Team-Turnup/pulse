@@ -59,11 +59,10 @@ export const UserList = ({attendees}) => (
           <Text style={styles.name}>{name} </Text>
           <Text style={styles.age}>{age}</Text>
           <Text style={styles.gender}>{userData[gender].icon}</Text>
-        </ListItem>
-      ))}
-    </List>
-  </Fragment>
-)
+        </ListItem>))}
+      </List>
+    </Fragment>
+  )
 
 export const styles = StyleSheet.create({
   listItem: {

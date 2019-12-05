@@ -1,27 +1,126 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {View, StyleSheet} from 'react-native'
-import {Container, Text, Content, Card, CardItem, Button} from 'native-base'
-import {connect} from 'react-redux'
-import AppHeader from '../components/AppHeader'
+import {Container, Text, Content, Card, CardItem} from 'native-base'
+import WorkoutGraph from './WorkoutGraph'
+import {useSelector, useDispatch} from 'react-redux'
+import {removeWorkout} from '../store/workout'
+import RoutineBarGraphic from '../components/RoutineBarGraphic'
+import activityTypes from '../assets/images/activityTypes'
+import {DateTime} from 'luxon'
 
-class PreviousWorkoutScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-    }
-  }
+export default () => {
+  const dispatch = useDispatch()
+  const {
+    workout: {
+      id = null,
+      timestamp: startTime = null,
+      workoutTimestamps = [],
+      class: _class
+    },
+    routine: {name: routineName = null, activityType = null, intervals = []}
+  } = useSelector(({workout, routine}) => ({workout, routine}))
+  const totalTime =
+    (intervals &&
+      intervals.reduce((sum, interval) => sum + interval.duration, 0)) ||
+    0
+  const className = (_class && _class.name) || null
 
-  componentDidMount() {
-  }
-
-  render() {
-    return (
-        <Container >
-           <AppHeader navigation={this.props.navigation} />
-            <Text>Previous workout screen</Text>
-        </Container>
-    )
-  }
+  useEffect(() => () => dispatch(removeWorkout(id)), [])
+  return (
+    <Container>
+      <View
+        style={{
+          padding: 20,
+          // backgroundColor: this.hexToRgb(
+          //   this.props.option.visualColor,
+          //   this.state.opacity
+          // ),
+          width: '100%',
+          height: '70%'
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: 'white',
+            width: '100%',
+            height: '100%',
+            borderRadius: 10,
+            opacity: 1
+          }}
+        >
+          <View>
+            <Text style={{textAlign: 'center'}}>
+              Workout Performed on:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {DateTime.fromJSDate(new Date(startTime)).toLocaleString(
+                  DateTime.DATE_SHORT
+                )}
+              </Text>
+            </Text>
+            {!className ? null : (
+              <Text style={{textAlign: 'center'}}>
+                As a part of the class{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {className}
+                </Text>
+              </Text>
+            )}
+            <Text style={{textAlign: 'center'}}>
+              Routine Name:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {routineName}
+              </Text>
+            </Text>
+            <Text style={{textAlign: 'center'}}>
+              Activity Type:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {activityType !== 'combo'
+                  ? activityTypes[activityType].icon
+                  : 'Combo'}
+              </Text>
+            </Text>
+          </View>
+          <RoutineBarGraphic
+            routine={intervals}
+            changeIndex={() => {}}
+            removeInterval={() => {}}
+            finished={true}
+            routineType={activityType}
+          />
+          <View>
+            <View style={styles.info}>
+              <View style={styles.col}>
+                <Card transparent style={styles.card}>
+                  <Text style={{fontSize: 12}}>Routine Length:</Text>
+                  <Text style={{color: 'rgb(84, 130, 53)'}}>
+                    {Math.floor(totalTime / 60)
+                      ? `${Math.floor(totalTime / 60)}m`
+                      : ''}{' '}
+                    {totalTime % 60 ? `${totalTime % 60}s` : ''}
+                  </Text>
+                </Card>
+              </View>
+              <View style={styles.col}>
+                <Card transparent style={styles.card}>
+                  <Text style={{fontSize: 12}}>Total Steps:</Text>
+                  <Text style={{color: 'rgb(84, 130, 53)'}}>
+                    {workoutTimestamps.length} steps
+                  </Text>
+                </Card>
+              </View>
+            </View>
+            <WorkoutGraph
+              workoutHistory={true}
+              intervals={intervals}
+              workoutData={workoutTimestamps}
+              totalTimeElapsed={totalTime}
+              totalTime={totalTime}
+            />
+          </View>
+        </View>
+      </View>
+    </Container>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -62,7 +161,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }
 })
-
-const mapStateToProps = ({workout}) => ({workout})
-
-export default connect(mapStateToProps)(PreviousWorkoutScreen)

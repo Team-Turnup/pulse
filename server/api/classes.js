@@ -78,6 +78,15 @@ router.get('/', authenticatedUser, async (req, res, next) => {
           through: {
             attributes: []
           }
+        },
+        {
+          model: Routine,
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'activityType', 'cadence', 'duration']
+            }
+          ]
         }
       ],
       ...(search && {

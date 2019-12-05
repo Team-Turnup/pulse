@@ -85,7 +85,7 @@ const createWorkoutstamp = () => {
   return WorkoutTimestamp.create({
     cadence: faker.random.number({min: -1, max: 999}),
     goalCadence: Math.round(faker.random.number({min: -1, max: 999})),
-    timestamp: new Date()
+    timestamp: faker.random.number({min: 0 * 1000, max: 60 * 1000})
   })
 }
 const createClass = () => {
