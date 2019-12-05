@@ -20,6 +20,9 @@ class HomeWorkoutsScreen extends Component {
     this.props.getMyClassesThunk()
     this.props.getMyWorkoutsThunk()
   }
+  static navigationOptions = {
+    header: null
+  }
 
   async selectWorkout(workoutId) {
     await this.props.fetchWorkoutThunk(workoutId)

@@ -10,6 +10,8 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
+
 
 class OptionsScreen extends Component {
   constructor(props) {
@@ -36,9 +38,9 @@ class OptionsScreen extends Component {
     this.clearVisual = []
   }
 
-  // static navigationOptions = {
-  //   header: null
-  // }
+  static navigationOptions = {
+    header: null
+  }
 
   handleChange(key, value) {
     this.setState({[key]: value})
@@ -101,11 +103,12 @@ class OptionsScreen extends Component {
   render() {
     return (
       <Container>
-        <Header>
+        <AppHeader/>
+        {/* <Header>
           <Text>
             Settings
           </Text>
-        </Header>
+        </Header> */}
         <Content>
           {/* <Button
             style={styles.button}
@@ -118,7 +121,7 @@ class OptionsScreen extends Component {
             style={styles.button}
             onPress={() => this.props.navigation.navigate('UserInfo')}
           >
-            <Text>User Information</Text>
+            <Text>User Information Settings</Text>
           </Button>
           <Button
             style={styles.button}
