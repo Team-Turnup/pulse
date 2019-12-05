@@ -73,8 +73,10 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
             <Text
               style={{textAlign: 'center', paddingBottom: 20}}
             >{`Routine: ${routine.name}`}</Text>
-            {routine.intervals ? <RoutineBarDisplay routine={routine.intervals} /> : null}
-            {attendees && attendees.length ? 
+            {routine.intervals ? (
+              <RoutineBarDisplay routine={routine.intervals} />
+            ) : null}
+            {attendees && attendees.length ? (
               <UserList
                 attendees={attendees.sort((a, b) =>
                   !a.ready && b.ready
@@ -88,7 +90,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
                     : 0
                 )}
               />
-            : null}
+            ) : null}
           </Fragment>
         ) : (
           <Text>Loading...</Text>

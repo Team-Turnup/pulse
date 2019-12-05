@@ -12,7 +12,7 @@ import ClassesScreen from '../screens/ClassesScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
 import BuildClassScreen from '../screens/BuildClassScreen'
 import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
-import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
+import TrainerWorkoutScreen from '../screens/FakeTrainerWorkoutScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import PreviousWorkoutScreen from '../screens/PreviousWorkoutScreen'
 import OptionUserInfoScreen from '../screens/OptionsUserInfoScreen'
@@ -103,9 +103,9 @@ HomeClassesStack.path = ''
 const SettingsStack = createStackNavigator(
   {
     Settings: OptionsScreen,
-    UserInfo:OptionUserInfoScreen,
+    UserInfo: OptionUserInfoScreen,
     CadenceVibration: OptionsCadenceVibrationScreen,
-    VisualSettings:OptionsVisualSettingsScreen
+    VisualSettings: OptionsVisualSettingsScreen
   },
   config
 )
@@ -127,7 +127,7 @@ const tabNavigator = createBottomTabNavigator(
     // LoginStack,
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack,
+    SettingsStack
     // TrainerWorkScreen,
     // TakePhotoStack
   },
