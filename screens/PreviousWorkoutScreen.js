@@ -17,7 +17,7 @@ class PreviousWorkoutScreen extends React.Component {
   render() {
     return (
         <Container >
-            <AppHeader />
+           AppHeader navigation={this.props.navigation} />
             <Text>Previous workout screen</Text>
         </Container>
     )
