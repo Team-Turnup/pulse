@@ -43,10 +43,6 @@ class HomeWorkoutsScreen extends Component {
             height: 650
           }}
         >
-          <MyPreviousWorkouts
-            selectWorkout={this.selectWorkout}
-            workouts={this.props.workouts}
-          />
           <Button
             style={styles.button}
             onPress={() => {
@@ -62,6 +58,10 @@ class HomeWorkoutsScreen extends Component {
           >
             <Text>Start New Solo Workout</Text>
           </Button>
+          <MyPreviousWorkouts
+            selectWorkout={this.selectWorkout}
+            workouts={this.props.workouts}
+          />
         </View>
       </Content>
     )

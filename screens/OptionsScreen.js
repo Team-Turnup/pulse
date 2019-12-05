@@ -38,10 +38,6 @@ class OptionsScreen extends Component {
     this.clearVisual = []
   }
 
-  static navigationOptions = {
-    header: null
-  }
-
   handleChange(key, value) {
     this.setState({[key]: value})
     if (key !== 'visualColor') {
