@@ -50,16 +50,6 @@ class ClassesScreen extends React.Component {
     this.setState({[key]: value})
   }
 
-  /*
-  this.props.classes is an array (empty at mount, filled after)
-  this.props.classes is an array of attendees objects which is an array of objects with id (prob user)
-  this.props.classes is array .userId is the owner id
-  this.props.classes is array .classId
-  this.props.enrollClass
-  this.props.getClasses
-intervals?
-  */
-
   render() {
     const sorter = sort => {
       if (sort === 'dateCreated') {
@@ -360,21 +350,32 @@ intervals?
                               />
                             ) : null}
                           </TouchableOpacity>
-
-                          {/* {classId === aClass.id ? (
+                          {classId === aClass.id ? (
                             <View
                               style={{display: 'flex', flexDirection: 'row'}}
                             >
                               <Button
-                                onPress={() => {
-                                  this.props.setClass(
-                                    classes.find(
-                                      aClass => aClass.id === classId
-                                    )
+                                onPress={async () => {
+                                  // this.props.setClass(
+                                  //   classes.find(
+                                  //     aClass => aClass.id === classId
+                                  //   )
+                                  // )
+                                  await this.props.enrollClass(
+                                    aClass.id,
+                                    this.props.user.id
+                                  )
+                                  this.props.socket.emit(
+                                    'joined',
+                                    aClass.id,
+                                    this.props.user
                                   )
                                   this.props.navigation.navigate(
-                                    'StartClassScreen'
+                                    'UserWaitingScreen'
                                   )
+                                  // this.props.navigation.navigate(
+                                  //   'StartClassScreen'
+                                  // )
                                 }}
                                 style={{
                                   ...styles.button,
@@ -383,15 +384,16 @@ intervals?
                                   marginRight: 5
                                 }}
                               >
-                                <Text>Start Workout</Text>
+                                <Text>Join Class</Text>
                               </Button>
-                              <Button
+                              {/* <Button
                                 onPress={() => {
                                   this.props.setClass(
                                     classes.find(
                                       aClass => aClass.id === classId
                                     )
                                   )
+
                                   this.props.navigation.navigate(
                                     'BuildClassScreen'
                                   )
@@ -404,9 +406,9 @@ intervals?
                                 }}
                               >
                                 <Text>Edit Class</Text>
-                              </Button>
+                              </Button> */}
                             </View>
-                          ) : null} */}
+                          ) : null}
                         </View>
                       )
                     })
@@ -473,6 +475,7 @@ intervals?
   }
 }
 
+// //below is the original join or enroll classes render
 //   render() {
 //     const {classes, user} = this.props
 //     let allClasses = classes.filter(aClass =>
@@ -545,6 +548,7 @@ const mapDispatchToProps = dispatch => ({
   enrollClass: (classId, studentId) =>
     dispatch(enrollClass(classId, studentId)),
   getClassesThunk: () => dispatch(getClassesThunk())
+  //setClass: () => dispatch(setClass())
 })
 
 const SocketConnectedClassesScreen = props => (
