@@ -4,19 +4,6 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
 
-// Quick and dirty testing DO NOT USE IN PRODUCTION
-router.use(async (req, res, next) => {
-  try {
-    if (process.env.NODE_ENV === 'test') {
-      req.login((await Class.findOne({include: [User]})).user, err =>
-        err ? next(err) : 'good!'
-      )
-    }
-    next()
-  } catch (err) {
-    next(err)
-  }
-})
 // POST - Enrolling in a class
 router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
   try {
@@ -24,7 +11,7 @@ router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
       user,
       params: {classId}
     } = req
-    await user.setAttendee(classId)
+    await user.addAttendee(classId)
     const enrolledClass = await Class.findByPk(classId, {
       attributes: ['id', 'name', 'canEnroll', 'when'],
       include: [
