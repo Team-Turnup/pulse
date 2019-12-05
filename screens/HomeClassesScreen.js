@@ -250,6 +250,9 @@ class HomeClassesScreen extends Component {
                         borderRadius: 10,
                         overflow: 'hidden'
                       }}
+                      onPress={() => {
+                        this.props.navigation.navigate('UserWaitingScreen')
+                      }}
                     >
                       <Text style={{textAlign: 'center'}}>
                         <Text
