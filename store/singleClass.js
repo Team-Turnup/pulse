@@ -8,7 +8,7 @@ const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
 const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
 
-const setClass = singleClass => ({
+export const setClass = singleClass => ({
   type: SET_CLASS,
   singleClass
 })
@@ -71,7 +71,8 @@ export const createClassThunk = singleClass => async dispatch => {
   try {
     const {
       data: {routine, ..._class}
-    } = await axios.get(`${ngrok}/api/classes/`, singleClass)
+    } = await axios.post(`${ngrok}/api/classes/`, singleClass)
+
     _class.when = Date.parse(_class.when)
     dispatch(setClass(_class))
     dispatch(setRoutine(routine))

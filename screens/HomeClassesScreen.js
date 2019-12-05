@@ -4,8 +4,9 @@ import {View, StyleSheet} from 'react-native'
 import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
-import {getClassThunk} from '../store/singleClass'
+import {getClassThunk, setClass} from '../store/singleClass'
 import AppHeader from '../components/AppHeader'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 class HomeClassesScreen extends Component {
   componentDidMount() {
@@ -42,7 +43,17 @@ class HomeClassesScreen extends Component {
               </Text>
               {upcomingClasses.length ? (
                 upcomingClasses.map((aClass, i) => {
-                  return <Text key={i}>{aClass.name}</Text>
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={async () => {
+                        await this.props.getClassThunk(aClass.id)
+                         this.props.navigation.navigate(aClass.userId===user.id ? 'TrainerWaitingScreen' : 'UserWaitingScreen')
+                      }}
+                    >
+                      <Text>{aClass.name}</Text>
+                    </TouchableOpacity>
+                  )
                 })
               ) : (
                 <Text>- No upcoming classes</Text>
@@ -71,18 +82,17 @@ class HomeClassesScreen extends Component {
           </Content>
           <Button
             style={styles.button}
-            onPress={() =>
-              navigation.navigate('ClassesScreen', {
-                loggedInUserId: this.props.user.id
-              })
-            }
+            onPress={() => navigation.navigate('ClassesScreen')}
           >
             <Text>Enroll in Class</Text>
           </Button>
 
           <Button
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('CreateClassScreen')}
+            onPress={() => {
+              this.props.setClass({})
+              this.props.navigation.navigate('BuildClassScreen')
+            }}
           >
             <Text>Create Class</Text>
           </Button>
@@ -130,16 +140,18 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({user, workouts, myClasses}) => ({
+const mapStateToProps = ({user, workouts, myClasses, routine}) => ({
   user,
   workouts,
-  myClasses
+  myClasses,
+  routine
 })
 
 const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
-  getClassThunk
+  getClassThunk,
+  setClass,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

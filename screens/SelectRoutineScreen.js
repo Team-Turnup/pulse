@@ -115,6 +115,11 @@ class SelectRoutineScreen extends Component {
       (page - 1) * numPerPage,
       page * numPerPage
     )
+
+    const isClass = this.props.navigation.getParam('isClass', false)
+
+    console.log('isClass', isClass)
+
     return (
       <Container>
         <Content>
@@ -128,7 +133,7 @@ class SelectRoutineScreen extends Component {
               color: 'rgb(84, 130, 53)'
             }}
           >
-            Start New Solo Workout
+            {!isClass ? 'Start New Solo Workout' : 'Create Class'}
           </Text>
           <View
             style={{
@@ -173,7 +178,7 @@ class SelectRoutineScreen extends Component {
                   height: 435
                 }}
               >
-                {/* <ScrollView> */}
+                <ScrollView>
                   <Text style={{fontWeight: '600', marginBottom: 10}}>
                     Select One of Your Previous Routines
                   </Text>
@@ -342,13 +347,14 @@ class SelectRoutineScreen extends Component {
                             >
                               <Button
                                 onPress={() => {
-                                  this.props.setRoutine(
-                                    routines.find(
-                                      routine => routine.id === routineId
-                                    )
+                                  selectRoutine = routines.find(
+                                    routine => routine.id === routineId
                                   )
-                                  this.props.navigation.navigate(
-                                    'StartRoutineScreen'
+                                  this.props.setRoutine(
+                                    selectRoutine
+                                  )
+                                  this.props.navigation.navigate(!isClass ? 
+                                    'StartRoutineScreen' : 'BuildClassScreen', {routine: selectRoutine}
                                   )
                                 }}
                                 style={{
@@ -358,18 +364,17 @@ class SelectRoutineScreen extends Component {
                                   marginRight: 5
                                 }}
                               >
-                                <Text>Start Workout</Text>
+                                <Text>{!isClass ? 'Start Workout' : 'Select Routine'}</Text>
                               </Button>
                               <Button
                                 onPress={() => {
-                                  console.log('here')
                                   this.props.setRoutine(
                                     routines.find(
                                       routine => routine.id === routineId
                                     )
                                   )
                                   this.props.navigation.navigate(
-                                    'BuildRoutineScreen'
+                                    'BuildRoutineScreen', {isClass}
                                   )
                                 }}
                                 style={{
@@ -389,7 +394,7 @@ class SelectRoutineScreen extends Component {
                   ) : (
                     <Text>- No routines</Text>
                   )}
-                {/* </ScrollView> */}
+                </ScrollView>
               </Card>
             </Content>
             {page < numPages ? (
@@ -418,12 +423,12 @@ class SelectRoutineScreen extends Component {
               ></View>
             )}
           </View>
-          <Text
+          {!isClass ? <Text
             style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
           >
             or
-          </Text>
-          <Button
+          </Text> : null}
+         {!isClass ? <Button
             style={styles.button}
             onPress={() => {
               this.props.setRoutine({})
@@ -431,7 +436,7 @@ class SelectRoutineScreen extends Component {
             }}
           >
             <Text>Create New Routine</Text>
-          </Button>
+          </Button> : null}
           {/* <Text
             style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
           >

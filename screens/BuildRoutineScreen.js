@@ -27,9 +27,9 @@ class BuildRoutineScreen extends Component {
       index: 0,
       cadence: 100,
       duration: 60,
-      activityType: '',
+      activityType: routine.intervals && routine.intervals.length ? routine.intervals[0].activityType : '',
       routine: routine.intervals || [],
-      makePublic: routine.makePublic || false,
+      makePublic: routine.makePublic || this.props.navigation.getParam('isClass', false),
       showAddIntervals: (routine.activityType && routine.name) || false,
       addAnotherInterval: false,
       finished: false
@@ -56,15 +56,21 @@ class BuildRoutineScreen extends Component {
     }
   }
 
-  createRoutine() {
+  async createRoutine() {
     const {routineName, routineType, routine, makePublic} = this.state
-    this.props.createRoutineThunk({
+    const createdRoutine = await this.props.createRoutineThunk({
       routineName,
       routineType,
       routine,
       makePublic
     })
-    this.props.navigation.navigate('HomeWorkoutsScreen')
+    console.log(createdRoutine)
+    const isClass = this.props.navigation.getParam('isClass', false)
+    if (isClass) {
+      this.props.navigation.navigate('BuildClassScreen', {routine: createdRoutine})
+    } else {
+      this.props.navigation.navigate('HomeWorkoutsScreen')
+    }
   }
 
   async createAndStartRoutine() {
@@ -132,6 +138,8 @@ class BuildRoutineScreen extends Component {
       })
     )
 
+    const isClass = this.props.navigation.getParam('isClass', false)
+
     return (
       <Container>
         <AppHeader navigation={this.props.navigation} />
@@ -144,7 +152,7 @@ class BuildRoutineScreen extends Component {
               color: 'rgb(84, 130, 53)'
             }}
           >
-            Create Routine{'\n'}for New Solo Workout
+            Create Routine{'\n'}{isClass ? 'for New Class' : 'for New Solo Workout'}
           </Text>
           <Text
             style={{
@@ -152,7 +160,7 @@ class BuildRoutineScreen extends Component {
               ...styles.message
             }}
           >
-            You can reuse your routines for future workouts
+            You can reuse your routines for future workouts{isClass ? ' and classes' : ''}
           </Text>
         </View>
         {/* <Header>
@@ -190,7 +198,7 @@ class BuildRoutineScreen extends Component {
                 />
               </View>
               {/* </Item> */}
-              <Item fixedLabel style={styles.item}>
+              {!isClass ? <Item fixedLabel style={styles.item}>
                 <View
                   style={{
                     display: 'flex',
@@ -213,7 +221,7 @@ class BuildRoutineScreen extends Component {
                 <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>
                   Allows other users to search for and workout to your routine
                 </Text>
-              </Item>
+              </Item> : null}
             </View>
           ) : null}
 
@@ -364,7 +372,8 @@ class BuildRoutineScreen extends Component {
                 </View>
               ) : null}
 
-              {this.state.finished ? (
+              {this.state.finished ? 
+              !isClass ? (
                 <View>
                   {/* <Button
                   style={styles.button}
@@ -390,7 +399,16 @@ class BuildRoutineScreen extends Component {
                     <Text>Create and Start Routine</Text>
                   </Button>
                 </View>
-              ) : null}
+              ) :
+              <Button
+                style={styles.button}
+                onPress={
+                  this.state.routine.length ? this.createRoutine  : null
+                }
+              >
+                <Text>Create Routine for Class</Text>
+              </Button>
+          : null}
             </View>
           ) : (
             <View></View>

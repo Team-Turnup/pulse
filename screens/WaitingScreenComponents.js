@@ -41,10 +41,10 @@ export const StartButton = ({_onPress}) => (
 
 export const UserList = ({attendees}) => (
   <Fragment>
-    <H3 style={{textAlign: 'center', paddingTop: 20}}>
+    <Text style={{textAlign: 'center', paddingTop: 20}}>
       Attendees ({attendees.filter(a => a.ready).length} Waiting /{' '}
       {attendees.length} Total)
-    </H3>
+    </Text>
     <List>
       <ListItem itemHeader style={styles.listItem}>
         <Text style={[styles.name, styles.listHeader]}>Name</Text>
@@ -90,5 +90,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 20
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
   }
 })
