@@ -71,6 +71,7 @@ class StartRoutineScreen extends Component {
                 <InProgressScreen
                   proposedStart={this.classStart}
                   routine={this.props.routine}
+                  navigation={this.props.navigation}
                 />
               ) : (
                 <View style={styles.countdown}>
