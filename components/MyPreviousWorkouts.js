@@ -18,7 +18,7 @@ import {getMyWorkoutsThunk} from '../store/workouts'
 import RoutineBarMini from '../components/RoutineBarMini'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
-import {setWorkout} from '../store/workout'
+import {fetchWorkoutThunk} from '../store/workout'
 
 //this.props.workouts is an array of objects, each object has a workout
 
@@ -122,168 +122,164 @@ class MyPreviousWorkouts extends React.Component {
       page * numPerPage
     )
     return (
-      <View style={{height:415}}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%'
-            }}
-          >
-            {page > 1 ? (
-              <TouchableOpacity
-                style={{
-                  width: 25,
-                  height: 35,
-                  backgroundColor: 'rgb(84, 130, 53)',
-                  borderRadius: 5,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onPress={() =>
-                  this.setState(prevState => ({page: prevState.page - 1}))
-                }
-              >
-                <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View
-                style={{
-                  width: 25,
-                  height: 35
-                }}
-              ></View>
-            )}
-            <Content style={{marginTop: 0, marginBottom: 5}}>
-              <Card
-                style={{
-                  borderRadius: 10,
-                  overflow: 'hidden',
-                  padding: 15,
-                  margin: 15,
-                  // height: 650
-                  height: 405
-                }}
-              >
-                <ScrollView>
-                  <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    My Previous Workouts
-                  </Text>
+      <View style={{height: 415}}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%'
+          }}
+        >
+          {page > 1 ? (
+            <TouchableOpacity
+              style={{
+                width: 25,
+                height: 35,
+                backgroundColor: 'rgb(84, 130, 53)',
+                borderRadius: 5,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() =>
+                this.setState(prevState => ({page: prevState.page - 1}))
+              }
+            >
+              <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View
+              style={{
+                width: 25,
+                height: 35
+              }}
+            ></View>
+          )}
+          <Content style={{marginTop: 0, marginBottom: 5}}>
+            <Card
+              style={{
+                borderRadius: 10,
+                overflow: 'hidden',
+                padding: 15,
+                margin: 15,
+                // height: 650
+                height: 405
+              }}
+            >
+              <ScrollView>
+                <Text style={{fontWeight: '600', marginBottom: 10}}>
+                  My Previous Workouts
+                </Text>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <View style={{width: '30%', margin: 2}}>
+                    <Input
+                      placeholder="Search"
+                      autoCorrect={false}
+                      value={search}
+                      onChangeText={search => this.setState({search})}
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 1,
+                        fontSize: 14,
+                        height: 16
+                      }}
+                    />
+                  </View>
                   <View
                     style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
+                      width: '30%',
+                      margin: 2,
+                      borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 5
                     }}
                   >
-                    <View style={{width: '30%', margin: 2}}>
-                      <Input
-                        placeholder="Search"
-                        autoCorrect={false}
-                        value={search}
-                        onChangeText={search => this.setState({search})}
-                        style={{
-                          borderBottomColor: 'gray',
-                          borderBottomWidth: 1,
-                          fontSize: 14,
-                          height: 16
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: '30%',
-                        margin: 2,
-                        borderWidth: 1,
-                        borderColor: 'gray',
-                        borderRadius: 5
-                      }}
-                    >
-                      <RNPickerSelect
-                        placeholder={{label: 'Filter', value: null}}
-                        onValueChange={value =>
-                          this.handleChange('filter', value)
-                        }
-                        value={filter}
-                        items={activityTypeSelects}
-                        userNativeAndroidPickerStyle={false}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: '30%',
-                        margin: 2,
-                        borderWidth: 1,
-                        borderColor: 'gray',
-                        borderRadius: 5
-                      }}
-                    >
-                      <RNPickerSelect
-                        placeholder={{label: 'Sort', value: null}}
-                        onValueChange={value =>
-                          this.handleChange('sort', value)
-                        }
-                        value={sort}
-                        items={[
-                          {label: 'Date created', value: 'dateCreated'},
-                          {
-                            label: 'Duration (low>high)',
-                            value: 'durationLowHigh'
-                          },
-                          {
-                            label: 'Duration (high>low)',
-                            value: 'durationHighLow'
-                          },
-                          {label: 'Name (A>Z)', value: 'AZ'},
-                          {label: 'Name (Z>A)', value: 'ZA'}
-                          // {label:'Most used', value:'mostUsed'}
-                        ]}
-                        userNativeAndroidPickerStyle={false}
-                      />
-                    </View>
+                    <RNPickerSelect
+                      placeholder={{label: 'Filter', value: null}}
+                      onValueChange={value =>
+                        this.handleChange('filter', value)
+                      }
+                      value={filter}
+                      items={activityTypeSelects}
+                      userNativeAndroidPickerStyle={false}
+                    />
                   </View>
-                  <Text style={{fontSize: 12, textAlign: 'center'}}>
-                    {viewWorkouts.length
-                      ? `Showing ${(page - 1) * numPerPage + 1}-${Math.min(
-                          numResults,
-                          page * numPerPage
-                        )} of ${numResults}`
-                      : ''}
-                  </Text>
-                  {viewWorkouts.length ? (
-                    viewWorkouts.map((workout, i) => {
-                      const duration = workout.routine.intervals
-                        ? workout.routine.intervals.reduce(
-                            (sum, interval) => sum + interval.duration,
-                            0
-                          )
-                        : 0
-                      return (
-                        <View key={i}>
-                          <TouchableOpacity
+                  <View
+                    style={{
+                      width: '30%',
+                      margin: 2,
+                      borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 5
+                    }}
+                  >
+                    <RNPickerSelect
+                      placeholder={{label: 'Sort', value: null}}
+                      onValueChange={value => this.handleChange('sort', value)}
+                      value={sort}
+                      items={[
+                        {label: 'Date created', value: 'dateCreated'},
+                        {
+                          label: 'Duration (low>high)',
+                          value: 'durationLowHigh'
+                        },
+                        {
+                          label: 'Duration (high>low)',
+                          value: 'durationHighLow'
+                        },
+                        {label: 'Name (A>Z)', value: 'AZ'},
+                        {label: 'Name (Z>A)', value: 'ZA'}
+                        // {label:'Most used', value:'mostUsed'}
+                      ]}
+                      userNativeAndroidPickerStyle={false}
+                    />
+                  </View>
+                </View>
+                <Text style={{fontSize: 12, textAlign: 'center'}}>
+                  {viewWorkouts.length
+                    ? `Showing ${(page - 1) * numPerPage + 1}-${Math.min(
+                        numResults,
+                        page * numPerPage
+                      )} of ${numResults}`
+                    : ''}
+                </Text>
+                {viewWorkouts.length ? (
+                  viewWorkouts.map((workout, i) => {
+                    const duration = workout.routine.intervals
+                      ? workout.routine.intervals.reduce(
+                          (sum, interval) => sum + interval.duration,
+                          0
+                        )
+                      : 0
+                    return (
+                      <View key={i}>
+                        <TouchableOpacity
+                          style={{
+                            marginTop: 5,
+                            marginBottom: 5,
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            overflow: 'hidden'
+                          }}
+                          onPress={this.props.selectWorkout}
+                        >
+                          <View
                             style={{
-                              marginTop: 5,
-                              marginBottom: 5,
-                              borderColor: 'gray',
-                              borderWidth: 1,
-                              borderRadius: 10,
-                              overflow: 'hidden'
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-evenly'
                             }}
-                            onPress={() => {}
-                              // this.props.navigation.navigate('PreviousWorkoutScreen')
-                            }
                           >
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-evenly'
-                              }}
-                            >
                             <Text>
                               Name:{' '}
                               <Text
@@ -307,86 +303,86 @@ class MyPreviousWorkouts extends React.Component {
                                 {workout.timestamp.split('T')[0]}
                               </Text>
                             </Text>
-                            </View>
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-evenly'
-                              }}
-                            >
-                              <Text>
-                                Activity:{' '}
-                                <Text
-                                  style={{
-                                    color: 'rgb(84, 130, 53)',
-                                    fontStyle: 'italic'
-                                  }}
-                                >
-                                  {
-                                    activityTypes[workout.routine.activityType]
-                                      .icon
-                                  }
-                                </Text>
+                          </View>
+                          <View
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-evenly'
+                            }}
+                          >
+                            <Text>
+                              Activity:{' '}
+                              <Text
+                                style={{
+                                  color: 'rgb(84, 130, 53)',
+                                  fontStyle: 'italic'
+                                }}
+                              >
+                                {
+                                  activityTypes[workout.routine.activityType]
+                                    .icon
+                                }
                               </Text>
-                              <Text>
-                                Duration:{' '}
-                                <Text
-                                  style={{
-                                    color: 'rgb(84, 130, 53)',
-                                    fontStyle: 'italic'
-                                  }}
-                                >
-                                  {Math.floor(duration / 60)
-                                    ? `${Math.floor(duration / 60)}m`
-                                    : ''}{' '}
-                                  {duration % 60 ? `${duration % 60}s` : ''}
-                                </Text>
+                            </Text>
+                            <Text>
+                              Duration:{' '}
+                              <Text
+                                style={{
+                                  color: 'rgb(84, 130, 53)',
+                                  fontStyle: 'italic'
+                                }}
+                              >
+                                {Math.floor(duration / 60)
+                                  ? `${Math.floor(duration / 60)}m`
+                                  : ''}{' '}
+                                {duration % 60 ? `${duration % 60}s` : ''}
                               </Text>
-                            </View>
-                            {workout.routine.intervals ? (
-                              <RoutineBarMini
-                                routine={workout.routine.intervals}
-                                totalDuration={duration}
-                                activityType={workout.routine.activityType}
-                              />
-                            ) : null}
-                          </TouchableOpacity>
-                        </View>
-                      )
-                    })
-                  ) : (
-                    <Text>- No previous workouts</Text>
-                  )}
-                </ScrollView>
-              </Card>
-            </Content>
-            {page < numPages ? (
-              <TouchableOpacity
-                style={{
-                  width: 25,
-                  height: 35,
-                  backgroundColor: 'rgb(84, 130, 53)',
-                  borderRadius: 5,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onPress={() =>
-                  this.setState(prevState => ({page: prevState.page + 1}))
-                }
-              >
-                <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View
-                style={{
-                  width: 25,
-                  height: 35
-                }}
-              ></View>
-            )}
-          </View>
+                            </Text>
+                          </View>
+                          {workout.routine.intervals ? (
+                            <RoutineBarMini
+                              routine={workout.routine.intervals}
+                              totalDuration={duration}
+                              activityType={workout.routine.activityType}
+                            />
+                          ) : null}
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  })
+                ) : (
+                  <Text>- No previous workouts</Text>
+                )}
+              </ScrollView>
+            </Card>
+          </Content>
+          {page < numPages ? (
+            <TouchableOpacity
+              style={{
+                width: 25,
+                height: 35,
+                backgroundColor: 'rgb(84, 130, 53)',
+                borderRadius: 5,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() =>
+                this.setState(prevState => ({page: prevState.page + 1}))
+              }
+            >
+              <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View
+              style={{
+                width: 25,
+                height: 35
+              }}
+            ></View>
+          )}
+        </View>
       </View>
     )
   }
@@ -407,6 +403,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({workouts}) => ({workouts})
-const mapDispatchToProps = {getMyWorkoutsThunk, setWorkout}
+const mapDispatchToProps = {getMyWorkoutsThunk, fetchWorkoutThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyPreviousWorkouts)

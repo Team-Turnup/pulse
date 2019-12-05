@@ -5,15 +5,25 @@ import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
+import {fetchWorkoutThunk} from '../store/workout'
 import {setRoutine} from '../store/routine'
 import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
 class HomeWorkoutsScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.selectWorkout = this.selectWorkout.bind(this)
+  }
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
     this.props.getMyWorkoutsThunk()
+  }
+
+  selectWorkout(workoutId) {
+    this.props.fetchWorkoutThunk(workoutId)
+    this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
   render() {
@@ -30,7 +40,10 @@ class HomeWorkoutsScreen extends Component {
             height: 650
           }}
         >
-          <MyPreviousWorkouts workouts={this.props.workouts} />
+          <MyPreviousWorkouts
+            selectWorkout={this.selectWorkout}
+            workouts={this.props.workouts}
+          />
           <Button
             style={styles.button}
             onPress={() => {
@@ -69,6 +82,11 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
   myClasses
 })
 
-const mapDispatchToProps = {me, getMyClassesThunk, getMyWorkoutsThunk, setRoutine}
+const mapDispatchToProps = {
+  me,
+  getMyClassesThunk,
+  getMyWorkoutsThunk,
+  setRoutine
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeWorkoutsScreen)

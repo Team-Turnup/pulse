@@ -1,37 +1,51 @@
-import axios from 'axios';
+import axios from 'axios'
 import {ngrok} from '../ngrok'
 import {addWorkout} from './workouts'
+import {setRoutine} from './routine'
 
-// const GET_EXERCISE = 'GET_EXERCISE';
-const SET_WORKOUT = 'SET_WORKOUT';
+const SET_WORKOUT = 'SET_WORKOUT'
 
 export const setWorkout = workout => ({
   type: SET_WORKOUT,
-  workout,
-});
+  workout
+})
 
 export const createWorkoutThunk = routineId => async dispatch => {
   try {
-    const response = await axios.post(`${ngrok}/api/workouts/`, {routineId});
+    const response = await axios.post(`${ngrok}/api/workouts/`, {routineId})
     const {workout, routine} = response.data
-    dispatch(setWorkout(workout));
+    dispatch(setWorkout(workout))
     const workoutWithRoutine = workout
     workoutWithRoutine.routine = routine
-    dispatch(addWorkout(workoutWithRoutine));
+    dispatch(addWorkout(workoutWithRoutine))
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
-};
+}
 
-initialState = {};
+export const fetchWorkoutThunk = workoutId => async dispatch => {
+  try {
+    const {
+      data: {
+        workout: {routine, ...workout}
+      }
+    } = await axios.get(`${ngrok}/api/workouts/${workoutId}`)
+    dispatch(setWorkout(workout))
+    dispatch(setRoutine(routine))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+initialState = {}
 
 //should be a GET_WORKOUTS probably
 const workoutReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_WORKOUT:
-      return action.workout;
+      return action.workout
     default:
-      return state;
+      return state
   }
-};
-export default workoutReducer;
+}
+export default workoutReducer

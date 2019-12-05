@@ -1,17 +1,48 @@
 const router = require('express').Router()
-const {Workout, WorkoutTimestamp, User, Routine} = require('../db/models')
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
+const {
+  Workout,
+  WorkoutTimestamp,
+  Routine,
+  Interval,
+  Class
+} = require('../db/models')
+// const Sequelize = require('sequelize')
+// const Op = Sequelize.Op
 const {authenticatedUser} = require('./authFunctions')
 
-// Quick and dirty testing DO NOT USE IN PRODUCTION
-router.use(async (req, res, next) => {
-  if (process.env.NODE_ENV === 'test') {
-    req.login((await Workout.findOne({include: [User]})).user, err =>
-      err ? next(err) : 'good!'
-    )
+// GET a previous workout /api/workouts/:workoutId
+router.get('/:workoutId', authenticatedUser, async (req, res, next) => {
+  try {
+    const {
+      params: {workoutId}
+    } = req
+    const workout = await Workout.findByPk(workoutId, {
+      attributes: ['id', 'timestamp'],
+      include: [
+        {
+          model: WorkoutTimestamp,
+          attributes: ['id', 'timestamp', 'cadence', 'goalCadence']
+        },
+        {
+          model: Routine,
+          attributes: ['id', 'name', 'activityType'],
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'cadence', 'duration', 'activityType']
+            }
+          ]
+        },
+        {
+          model: Class,
+          attributes: ['id', 'name']
+        }
+      ]
+    })
+    res.status(200).json(workout)
+  } catch (err) {
+    next(err)
   }
-  next()
 })
 
 // GET logged in user's previous workouts at /api/workouts (workout history-- filter to complete?)
@@ -43,7 +74,7 @@ router.post('/', authenticatedUser, async (req, res, next) => {
     // set user and routine, conditionally add classId if provided
     await Promise.all([
       workout.setUser(user),
-      workout.setRoutine(routine),
+      workout.setRoutine(routine)
       // ...((classId && workout.setClass(classId)) || [])
     ])
     res.status(200).json({workout, routine})
