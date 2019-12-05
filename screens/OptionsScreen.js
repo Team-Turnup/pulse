@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'rgb(84, 130, 53)'
   },
-
   header: {
-    fontSize: 20,
+    paddingTop: 15,
     textAlign: 'center',
-    width: '100%',
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    marginBottom: 25
   },
   // buttons: {
   //   display: 'flex',

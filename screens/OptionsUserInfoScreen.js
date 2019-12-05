@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
-import {Container, Content, Item, Label, Input, Text} from 'native-base'
+import {Container, Content, Item, Label, Input, Text, Button} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
@@ -17,7 +17,7 @@ class UserInfoScreen extends Component {
     this.state = {
       name: this.props.user.name || '',
       age: this.props.user.age || 0,
-      gender: this.props.user.gender ||null,
+      gender: this.props.user.gender || null,
       weight: this.props.user.weight || 0,
       height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',
@@ -38,7 +38,7 @@ class UserInfoScreen extends Component {
 
   handleChange(key, value) {
     this.setState({[key]: value})
-    if (key!=='visualColor') {
+    if (key !== 'visualColor') {
       this.props.updateOptionThunk({[key]: value})
     }
   }
@@ -70,10 +70,12 @@ class UserInfoScreen extends Component {
 
   handleVisualColor(value) {
     this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(setInterval(()=>{
-      this.setState({opacity: 0.3})
-      setTimeout(()=>this.setState({opacity: 1}), 300)
-    }, 600))
+    this.clearVisual.push(
+      setInterval(() => {
+        this.setState({opacity: 0.3})
+        setTimeout(() => this.setState({opacity: 1}), 300)
+      }, 600)
+    )
     setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
     // if (value) {
     //     if (this.clear.length) {
@@ -83,73 +85,79 @@ class UserInfoScreen extends Component {
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
-  arrayBufferToBase64( buffer) {
+  arrayBufferToBase64(buffer) {
     return btoa(
-      new Uint8Array(buffer)
-        .reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-}
-
+      new Uint8Array(buffer).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ''
+      )
+    )
+  }
 
   render() {
     return (
       <Container>
         <Content>
-          <Text style={styles.sectionHeader}>User Info</Text>
-          <Item fixedLabel style={styles.item}>
-            <Label>Name</Label>
-            <Input
-              placeholder=""
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={this.state.name}
-              onChangeText={name => this.setState({name})}
-              style={styles.name}
+          <Text style={styles.header}>User Info</Text>
+          <View style={styles.viewPicker}>
+            <Item fixedLabel style={styles.item}>
+              <Label>Name</Label>
+              <Input
+                placeholder=""
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={this.state.name}
+                onChangeText={name => this.setState({name})}
+                style={styles.name}
+              />
+            </Item>
+          </View>
+          <View style={styles.viewPicker}>
+            <Item fixedLabel style={styles.item}>
+              <Label>Age</Label>
+              <NumericInput
+                value={this.state.age}
+                onChange={value => this.handleChange('age', value)}
+              />
+            </Item>
+          </View>
+          <View style={styles.viewPicker}>
+            <Item fixedLabel style={styles.item}>
+              <Label>Height (inches)</Label>
+              <NumericInput
+                value={this.state.height}
+                onChange={value => this.handleChange('height', value)}
+              />
+            </Item>
+          </View>
+          <View style={styles.viewPicker}>
+            <Item fixedLabel style={styles.item}>
+              <Label>Weight (lb)</Label>
+              <NumericInput
+                value={this.state.weight}
+                onChange={value => this.handleChange('weight', value)}
+              />
+            </Item>
+          </View>
+          <View style={styles.viewPicker}>
+            <Label>Gender</Label>
+            <RNPickerSelect
+              onValueChange={value => this.handleChange('gender', value)}
+              style={{display: 'flex', alignItems: 'center'}}
+              value={this.state.gender}
+              items={[
+                {label: 'Female', value: 'female'},
+                {label: 'Male', value: 'male'},
+                {label: 'Non-binary', value: 'non-binary'}
+              ]}
             />
-          </Item>
-          <Item fixedLabel style={styles.item}>
-            <Label>Age</Label>
-            <NumericInput
-              value={this.state.age}
-              onChange={value => this.handleChange('age', value)}
-            />
-          </Item>
-          <Item fixedLabel style={styles.item}>
-            <Label>Height (inches)</Label>
-            <NumericInput
-              value={this.state.height}
-              onChange={value => this.handleChange('height', value)}
-            />
-          </Item>
-          <Item fixedLabel style={styles.item}>
-            <Label>Weight (lb)</Label>
-            <NumericInput
-              value={this.state.weight}
-              onChange={value => this.handleChange('weight', value)}
-            />
-          </Item>
-          <Label>Gender</Label>
-          <RNPickerSelect
-            onValueChange={value => this.handleChange('gender', value)}
-            style={{display: 'flex', alignItems: 'center'}}
-            value={this.state.gender}
-            items={[
-              {label: 'Female', value: 'female'},
-              {label: 'Male', value: 'male'},
-              {label: 'Non-binary', value: 'non-binary'}
-            ]}
-          />
-          <TouchableOpacity
-            style={{
-              ...styles.button,
-              backgroundColor: 'blue'
-            }}
+          </View>
+          <Button
+            style={{...styles.button, marginTop: 15}}
             onPress={this.updateUserInfo}
           >
             <Text style={styles.buttonText}>Save User Info</Text>
-
-          </TouchableOpacity>
-
+          </Button>
         </Content>
       </Container>
     )
@@ -158,25 +166,48 @@ class UserInfoScreen extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 20,
+    paddingTop: 15,
     textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    marginBottom: 25
+  },
+  viewPicker: {
     width: '100%',
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
+    margin: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    display: 'flex',
+    alignItems: 'center'
   },
   buttons: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
   },
+  buttonText: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'white'
+  },
   button: {
-    width: '30%',
-    margin: 5,
+    margin: 15,
     padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
+  // button: {
+  //   width: '30%',
+  //   margin: 5,
+  //   padding: 2,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   borderRadius: 5
+  // },
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
@@ -222,7 +253,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  changeUserInfoThunk, updateOptionThunk
+  changeUserInfoThunk,
+  updateOptionThunk
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfoScreen)
