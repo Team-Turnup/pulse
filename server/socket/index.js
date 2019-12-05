@@ -19,10 +19,6 @@ module.exports = io => {
       console.log(`Connection ${socket.id} has left the building`)
     })
 
-    // socket.on('identify', classId => {
-    //   classes.push({[classId]: socket.id})
-    // })
-
     socket.on('workoutTimestamp', async ({workoutTimestamp, workoutId}) => {
       const newWorkoutTimestamp = await WorkoutTimestamp.create(
         workoutTimestamp
@@ -30,9 +26,21 @@ module.exports = io => {
       newWorkoutTimestamp.setWorkout(workoutId)
     })
 
-    socket.on('subscribe', (classId, userId, isLeader = false) => {
+    socket.on('start', (classId, userId, proposedStart) => {
+      if (classes[classId] && classes[classId].leader.userId === userId) {
+        socket
+          .to(classId)
+          .emit(
+            'start',
+            proposedStart,
+            Object.fromEntries(classes[classId].followers.entries())
+          )
+      }
+    })
+
+    socket.on('subscribe', (classId, userId, isLeader = false, now) => {
       if (!classes[classId]) {
-        classes[classId] = {leader: {...initialLeader}, followers: new Set()}
+        classes[classId] = {leader: {...initialLeader}, followers: new Map()}
         console.log(`class ${classId} created`)
       }
       if (
@@ -42,14 +50,25 @@ module.exports = io => {
       ) {
         classes[classId].leader.socket = socket.id
         classes[classId].leader.userId = userId
-      } else classes[classId].followers.add(userId)
+      } else classes[classId].followers.set(userId, now - Date.now())
       socket.join(classId)
-      informLeader(classId, 'classList', Array.from(classes[classId].followers))
+      console.log(classes[classId].followers)
+      informLeader(
+        classId,
+        'classList',
+        Array.from(classes[classId].followers.keys())
+      )
     })
 
     socket.on('joined', (classId, user) => {
       console.log(`${user.name} has joined ${classId}`)
       informLeader(classId, 'joined', user)
+      if (classes[classId] && classes[classId].followers.has(user.id))
+        informLeader(
+          classId,
+          'classList',
+          Array.from(classes[classId].followers)
+        )
     })
 
     socket.on('left', (classId, userId) => {

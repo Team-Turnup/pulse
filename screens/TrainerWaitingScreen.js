@@ -31,21 +31,21 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
-    socket.emit('start', classId, userId)
+    socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
 
   useEffect(() => {
     // listen for socket messages
+    socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
     socket.on('joined', user => dispatch(addNewAttendee(user)))
     socket.on('left', id => dispatch(removeAttendee(id)))
-    socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
   }, [])
 
   useEffect(() => {
     // join/create a class when the component sees a valid classId and unsubscribe on unmount
     if (classId) {
-      socket.emit('subscribe', classId, userId, true)
+      socket.emit('subscribe', classId, userId, true, Date.now())
       return () => socket.emit('unsubscribe', classId, userId, true)
     }
   }, [classId])

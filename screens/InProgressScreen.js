@@ -37,8 +37,18 @@ class InProgressScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._subscribe()
-    this._startWorkout()
+    if (this.props.proposedStart) {
+      const wait = setInterval(() => {
+        if (Date.now() >= this.props.proposedStart) {
+          this._subscribe()
+          this._startWorkout()
+          clearInterval(wait)
+        }
+      }, 10)
+    } else {
+      this._subscribe()
+      this._startWorkout()
+    }
   }
 
   componentWillUnmount() {
@@ -50,7 +60,7 @@ class InProgressScreen extends React.Component {
   _subscribe = () => {
     this._subscription = Pedometer.watchStepCount(result => {
       let {avgCadences, currentStepCount, cadences} = this.state
-      const timestamp = Date.now()-this.state.startTime
+      const timestamp = Date.now() - this.state.startTime
       const cadence =
         ((result.steps - currentStepCount) /
           (timestamp - avgCadences[avgCadences.length - 1].timestamp)) *
@@ -357,12 +367,12 @@ class InProgressScreen extends React.Component {
                   </Card>
                 </View>
               </View>
-              {/* <WorkoutGraph
-            intervals={intervals}
-            workoutData={avgCadences}
-            startTime={avgCadences[0].timestamp}
-            paused={paused}
-          /> */}
+              <WorkoutGraph
+                intervals={intervals}
+                workoutData={avgCadences}
+                startTime={avgCadences[0].timestamp}
+                paused={paused}
+              />
               <View style={styles.buttonContainer}>
                 {this.state.paused ? (
                   <Button
