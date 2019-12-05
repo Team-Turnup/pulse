@@ -147,7 +147,6 @@ class HomeClassesScreen extends Component {
                   flexDirection: 'column'
                 }}
               >
-
                 <View
                   style={{
                     display: 'flex',
@@ -256,9 +255,9 @@ class HomeClassesScreen extends Component {
                         borderRadius: 10,
                         overflow: 'hidden'
                       }}
-                      onPress={ async () => {
+                      onPress={async () => {
                         await this.props.getClassThunk(aClass.id),
-                        navigation.navigate('UserWaitingScreen')
+                          navigation.navigate('UserWaitingScreen')
                       }}
                     >
                       <Text style={{textAlign: 'center'}}>
@@ -315,7 +314,6 @@ class HomeClassesScreen extends Component {
             >
               <View>
                 <View>
-
                   <View
                     style={{
                       display: 'flex',
@@ -526,7 +524,7 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
 const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
-  getClassThunk,
+  getClassThunk
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

@@ -23,11 +23,14 @@ const {leaderValidate, authenticatedUser} = require('./authFunctions')
 //GET all classes where user is attendee
 router.get('/myClasses', authenticatedUser, async (req, res, next) => {
   try {
-    const myClasses = await req.user.getAttendee({
+    const enrolledClasses = await req.user.getAttendee({
       include: [{model: User}, {model: Routine, include: [{model: Interval}]}]
     })
-    if (!myClasses) res.status(404).send("can't find user's classes")
-    res.json(myClasses).status(200)
+    const leaderClasses = await req.user.getClasses({
+      include: [{model: User}, {model: Routine, include: [{model: Interval}]}]
+    })
+    if (!enrolledClasses) res.status(404).send("can't find user's classes")
+    res.json([...enrolledClasses, ...leaderClasses]).status(200)
   } catch (err) {
     next(err)
   }

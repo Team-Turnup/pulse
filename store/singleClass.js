@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {ngrok} from '../ngrok'
 import {setRoutine} from './routine'
+import {getMyClassesThunk} from './myClasses'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
 const SET_CLASS = 'SET_CLASS'
@@ -50,6 +51,7 @@ export const enrollClass = classId => async dispatch => {
     _class.when = Date.parse(_class.when)
     dispatch(setClass(_class))
     dispatch(setRoutine(routine))
+    dispatch(getMyClassesThunk())
   } catch (error) {
     console.error(error)
   }
