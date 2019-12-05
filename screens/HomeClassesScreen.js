@@ -23,7 +23,8 @@ class HomeClassesScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      page: 1,
+      futureClassesPage: 1,
+      pastClassesPage: 1,
       numPerPage: 3,
       pastClassesPages: 0,
       futureClassesPages: 0,
@@ -48,7 +49,7 @@ class HomeClassesScreen extends Component {
 
   render() {
     const {navigation, myClasses} = this.props
-    const {page, numPerPage, search, filter, sort, classId} = this.state
+    const {futureClassesPage, pastClassesPage,  numPerPage, search, filter, sort, classId} = this.state
 
     let aDate = Date.parse(new Date().toString())
 
@@ -76,16 +77,16 @@ class HomeClassesScreen extends Component {
     let pastClassesResults = viewPastClasses.length
     let pastClassesPages = Math.ceil(pastClassesResults / numPerPage)
     viewPastClasses = viewPastClasses.slice(
-      (page - 1) * numPerPage,
-      page * numPerPage
+      (pastClassesPage - 1) * numPerPage,
+      pastClassesPage * numPerPage
     )
 
     let viewFutureClasses = [...futureClasses]
     let futureClassesResults = viewFutureClasses.length
     let futureClassesPages = Math.ceil(futureClassesResults / numPerPage)
     viewFutureClasses = viewFutureClasses.slice(
-      (page - 1) * numPerPage,
-      page * numPerPage
+      (futureClassesPage - 1) * numPerPage,
+      futureClassesPage * numPerPage
     )
 
     return (
@@ -138,7 +139,7 @@ class HomeClassesScreen extends Component {
                   justifyContent: 'space-evenly'
                 }}
               >
-                {page > 1 ? (
+                {futureClassesPage > 1 ? (
                   <TouchableOpacity
                     style={{
                       width: 25,
@@ -151,7 +152,7 @@ class HomeClassesScreen extends Component {
                     }}
                     onPress={() =>
                       this.setState(prevState => ({
-                        page: prevState.page - 1
+                        futureClassesPage: prevState.futureClassesPage - 1
                       }))
                     }
                   >
@@ -164,7 +165,7 @@ class HomeClassesScreen extends Component {
                 <Text style={{fontWeight: '600', marginBottom: 10}}>
                   My Upcoming Classes
                 </Text>
-                {page < pastClassesPages ? (
+                {futureClassesPage < futureClassesPages ? (
                   <TouchableOpacity
                     style={{
                       width: 25,
@@ -177,7 +178,7 @@ class HomeClassesScreen extends Component {
                     }}
                     onPress={() =>
                       this.setState(prevState => ({
-                        page: prevState.page + 1
+                        futureClassesPage: prevState.futureClassesPage + 1
                       }))
                     }
                   >
@@ -267,7 +268,7 @@ class HomeClassesScreen extends Component {
                     justifyContent: 'space-evenly'
                   }}
                 >
-                  {page > 1 ? (
+                  {pastClassesPage > 1 ? (
                     <TouchableOpacity
                       style={{
                         width: 25,
@@ -280,7 +281,7 @@ class HomeClassesScreen extends Component {
                       }}
                       onPress={() =>
                         this.setState(prevState => ({
-                          page: prevState.page - 1
+                          pastClassesPage: prevState.pastClassesPage - 1
                         }))
                       }
                     >
@@ -294,7 +295,7 @@ class HomeClassesScreen extends Component {
                     My Previous Classes
                   </Text>
 
-                  {page < pastClassesPages ? (
+                  {pastClassesPage < pastClassesPages ? (
                     <TouchableOpacity
                       style={{
                         width: 25,
@@ -307,7 +308,7 @@ class HomeClassesScreen extends Component {
                       }}
                       onPress={() =>
                         this.setState(prevState => ({
-                          page: prevState.page + 1
+                          pastClassesPage: prevState.pastClassesPage + 1
                         }))
                       }
                     >
