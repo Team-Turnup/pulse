@@ -15,6 +15,7 @@ import {getMyWorkoutsThunk} from '../store/workouts'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
+import RNPickerSelect from 'react-native-picker-select'
 
 import AppHeader from '../components/AppHeader'
 
@@ -23,9 +24,10 @@ class HomeClassesScreen extends Component {
     super(props)
     this.state = {
       page: 1,
-      numPerPage: 4,
+      numPerPage: 3,
       pastClassesPages: 0,
       futureClassesPages: 0,
+      filter: null,
       sort: null,
       search: '',
       classId: null
@@ -40,23 +42,35 @@ class HomeClassesScreen extends Component {
     this.props.getMyClassesThunk()
   }
 
-  handleChange(event) {}
+  handleChange(key, value) {
+    this.setState({[key]: value})
+  }
 
   render() {
     const {navigation, myClasses} = this.props
-    const {page, numPerPage, search, sort, classId} = this.state
+    const {page, numPerPage, search, filter, sort, classId} = this.state
 
     let aDate = Date.parse(new Date().toString())
 
-    let pastClasses = myClasses.filter(
-      aClass => Date.parse(aClass.when) < aDate
-    )
-    let futureClasses = myClasses.filter(
-      aClass => Date.parse(aClass.when) > aDate
+    const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
+      label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
+      value: activity
+    }))
+
+    let searchedClasses = filter
+      ? myClasses.filter(aClass => aClass.routine.activityType === filter)
+      : myClasses
+
+    searchedClasses = searchedClasses.filter(aClass =>
+      aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
     )
 
-    console.log('FUTURECLASSES', futureClasses)
-    console.log('PASTCLASSES', pastClasses)
+    let pastClasses = searchedClasses.filter(
+      aClass => Date.parse(aClass.when) < aDate
+    )
+    let futureClasses = searchedClasses.filter(
+      aClass => Date.parse(aClass.when) > aDate
+    )
 
     let viewPastClasses = [...pastClasses]
     let pastClassesResults = viewPastClasses.length
@@ -77,6 +91,35 @@ class HomeClassesScreen extends Component {
     return (
       <Content>
         <AppHeader />
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            justifyContent: 'space-evenly'
+          }}
+        >
+          <Input
+            placeholder="Search"
+            autoCorrect={false}
+            value={search}
+            onChangeText={search => this.setState({search})}
+            style={{
+              backgroundColor: 'lightgray',
+              // width: '50%',
+              // margin: 2
+            }}
+          />
+          <View>
+          <RNPickerSelect
+            placeholder={{label: 'Filter', value: null}}
+            onValueChange={value => this.handleChange('filter', value)}
+            value={filter}
+            items={activityTypeSelects}
+            userNativeAndroidPickerStyle={false}
+          />
+          </View>
+        </View>
         <View>
           <Content style={{margin: 15}}>
             <Card
@@ -141,28 +184,10 @@ class HomeClassesScreen extends Component {
                     <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
                   </TouchableOpacity>
                 ) : (
-                  <View
-                  // style={{
-                  //   width: 25,
-                  //   height: 35
-                  // }}
-                  ></View>
+                  <View></View>
                 )}
               </View>
-              {/* <View style={{width: '30%', margin: 2}}>
-                    <Input
-                      placeholder="Search"
-                      autoCorrect={false}
-                      value={search}
-                      onChangeText={search => this.setState({search})}
-                      style={{
-                        borderBottomColor: 'gray',
-                        borderBottomWidth: 1,
-                        fontSize: 14,
-                        height: 16
-                      }}
-                    />
-                  </View> */}
+
               {viewFutureClasses.length ? (
                 viewFutureClasses.map((aClass, i) => {
                   const duration = aClass.routine.intervals.reduce(
