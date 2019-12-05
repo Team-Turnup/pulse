@@ -228,6 +228,13 @@ class HomeClassesScreen extends Component {
                       margin: 2
                     }}
                   />
+                  <View style={{
+                        width: '30%',
+                        margin: 2,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        borderRadius: 5
+                      }}>
                   <RNPickerSelect
                     placeholder={{label: 'Filter', value: null}}
                     onValueChange={value =>
@@ -237,6 +244,7 @@ class HomeClassesScreen extends Component {
                     items={activityTypeSelects}
                     userNativeAndroidPickerStyle={false}
                   />
+                  </View>
                 </View>
               </View>
 
@@ -439,6 +447,13 @@ class HomeClassesScreen extends Component {
                         margin: 2
                       }}
                     />
+                    <View style={{
+                        width: '30%',
+                        margin: 2,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        borderRadius: 5
+                      }}>
                     <RNPickerSelect
                       placeholder={{label: 'Filter', value: null}}
                       onValueChange={value =>
@@ -448,6 +463,7 @@ class HomeClassesScreen extends Component {
                       items={activityTypeSelects}
                       userNativeAndroidPickerStyle={false}
                     />
+                    </View>
                   </View>
                 </View>
 

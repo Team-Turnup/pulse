@@ -96,5 +96,16 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: 'rgb(84, 130, 53)',
     lineHeight: 30
-  }
+  },
+    button: {
+      marginTop: 7,
+      marginBottom: 7,
+      marginLeft: 15,
+      marginRight: 15,
+      padding: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 10,
+      backgroundColor: 'rgb(84, 130, 53)'
+    }
 })

@@ -70,7 +70,7 @@ router.get('/', authenticatedUser, async (req, res, next) => {
     } = req
     const classes = await Class.findAll({
       // including users for class counts -- may not need this but including it for now?
-      include: [
+      include: [User, 
         {
           model: User,
           as: 'attendees',
@@ -95,6 +95,7 @@ router.get('/', authenticatedUser, async (req, res, next) => {
         }
       })
     })
+    console.log('classes', classes)
     res.json(classes).status(200)
   } catch (err) {
     next(err)

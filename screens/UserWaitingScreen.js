@@ -97,7 +97,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
         <Button
           block
           danger
-          style={{margin: 7}}
+          style={styles.button}
           onPress={() => {
             socket.emit('left', _class.id, user.id)
             dispatch(leaveClass(_class.id, user.id))
