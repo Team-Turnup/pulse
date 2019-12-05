@@ -53,10 +53,13 @@ export default ({
         />
       )}
       <VictoryLine data={routine} x={0} y={1} />
-      {workoutData.length > 2 ? (
+      {workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed).slice(3)
+        .length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
-          data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
+          data={workoutData
+            .filter(d => d.timestamp / 1000 < totalTimeElapsed)
+            .slice(3)}
           x={d => d.timestamp / 1000}
           y={d => d.cadence}
           style={{data: {stroke: 'red', strokeWidth: 1}}}

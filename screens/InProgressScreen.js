@@ -5,6 +5,7 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
+import {setWorkout} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {SocketContext} from '../socket'
@@ -42,7 +43,7 @@ class InProgressScreen extends React.Component {
   }
 
   componentWillUnmount() {
-this._endWorkout()
+    this._endWorkout()
   }
 
   _subscribe = () => {
@@ -100,8 +101,7 @@ this._endWorkout()
     //     console.log(error)
     //   }
     const clearCadence = setInterval(async () => {
-      if (this.state.totalTimeElapsed>=this.state.totalTime) {
-        console.log('here')
+      if (this.state.totalTimeElapsed >= this.state.totalTime) {
         this._endWorkout()
         return
       }
@@ -146,13 +146,12 @@ this._endWorkout()
       } = this.state
       totalTimeElapsed++
       intervalTime++
-      if (this.state.totalTimeElapsed>=this.state.totalTime) {
-        console.log('here')
+      if (this.state.totalTimeElapsed >= this.state.totalTime) {
         this._endWorkout()
         return
       }
       if (intervalTime > intervals[currentInterval].duration - 1) {
-        if (currentInterval < intervals.length-1) {
+        if (currentInterval < intervals.length - 1) {
           currentInterval++
           intervalTime = 0
           clearInterval(clearCadence)
@@ -168,8 +167,7 @@ this._endWorkout()
           //     1000
           // )
           clearCadence = setInterval(async () => {
-            if (this.state.totalTimeElapsed>=this.state.totalTime) {
-              console.log('here')
+            if (this.state.totalTimeElapsed >= this.state.totalTime) {
               this._endWorkout()
               return
             }
@@ -234,6 +232,10 @@ this._endWorkout()
   }
 
   _endWorkout = () => {
+    this.props.setWorkout({
+      ...this.props.workout,
+      workoutTimestamps: this.state.avgCadences
+    })
     this._unsubscribe()
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)
@@ -271,8 +273,7 @@ this._endWorkout()
         0.85 * intervals[currentInterval].cadence &&
       avgCadences[avgCadences.length - 1].cadence <
         1.15 * intervals[currentInterval].cadence
-    return (
-      currentInterval>intervals.length ? null :
+    return currentInterval > intervals.length ? null : (
       <Container>
         <View
           style={{
@@ -474,10 +475,15 @@ const mapStateToProps = ({routine, option, user, workout}) => ({
   workout
 })
 
+const mapDispatchToProps = {setWorkout}
+
 const SocketConnectedInProgressScreen = props => (
   <SocketContext.Consumer>
     {socket => <InProgressScreen {...props} socket={socket} />}
   </SocketContext.Consumer>
 )
 
-export default connect(mapStateToProps)(SocketConnectedInProgressScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SocketConnectedInProgressScreen)

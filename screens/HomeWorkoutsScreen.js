@@ -21,8 +21,8 @@ class HomeWorkoutsScreen extends Component {
     this.props.getMyWorkoutsThunk()
   }
 
-  selectWorkout(workoutId) {
-    this.props.fetchWorkoutThunk(workoutId)
+  async selectWorkout(workoutId) {
+    await this.props.fetchWorkoutThunk(workoutId)
     this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
@@ -86,7 +86,8 @@ const mapDispatchToProps = {
   me,
   getMyClassesThunk,
   getMyWorkoutsThunk,
-  setRoutine
+  setRoutine,
+  fetchWorkoutThunk
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeWorkoutsScreen)

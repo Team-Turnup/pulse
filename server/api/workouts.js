@@ -11,7 +11,7 @@ const {
 const {authenticatedUser} = require('./authFunctions')
 
 // GET a previous workout /api/workouts/:workoutId
-router.get('/:workoutId', authenticatedUser, async (req, res, next) => {
+router.get('/:workoutId', async (req, res, next) => {
   try {
     const {
       params: {workoutId}

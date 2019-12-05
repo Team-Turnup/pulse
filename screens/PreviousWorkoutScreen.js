@@ -1,25 +1,31 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {View, StyleSheet} from 'react-native'
 import {Container, Text, Content, Card, CardItem} from 'native-base'
 import WorkoutGraph from './WorkoutGraph'
-import {connect} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
+import {removeWorkout} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {DateTime} from 'luxon'
 
-const PreviousWorkoutScreen = ({
-  navigator,
-  workout: {
-    timestamp: startTime,
-    workoutTimestamps,
-    class: {name: className}
-  },
-  routine: {name: routineName, activityType, intervals}
-}) => {
-  const totalTime = intervals.reduce(
-    (sum, interval) => sum + interval.duration,
+export default () => {
+  const dispatch = useDispatch()
+  const {
+    workout: {
+      id = null,
+      timestamp: startTime = null,
+      workoutTimestamps = [],
+      class: _class
+    },
+    routine: {name: routineName = null, activityType = null, intervals = []}
+  } = useSelector(({workout, routine}) => ({workout, routine}))
+  const totalTime =
+    (intervals &&
+      intervals.reduce((sum, interval) => sum + interval.duration, 0)) ||
     0
-  )
+  const className = (_class && _class.name) || null
+
+  useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (
     <Container>
       <View
@@ -46,7 +52,7 @@ const PreviousWorkoutScreen = ({
             <Text style={{textAlign: 'center'}}>
               Workout Performed on:{' '}
               <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                {DateTime.fromJSDate(startTime).toLocaleString(
+                {DateTime.fromJSDate(new Date(startTime)).toLocaleString(
                   DateTime.DATE_SHORT
                 )}
               </Text>
@@ -104,11 +110,11 @@ const PreviousWorkoutScreen = ({
               </View>
             </View>
             <WorkoutGraph
+              workoutHistory={true}
               intervals={intervals}
               workoutData={workoutTimestamps}
               totalTimeElapsed={totalTime}
               totalTime={totalTime}
-              paused={paused}
             />
           </View>
         </View>
@@ -155,11 +161,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   }
 })
-
-const mapStateToProps = ({routine, user, workout}) => ({
-  routine,
-  user,
-  workout
-})
-
-export default connect(mapStateToProps)(PreviousWorkoutScreen)

@@ -271,7 +271,7 @@ class MyPreviousWorkouts extends React.Component {
                             borderRadius: 10,
                             overflow: 'hidden'
                           }}
-                          onPress={this.props.selectWorkout}
+                          onPress={() => this.props.selectWorkout(workout.id)}
                         >
                           <View
                             style={{

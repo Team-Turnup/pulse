@@ -4,10 +4,16 @@ import {addWorkout} from './workouts'
 import {setRoutine} from './routine'
 
 const SET_WORKOUT = 'SET_WORKOUT'
+const REMOVE_WORKOUT = 'REMOVE_WORKOUT'
 
 export const setWorkout = workout => ({
   type: SET_WORKOUT,
   workout
+})
+
+export const removeWorkout = workoutId => ({
+  type: REMOVE_WORKOUT,
+  workoutId
 })
 
 export const createWorkoutThunk = routineId => async dispatch => {
@@ -26,9 +32,7 @@ export const createWorkoutThunk = routineId => async dispatch => {
 export const fetchWorkoutThunk = workoutId => async dispatch => {
   try {
     const {
-      data: {
-        workout: {routine, ...workout}
-      }
+      data: {routine, ...workout}
     } = await axios.get(`${ngrok}/api/workouts/${workoutId}`)
     dispatch(setWorkout(workout))
     dispatch(setRoutine(routine))
@@ -37,13 +41,15 @@ export const fetchWorkoutThunk = workoutId => async dispatch => {
   }
 }
 
-initialState = {}
+const initialState = {}
 
 //should be a GET_WORKOUTS probably
 const workoutReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_WORKOUT:
       return action.workout
+    case REMOVE_WORKOUT:
+      return initialState
     default:
       return state
   }

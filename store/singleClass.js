@@ -115,7 +115,6 @@ const classReducer = (state = initialState, action) => {
         )
       }
     case ADD_NEW_ATTENDEE:
-      console.log(action)
       return {
         ...state,
         attendees: [...state.attendees, action.attendee]
