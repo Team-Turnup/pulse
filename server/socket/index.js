@@ -32,7 +32,8 @@ module.exports = io => {
     )
 
     socket.on('start', (classId, userId, proposedStart) => {
-      if (classes[classId] && classes[classId].leader.userId === userId) {
+      console.log('class started')
+      if (classes[classId]) {
         socket
           .to(classId)
           .emit(
