@@ -298,7 +298,9 @@ class ClassesScreen extends React.Component {
                               overflow: 'hidden'
                             }}
                             onPress={() =>
-                              this.setState(prevState => ({ classPasscode: '', passcodeMessage: 'passcode',
+                              this.setState(prevState => ({
+                                classPasscode: '',
+                                passcodeMessage: 'passcode',
                                 classId:
                                   prevState.classId === aClass.id
                                     ? null
@@ -414,8 +416,11 @@ class ClassesScreen extends React.Component {
                                     aClass.id,
                                     this.props.user
                                   )
-                                  this.props.navigation.navigate(new Date(aClass.when)-new Date()<10*60*1000 ?
-                                    'UserWaitingScreen' : 'HomeClassesScreen'
+                                  this.props.navigation.navigate(
+                                    new Date(aClass.when) - new Date() <
+                                      10 * 60 * 1000
+                                      ? 'UserWaitingScreen'
+                                      : 'HomeClassesScreen'
                                   )
                                 }}
                                 style={{
