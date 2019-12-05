@@ -12,12 +12,11 @@ import {
 } from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
+import {getClassThunk} from '../store/singleClass'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
 import RNPickerSelect from 'react-native-picker-select'
-
-import {getClassThunk} from '../store/singleClass'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
@@ -257,8 +256,9 @@ class HomeClassesScreen extends Component {
                         borderRadius: 10,
                         overflow: 'hidden'
                       }}
-                      onPress={() => {
-                        this.props.navigation.navigate('UserWaitingScreen')
+                      onPress={ async () => {
+                        await this.props.getClassThunk(aClass.id),
+                        navigation.navigate('UserWaitingScreen')
                       }}
                     >
                       <Text style={{textAlign: 'center'}}>
@@ -526,7 +526,7 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
 const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
-  getClassThunk
+  getClassThunk,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)
