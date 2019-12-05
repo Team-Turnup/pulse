@@ -28,7 +28,8 @@ class HomeClassesScreen extends Component {
       numPerPage: 3,
       pastClassesPages: 0,
       futureClassesPages: 0,
-      filter: null,
+      futureFilter: null,
+      pastFilter:null,
       sort: null,
       searchUpcoming: '',
       searchPrevious: '',
@@ -56,7 +57,8 @@ class HomeClassesScreen extends Component {
       numPerPage,
       searchUpcoming,
       searchPrevious,
-      filter,
+      futureFilter,
+      pastFilter,
       sort,
       classId
     } = this.state
@@ -68,16 +70,22 @@ class HomeClassesScreen extends Component {
       value: activity
     }))
 
-    let searchedClasses = filter
-      ? myClasses.filter(aClass => aClass.routine.activityType === filter)
+    let futureFilteredClasses = futureFilter
+      ? myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
       : myClasses
 
-    let searchedFutureClasses = searchedClasses.filter(aClass =>
+    let pastFilteredClasses = pastFilter
+      ? myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
+      : myClasses
+
+
+
+    let searchedFutureClasses = futureFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
         .includes(this.state.searchUpcoming.toLowerCase())
     )
-    let searchedPastClasses = searchedClasses.filter(aClass =>
+    let searchedPastClasses = pastFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
         .includes(this.state.searchPrevious.toLowerCase())
@@ -120,8 +128,8 @@ class HomeClassesScreen extends Component {
           <View>
             <RNPickerSelect
               placeholder={{label: 'Filter', value: null}}
-              onValueChange={value => this.handleChange('filter', value)}
-              value={filter}
+              onValueChange={value => this.handleChange('futureFilter', value)}
+              value={futureFilter}
               items={activityTypeSelects}
               userNativeAndroidPickerStyle={false}
             />
