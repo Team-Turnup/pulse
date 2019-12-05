@@ -30,7 +30,8 @@ class HomeClassesScreen extends Component {
       futureClassesPages: 0,
       filter: null,
       sort: null,
-      search: '',
+      searchUpcoming: '',
+      searchPrevious: '',
       classId: null
     }
     this.handleChange = this.handleChange.bind(this)
@@ -49,7 +50,16 @@ class HomeClassesScreen extends Component {
 
   render() {
     const {navigation, myClasses} = this.props
-    const {futureClassesPage, pastClassesPage,  numPerPage, search, filter, sort, classId} = this.state
+    const {
+      futureClassesPage,
+      pastClassesPage,
+      numPerPage,
+      searchUpcoming,
+      searchPrevious,
+      filter,
+      sort,
+      classId
+    } = this.state
 
     let aDate = Date.parse(new Date().toString())
 
@@ -62,14 +72,21 @@ class HomeClassesScreen extends Component {
       ? myClasses.filter(aClass => aClass.routine.activityType === filter)
       : myClasses
 
-    searchedClasses = searchedClasses.filter(aClass =>
-      aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
+    let searchedFutureClasses = searchedClasses.filter(aClass =>
+      aClass.name
+        .toLowerCase()
+        .includes(this.state.searchUpcoming.toLowerCase())
+    )
+    let searchedPastClasses = searchedClasses.filter(aClass =>
+      aClass.name
+        .toLowerCase()
+        .includes(this.state.searchPrevious.toLowerCase())
     )
 
-    let pastClasses = searchedClasses.filter(
+    let pastClasses = searchedPastClasses.filter(
       aClass => Date.parse(aClass.when) < aDate
     )
-    let futureClasses = searchedClasses.filter(
+    let futureClasses = searchedFutureClasses.filter(
       aClass => Date.parse(aClass.when) > aDate
     )
 
@@ -100,25 +117,14 @@ class HomeClassesScreen extends Component {
             justifyContent: 'space-evenly'
           }}
         >
-          <Input
-            placeholder="Search"
-            autoCorrect={false}
-            value={search}
-            onChangeText={search => this.setState({search})}
-            style={{
-              backgroundColor: 'lightgray',
-              // width: '50%',
-              // margin: 2
-            }}
-          />
           <View>
-          <RNPickerSelect
-            placeholder={{label: 'Filter', value: null}}
-            onValueChange={value => this.handleChange('filter', value)}
-            value={filter}
-            items={activityTypeSelects}
-            userNativeAndroidPickerStyle={false}
-          />
+            <RNPickerSelect
+              placeholder={{label: 'Filter', value: null}}
+              onValueChange={value => this.handleChange('filter', value)}
+              value={filter}
+              items={activityTypeSelects}
+              userNativeAndroidPickerStyle={false}
+            />
           </View>
         </View>
         <View>
@@ -139,6 +145,19 @@ class HomeClassesScreen extends Component {
                   justifyContent: 'space-evenly'
                 }}
               >
+                <Input
+                  placeholder="Search"
+                  autoCorrect={false}
+                  value={searchUpcoming}
+                  onChangeText={searchUpcoming =>
+                    this.setState({searchUpcoming})
+                  }
+                  style={{
+                    backgroundColor: 'lightgray'
+                    // width: '50%',
+                    // margin: 2
+                  }}
+                />
                 {futureClassesPage > 1 ? (
                   <TouchableOpacity
                     style={{
@@ -268,6 +287,19 @@ class HomeClassesScreen extends Component {
                     justifyContent: 'space-evenly'
                   }}
                 >
+                  <Input
+                    placeholder="Search"
+                    autoCorrect={false}
+                    value={searchPrevious}
+                    onChangeText={searchPrevious =>
+                      this.setState({searchPrevious})
+                    }
+                    style={{
+                      backgroundColor: 'lightgray'
+                      // width: '50%',
+                      // margin: 2
+                    }}
+                  />
                   {pastClassesPage > 1 ? (
                     <TouchableOpacity
                       style={{
