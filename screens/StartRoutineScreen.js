@@ -56,7 +56,7 @@ class StartRoutineScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+       <AppHeader navigation={this.props.navigation} />
         {!this.state.startPressed ? (
           <Container style={{marginTop: 75, marginBottom: 75, margin: 15}}>
             <PrepStartRoutine navigation={this.props.navigation} />

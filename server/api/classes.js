@@ -143,13 +143,12 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
 
 router.post('/', authenticatedUser, (req, res, next) => {
   const {body, user} = req
-  const {name, canEnroll, when, attendees, classPasscode, routineId} = body
+  const {name, canEnroll, when, classPasscode, routineId} = body
   Class.create(
     {
       name,
       canEnroll,
       when,
-      attendees,
       classPasscode
     }
     // {
@@ -206,7 +205,9 @@ router.post('/', authenticatedUser, (req, res, next) => {
         ]
       })
     )
-    .then(currentClass => res.status(200).json(currentClass))
+    .then(currentClass => {
+      console.log('currentClass', currentClass)
+      res.status(200).json(currentClass)})
     .catch(e => next(e))
 })
 

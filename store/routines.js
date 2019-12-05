@@ -34,6 +34,7 @@ export const createRoutineThunk = routine => async dispatch => {
   try {
     const response = await axios.post(`${ngrok}/api/routines/`, routine)
     dispatch(createRoutine(response.data))
+    return response.data
   } catch (err) {
     console.error(err)
   }

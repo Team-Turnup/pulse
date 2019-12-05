@@ -12,7 +12,7 @@ import {
 } from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
-import {getClassThunk} from '../store/singleClass'
+import {getClassThunk, setClass} from '../store/singleClass'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
@@ -141,6 +141,7 @@ class HomeClassesScreen extends Component {
                 margin: 15
               }}
             >
+
               <View
                 style={{
                   display: 'flex',
@@ -245,6 +246,11 @@ class HomeClassesScreen extends Component {
                     (sum, interval) => sum + interval.duration,
                     0
                   )
+                  let parseDate = aClass.when.toString().split('GMT')[0].split('T')
+                  let parseTime = parseDate[1].split('.')[0]
+                  parseDate=parseDate[0].split('-')
+                  parseDate=`${parseDate[2]}/${parseDate[1]}/${parseDate[0].slice(2)}`
+                  parseDate=`${parseDate} ${parseTime}`
                   return (
                     <TouchableOpacity
                       key={i}
@@ -257,11 +263,15 @@ class HomeClassesScreen extends Component {
                         overflow: 'hidden'
                       }}
                       onPress={ async () => {
-                        await this.props.getClassThunk(aClass.id),
-                        navigation.navigate('UserWaitingScreen')
+                        await this.props.getClassThunk(aClass.id)
+                         this.props.navigation.navigate(aClass.userId===this.props.user.id ? 'TrainerWaitingScreen' : 'UserWaitingScreen')
                       }}
                     >
-                      <Text style={{textAlign: 'center'}}>
+                      <View style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between'}}>
+                      <Text>
                         <Text
                           style={{
                             color: 'rgb(84, 130, 53)',
@@ -273,14 +283,7 @@ class HomeClassesScreen extends Component {
                           {activityTypes[aClass.routine.activityType].icon}
                         </Text>
                       </Text>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-evenly'
-                        }}
-                      >
-                        <Text>
+                      <Text>
                           Trainer:{' '}
                           <Text
                             style={{
@@ -291,6 +294,37 @@ class HomeClassesScreen extends Component {
                             {aClass.user.name.split(' ')[0]}
                           </Text>
                         </Text>
+                      </View>
+                      <View style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between'}}>
+                        <Text>
+                          Date:{' '}
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontStyle: 'italic'
+                            }}
+                          >
+                            {parseDate}
+                          </Text>
+                        </Text>
+                        <Text>
+                          Duration:{' '}
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontStyle: 'italic'
+                            }}
+                          >
+                             {Math.floor(duration / 60)
+                                  ? `${Math.floor(duration / 60)}m`
+                                  : ''}{' '}
+                                {duration % 60 ? `${duration % 60}s` : ''}
+                          </Text>
+                        </Text>
+
                       </View>
                       <RoutineBarMini
                         routine={aClass.routine.intervals}
@@ -485,18 +519,17 @@ class HomeClassesScreen extends Component {
 
           <Button
             style={styles.button}
-            onPress={() =>
-              navigation.navigate('ClassesScreen', {
-                loggedInUserId: this.props.user.id
-              })
-            }
+            onPress={() => navigation.navigate('ClassesScreen')}
           >
             <Text>Enroll in Class</Text>
           </Button>
 
           <Button
             style={styles.button}
-            onPress={() => navigation.navigate('CreateClassScreen')}
+            onPress={() => {
+              this.props.setClass({})
+              this.props.navigation.navigate('BuildClassScreen')
+            }}
           >
             <Text>Create Class</Text>
           </Button>
@@ -517,16 +550,18 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({user, workouts, myClasses}) => ({
+const mapStateToProps = ({user, workouts, myClasses, routine}) => ({
   user,
   workouts,
-  myClasses
+  myClasses,
+  routine
 })
 
 const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
   getClassThunk,
+  setClass,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

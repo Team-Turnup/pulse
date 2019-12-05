@@ -39,33 +39,30 @@ export const StartButton = ({_onPress}) => (
   </Button>
 )
 
-export const UserList = ({attendees}) => {
-  return (
-    <Fragment>
-      <H3 style={{textAlign: 'center', paddingTop: 20}}>
-        Attendees ({attendees.filter(a => a.ready).length} Waiting /{' '}
-        {attendees.length} Total)
-      </H3>
-      <List>
-        <ListItem itemHeader style={styles.listItem}>
-          <Text style={[styles.name, styles.listHeader]}>Name</Text>
-          <Text style={[styles.age, styles.listHeader]}>Age</Text>
-          <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
-        </ListItem>
-        {attendees.map(({id: userId, name, age, gender, ready = false}) => (
-          <ListItem
-            key={userId}
-            style={[styles.listItem, ready ? styles.selected : null]}
-          >
-            <Text style={styles.name}>{name} </Text>
-            <Text style={styles.age}>{age}</Text>
-            <Text style={styles.gender}>{userData[gender].icon}</Text>
-          </ListItem>
-        ))}
+export const UserList = ({attendees}) => (
+  <Fragment>
+    <Text style={{textAlign: 'center', paddingTop: 20}}>
+      Attendees ({attendees.filter(a => a.ready).length} Waiting /{' '}
+      {attendees.length} Total)
+    </Text>
+    <List>
+      <ListItem itemHeader style={styles.listItem}>
+        <Text style={[styles.name, styles.listHeader]}>Name</Text>
+        <Text style={[styles.age, styles.listHeader]}>Age</Text>
+        <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
+      </ListItem>
+      {attendees.map(({id: userId, name, age, gender, ready = false}) => (
+        <ListItem
+          key={userId}
+          style={[styles.listItem, ready ? styles.selected : null]}
+        >
+          <Text style={styles.name}>{name} </Text>
+          <Text style={styles.age}>{age}</Text>
+          <Text style={styles.gender}>{userData[gender].icon}</Text>
+        </ListItem>))}
       </List>
     </Fragment>
   )
-}
 
 export const styles = StyleSheet.create({
   listItem: {
@@ -92,5 +89,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 20
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
   }
 })

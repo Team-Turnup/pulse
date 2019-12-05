@@ -444,31 +444,6 @@ class ClassesScreen extends React.Component {
               ></View>
             )}
           </View>
-          <Text
-            style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
-          >
-            or
-          </Text>
-          <Button
-            style={styles.button}
-            onPress={() => {
-              this.props.setClass({})
-              this.props.navigation.navigate('BuildClassScreen')
-            }}
-          >
-            <Text>Create New Class</Text>
-          </Button>
-          {/* <Text
-          style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
-        >
-          or
-        </Text>
-        <Button
-          onPress={() => this.props.navigation.navigate('PreviousClass')}
-          style={styles.button}
-        >
-          <Text>Search Public Classs</Text>
-        </Button> */}
         </Content>
       </Container>
     )
