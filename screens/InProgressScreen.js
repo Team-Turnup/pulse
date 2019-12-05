@@ -26,7 +26,7 @@ class InProgressScreen extends React.Component {
       intervals: props.routine.intervals,
       pauseTime: null,
       // visualColor: '',
-      opacity: 0.3,
+      opacity: 0,
       // soundObject: null,
       isPedometerAvailable: 'checking',
       // pastStepCount: 0,
@@ -42,9 +42,7 @@ class InProgressScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this._unsubscribe()
-    clearInterval(this.state.pauseTime)
-    clearInterval(this.state.clearCadence)
+this._endWorkout()
   }
 
   _subscribe = () => {
@@ -102,6 +100,11 @@ class InProgressScreen extends React.Component {
     //     console.log(error)
     //   }
     const clearCadence = setInterval(async () => {
+      if (this.state.totalTimeElapsed>=this.state.totalTime) {
+        console.log('here')
+        this._endWorkout()
+        return
+      }
       // soundObject.stopAsync().then(()=>soundObject.playFromPositionAsync(0))
       // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       const withinGoalCadence =
@@ -138,12 +141,18 @@ class InProgressScreen extends React.Component {
         intervals,
         currentInterval,
         clearCadence,
+        totalTime,
         pauseTime
       } = this.state
       totalTimeElapsed++
       intervalTime++
+      if (this.state.totalTimeElapsed>=this.state.totalTime) {
+        console.log('here')
+        this._endWorkout()
+        return
+      }
       if (intervalTime > intervals[currentInterval].duration - 1) {
-        if (currentInterval < intervals.length - 1) {
+        if (currentInterval < intervals.length-1) {
           currentInterval++
           intervalTime = 0
           clearInterval(clearCadence)
@@ -159,6 +168,11 @@ class InProgressScreen extends React.Component {
           //     1000
           // )
           clearCadence = setInterval(async () => {
+            if (this.state.totalTimeElapsed>=this.state.totalTime) {
+              console.log('here')
+              this._endWorkout()
+              return
+            }
             const withinGoalCadence =
               this.state.avgCadences[this.state.avgCadences.length - 1]
                 .cadence >
@@ -196,8 +210,7 @@ class InProgressScreen extends React.Component {
             }
           }, (60 / intervals[currentInterval].cadence) * 1000)
         } else {
-          clearInterval(clearCadence)
-          clearInterval(pauseTime)
+          this._endWorkout()
         }
       }
       this.setState({
@@ -218,6 +231,13 @@ class InProgressScreen extends React.Component {
   _restartWorkout = () => {
     this._pauseWorkout()
     this.setState({currentInterval: 0, totalTimeElapsed: 0, intervalTime: 0})
+  }
+
+  _endWorkout = () => {
+    this._unsubscribe()
+    clearInterval(this.state.clearCadence)
+    clearInterval(this.state.pauseTime)
+    this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
   _unsubscribe = () => {
@@ -252,6 +272,7 @@ class InProgressScreen extends React.Component {
       avgCadences[avgCadences.length - 1].cadence <
         1.15 * intervals[currentInterval].cadence
     return (
+      currentInterval>intervals.length ? null :
       <Container>
         <View
           style={{
@@ -390,6 +411,9 @@ class InProgressScreen extends React.Component {
                 <Button onPress={this._restartWorkout} style={styles.button}>
                   <Text>Restart</Text>
                 </Button>
+                <Button onPress={this._endWorkout} style={styles.button}>
+                  <Text>End</Text>
+                </Button>
               </View>
             </View>
           </View>
@@ -411,7 +435,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     padding: 5,
     height: 30,
-    width: '45%',
+    width: '30%',
     backgroundColor: 'rgb(84, 130, 53)'
   },
   col: {
