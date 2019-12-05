@@ -59,7 +59,7 @@ class StartRoutineScreen extends Component {
           <Container>
             <Content>
               {this.state.count === 'Go!' ? (
-                <InProgressScreen routine={this.props.routine} />
+                <InProgressScreen routine={this.props.routine} navigation={this.props.navigation} />
               ) : (
                 <View style={styles.countdown}>
                   <Text style={styles.text}>{this.state.count}</Text>

@@ -41,7 +41,6 @@ class SelectRoutineScreen extends Component {
   }
 
   render() {
-    console.log('this.props.routines in selectroutine', this.props.routines)
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
@@ -343,7 +342,6 @@ class SelectRoutineScreen extends Component {
                             >
                               <Button
                                 onPress={() => {
-                                  console.log('here')
                                   this.props.setRoutine(
                                     routines.find(
                                       routine => routine.id === routineId
