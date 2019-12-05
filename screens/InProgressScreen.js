@@ -206,7 +206,7 @@ class InProgressScreen extends React.Component {
         currentInterval,
         clearCadence
       })
-    }, 100)
+    }, 1000)
     this.setState({pauseTime, clearCadence})
   }
 
