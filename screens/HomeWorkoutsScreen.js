@@ -15,6 +15,9 @@ class HomeWorkoutsScreen extends Component {
     this.props.getMyClassesThunk()
     this.props.getMyWorkoutsThunk()
   }
+  static navigationOptions = {
+    header: null
+  }
 
   render() {
     const {navigation} = this.props
