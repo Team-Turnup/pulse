@@ -1,82 +1,87 @@
-import React, {useEffect, useState, useReducer} from 'react'
+import React, {useEffect, useState} from 'react'
 import {VictoryLine, VictoryChart} from 'victory-native'
-import {Text} from 'react-native'
-import {DateTime} from 'luxon'
-import useInterval from 'use-interval'
+import {Text} from 'native-base'
+// import {DateTime} from 'luxon'
+// import useInterval from 'use-interval'
 
-// using useReducer since we've got an array of DateTimes
-const ADD = 'ADD'
-const addInterval = (payload, startTime) => ({type: ADD, payload, startTime})
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ADD:
-      const {
-        payload: {duration, cadence},
-        startTime
-      } = action
-      // initialize to provided startTime or peek back at previous interval
-      const lastInterval =
-        (startTime && [DateTime.fromMillis(startTime)]) || state.slice(-1)[0]
-      // calculate beginning and end from last interval
-      const begin = lastInterval[0].plus({milliseconds: 1})
-      const end = begin.plus({seconds: duration})
-      // adds two new arrays to state w/ start and cadence, end and cadence
-      return [...state, [begin, cadence], [end, cadence]]
-    default:
-      return state
-  }
-}
+// // using useReducer since we've got an array of DateTimes
+// const ADD = 'ADD'
+// const addInterval = (payload, startTime) => ({type: ADD, payload, startTime})
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case ADD:
+//       const {
+//         payload: {duration, cadence},
+//         startTime
+//       } = action
+//       // initialize to provided startTime or peek back at previous interval
+//       const lastInterval =
+//         (startTime && [DateTime.fromMillis(startTime)]) || state.slice(-1)[0]
+//       // calculate beginning and end from last interval
+//       const begin = lastInterval[0].plus({milliseconds: 1})
+//       const end = begin.plus({seconds: duration})
+//       // adds two new arrays to state w/ start and cadence, end and cadence
+//       return [...state, [begin, cadence], [end, cadence]]
+//     default:
+//       return state
+//   }
+// }
 
 export default ({
   domainSetting = true,
   timeWindow = 30,
+  totalTime,
   intervals = [],
   workoutData = [],
-  startTime
+  totalTimeElapsed,
+  paused
 }) => {
-  // maybe instead of receiving a routine, we receive a workout?
-  // initialize tsIntervals with current DateTime
-  const [tsIntervals, dispatch] = useReducer(reducer, [])
-  const [domain, setDomain] = useState([
-    DateTime.local().minus({seconds: timeWindow * (2 / 3)}),
-    DateTime.local().plus({seconds: timeWindow * (1 / 3)})
-  ])
+  const [domain, setDomain] = useState([0, 30])
   const [tick, setTick] = useState(true)
 
+  const [routine, setRoutine] = useState([])
+
   useEffect(() => {
-    // on mount, convert interval duration data into timestamps for graph
-    intervals.forEach((d, i) =>
-      dispatch(addInterval(d, i === 0 ? startTime : undefined))
+    // on rerender, put the timeline in the right place
+    const lower = totalTimeElapsed - timeWindow * (2 / 3)
+    const upper = totalTimeElapsed + timeWindow * (1 / 3)
+    setDomain([lower < 0 ? 0 : lower, upper < 30 ? 30 : upper])
+  })
+
+  useEffect(() => {
+    setRoutine(
+      intervals.reduce((acc, interval, idx) => {
+        return [
+          ...acc,
+          ...[
+            [idx === 0 ? 0 : acc[idx * 2 - 1][0], interval.cadence],
+            [
+              (idx === 0 ? 0 : acc[idx * 2 - 1][0]) + interval.duration,
+              interval.cadence
+            ]
+          ]
+        ]
+      }, [])
     )
   }, [])
 
-  useEffect(() => {
-    // update chart domain every second to keep current time in the middle
-    const now = DateTime.local()
-    setDomain([
-      now.minus({seconds: timeWindow * (2 / 3)}),
-      now.plus({seconds: timeWindow * (1 / 3)})
-    ])
-  })
-  // useInterval(() => setTick(!tick), 1000)
-  return tsIntervals && tsIntervals.length > 1 ? (
+  return routine && routine.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain} : {}}
       domainPadding={{y: 50}}
-      scale={{x: 'time'}}
     >
       <VictoryLine
-        x={() => DateTime.local()}
+        x={() => totalTimeElapsed}
         style={{data: {strokeDasharray: 8}}}
         samples={1}
       />
-      <VictoryLine data={tsIntervals} x={0} y={1} />
+      <VictoryLine data={routine} x={0} y={1} />
       {workoutData.length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
-          data={workoutData}
-          x={d => d.timestamp}
+          data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
+          x={d => d.timestamp / 1000}
           y={d => d.cadence}
           style={{data: {stroke: 'red', strokeWidth: 1}}}
         />
