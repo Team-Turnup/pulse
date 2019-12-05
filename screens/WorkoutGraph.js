@@ -45,11 +45,18 @@ export default ({
       domain={domainSetting ? {x: domain} : {}}
       domainPadding={{y: 50}}
     >
+      <VictoryAxis
+        crossAxis
+        label="Cadence (bpm)"
+        style={{axisLabel: {angle: 90}}}
+      />
+      <VictoryAxis dependentAxis label="Time in Routine (seconds)" />
       <VictoryLine
         x={() => totalTimeElapsed}
         style={{data: {strokeDasharray: 8}}}
         samples={1}
       />
+      <VictoryLabel angle={90} verticalAnchor="middle"></VictoryLabel>
       <VictoryLine data={routine} x={0} y={1} />
       {workoutData.length > 4 ? (
         <VictoryLine
