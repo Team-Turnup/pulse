@@ -5,6 +5,7 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
+import {setWorkout} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {SocketContext} from '../socket'
@@ -114,7 +115,6 @@ class InProgressScreen extends React.Component {
     //   }
     const clearCadence = setInterval(async () => {
       if (this.state.totalTimeElapsed >= this.state.totalTime) {
-        console.log('here')
         this._endWorkout()
         return
       }
@@ -160,7 +160,6 @@ class InProgressScreen extends React.Component {
       totalTimeElapsed++
       intervalTime++
       if (this.state.totalTimeElapsed >= this.state.totalTime) {
-        console.log('here')
         this._endWorkout()
         return
       }
@@ -182,7 +181,6 @@ class InProgressScreen extends React.Component {
           // )
           clearCadence = setInterval(async () => {
             if (this.state.totalTimeElapsed >= this.state.totalTime) {
-              console.log('here')
               this._endWorkout()
               return
             }
@@ -247,6 +245,10 @@ class InProgressScreen extends React.Component {
   }
 
   _endWorkout = () => {
+    this.props.setWorkout({
+      ...this.props.workout,
+      workoutTimestamps: this.state.avgCadences
+    })
     this._unsubscribe()
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)
@@ -487,10 +489,15 @@ const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   singleClass
 })
 
+const mapDispatchToProps = {setWorkout}
+
 const SocketConnectedInProgressScreen = props => (
   <SocketContext.Consumer>
     {socket => <InProgressScreen {...props} socket={socket} />}
   </SocketContext.Consumer>
 )
 
-export default connect(mapStateToProps)(SocketConnectedInProgressScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SocketConnectedInProgressScreen)

@@ -3,7 +3,7 @@ import {VictoryLine, VictoryChart} from 'victory-native'
 import {Text} from 'native-base'
 
 export default ({
-  domainSetting = true,
+  workoutHistory = false,
   timeWindow = 30,
   totalTime,
   intervals = [],
@@ -42,19 +42,24 @@ export default ({
   return routine && routine.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
-      domain={domainSetting ? {x: domain} : {}}
+      domain={workoutHistory ? {} : {x: domain}}
       domainPadding={{y: 50}}
     >
-      <VictoryLine
-        x={() => totalTimeElapsed}
-        style={{data: {strokeDasharray: 8}}}
-        samples={1}
-      />
+      {workoutHistory ? null : (
+        <VictoryLine
+          x={() => totalTimeElapsed}
+          style={{data: {strokeDasharray: 8}}}
+          samples={1}
+        />
+      )}
       <VictoryLine data={routine} x={0} y={1} />
-      {workoutData.length > 4 ? (
+      {workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed).slice(3)
+        .length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
-          data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
+          data={workoutData
+            .filter(d => d.timestamp / 1000 < totalTimeElapsed)
+            .slice(3)}
           x={d => d.timestamp / 1000}
           y={d => d.cadence}
           style={{data: {stroke: 'red', strokeWidth: 1}}}

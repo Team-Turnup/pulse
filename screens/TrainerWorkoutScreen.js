@@ -82,8 +82,6 @@ const TrainerWorkoutScreen = () => {
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
 
-  useEffect()
-
   // when the data is live, useInterval might not be necessary
   // useInterval(() => {
   //   const timeElapsed = Math.round((Date.now() - classStart) / 1000)
