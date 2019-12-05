@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
-import {Button, Container, Content, Header, Item, Label, Input, Text} from 'native-base'
+import {Button, Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
@@ -11,13 +11,13 @@ import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
 
-class OptionsScreen extends Component {
+class VisualSettingsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       name: this.props.user.name || '',
       age: this.props.user.age || 0,
-      gender: this.props.user.gender || null,
+      gender: this.props.user.gender ||null,
       weight: this.props.user.weight || 0,
       height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',
@@ -36,13 +36,9 @@ class OptionsScreen extends Component {
     this.clearVisual = []
   }
 
-  // static navigationOptions = {
-  //   header: null
-  // }
-
   handleChange(key, value) {
     this.setState({[key]: value})
-    if (key !== 'visualColor') {
+    if (key!=='visualColor') {
       this.props.updateOptionThunk({[key]: value})
     }
   }
@@ -74,12 +70,10 @@ class OptionsScreen extends Component {
 
   handleVisualColor(value) {
     this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(
-      setInterval(() => {
-        this.setState({opacity: 0.3})
-        setTimeout(() => this.setState({opacity: 1}), 300)
-      }, 600)
-    )
+    this.clearVisual.push(setInterval(()=>{
+      this.setState({opacity: 0.3})
+      setTimeout(()=>this.setState({opacity: 1}), 300)
+    }, 600))
     setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
     // if (value) {
     //     if (this.clear.length) {
@@ -89,49 +83,61 @@ class OptionsScreen extends Component {
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
-  arrayBufferToBase64(buffer) {
+  arrayBufferToBase64( buffer) {
     return btoa(
-      new Uint8Array(buffer).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
-      )
-    )
-  }
+      new Uint8Array(buffer)
+        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+
 
   render() {
+    // console.log(this.props.user.image.data)
+    // console.log(encode(this.props.user.image)
+    // const imageSrc = `data:image/jpeg;base64,${encode(this.props.user.image)}`
+    // const arrayBufferView = new Uint8Array(this.props.user.image.data)
+    // const imageSrc = new Blob( [arrayBufferView], {type: "image/jpeg"})
+    // // const imageSrc =this.props.user.image
+    // console.log(imageSrc.slice(0,50))
     return (
       <Container>
-        <Header>
-          <Text>
-            Settings
-          </Text>
-        </Header>
         <Content>
-          {/* <Button
-            style={styles.button}
-            onPress={() => navigation.navigate('TrainerWaitingScreen')}
-          >
-            <Text>Start Test Class</Text>
-          </Button> */}
 
-          <Button
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('UserInfo')}
-          >
-            <Text>User Information</Text>
-          </Button>
-          <Button
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('CadenceVibration')}
-          >
-            <Text>Cadence & Vibration Settings</Text>
-          </Button>
-          <Button
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('VisualSettings')}
-          >
-            <Text>Visual Settings</Text>
-          </Button>
+          <Text style={styles.sectionHeader}>Visual Settings</Text>
+          <View
+            style={{
+              ...styles.visual,
+              backgroundColor: fromHsv(this.state.visualColor),
+              opacity: this.state.opacity
+            }}
+          ></View>
+          <Label>Visual Feedback Style</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleVisual(value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhat}
+            items={[{label: 'Blink', value: 'blink'}]}
+          />
+          <Label>Visual Feedback Color</Label>
+          <Text>(click the center circle to confirm color)</Text>
+          <ColorPicker
+            onColorSelected={color => this.handleVisualColor(color)}
+            onColorChange={color => this.handleChange('visualColor', color)}
+            style={{height: 400, marginBottom: 100}}
+            color={this.state.visualColor}
+            // hideSliders={true}
+          />
+          <Label>When to Play Visual Feedback</Label>
+          <RNPickerSelect
+            onValueChange={value => this.handleChange('visualWhen', value)}
+            style={{display: 'flex', alignItems: 'center'}}
+            value={this.state.visualWhen}
+            items={[
+              {label: 'Every Beat', value: 'everybeat'},
+              {label: 'Mute at Goal', value: 'muteAtGoal'},
+              {label: 'Mute', value: 'mute'}
+            ]}
+          />
         </Content>
       </Container>
     )
@@ -139,16 +145,6 @@ class OptionsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-
-  button: {
-    margin: 15,
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    backgroundColor: 'rgb(84, 130, 53)'
-  },
-
   header: {
     fontSize: 20,
     textAlign: 'center',
@@ -156,19 +152,19 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255, 0.9)',
     backgroundColor: 'gray'
   },
-  // buttons: {
-  //   display: 'flex',
-  //   flexDirection: 'row',
-  //   justifyContent: 'center'
-  // },
-  // button: {
-  //   width: '30%',
-  //   margin: 5,
-  //   padding: 2,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   borderRadius: 5
-  // },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    width: '30%',
+    margin: 5,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5
+  },
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
@@ -211,15 +207,10 @@ const styles = StyleSheet.create({
   }
 })
 
-OptionsScreen.NavigationOptions = {
-  header:'Settings'
-}
-
 const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  changeUserInfoThunk,
-  updateOptionThunk
+  changeUserInfoThunk, updateOptionThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(VisualSettingsScreen)
