@@ -277,10 +277,10 @@ class MyPreviousWorkouts extends React.Component {
                             style={{
                               display: 'flex',
                               flexDirection: 'row',
-                              justifyContent: 'space-evenly'
+                              justifyContent: 'space-between',
                             }}
                           >
-                            <Text>
+                            <Text style={{width: 100}}>
                               Name:{' '}
                               <Text
                                 style={{
@@ -308,7 +308,7 @@ class MyPreviousWorkouts extends React.Component {
                             style={{
                               display: 'flex',
                               flexDirection: 'row',
-                              justifyContent: 'space-evenly'
+                              justifyContent: 'space-between'
                             }}
                           >
                             <Text>
