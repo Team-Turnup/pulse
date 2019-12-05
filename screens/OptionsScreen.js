@@ -1,7 +1,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
-import {Button, Container, Content, Header, Item, Label, Input, Text} from 'native-base'
+import {
+  Button,
+  Container,
+  Content,
+  Header,
+  Item,
+  Label,
+  Input,
+  Text
+} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
@@ -11,7 +20,6 @@ import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
 import AppHeader from '../components/AppHeader'
-
 
 class OptionsScreen extends Component {
   constructor(props) {
@@ -103,7 +111,7 @@ class OptionsScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader/>
+        <AppHeader />
         {/* <Header>
           <Text>
             Settings
@@ -127,7 +135,7 @@ class OptionsScreen extends Component {
             style={styles.button}
             onPress={() => this.props.navigation.navigate('CadenceVibration')}
           >
-            <Text>Cadence & Vibration Settings</Text>
+            <Text>Vibration Settings</Text>
           </Button>
           <Button
             style={styles.button}
@@ -142,7 +150,6 @@ class OptionsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-
   button: {
     margin: 15,
     padding: 2,
@@ -215,7 +222,7 @@ const styles = StyleSheet.create({
 })
 
 OptionsScreen.NavigationOptions = {
-  header:'Settings'
+  header: 'Settings'
 }
 
 const mapStateToProps = ({user, option}) => ({user, option})
