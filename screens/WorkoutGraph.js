@@ -28,51 +28,51 @@ import {Text} from 'native-base'
 // }
 
 export default ({
-  // domainSetting = true,
+  domainSetting = true,
   timeWindow = 30,
   totalTime,
   intervals = [],
   workoutData = [],
-  startTime,
-  totalTimeElapsed
+  totalTimeElapsed,
+  paused
 }) => {
-  const [domain, setDomain] = useState([
-    totalTimeElapsed - timeWindow * (2 / 3),
-    totalTimeElapsed + timeWindow * (1 / 3)
-  ])
+  const [domain, setDomain] = useState([0, 30])
+  const [tick, setTick] = useState(true)
 
   const [routine, setRoutine] = useState([])
 
   useEffect(() => {
     // on rerender, put the timeline in the right place
-    setDomain([
-      totalTimeElapsed - timeWindow * (2 / 3),
-      totalTimeElapsed + timeWindow * (1 / 3)
-    ])
+    const lower = totalTimeElapsed - timeWindow * (2 / 3)
+    const upper = totalTimeElapsed + timeWindow * (1 / 3)
+    setDomain([lower < 0 ? 0 : lower, upper < 30 ? 30 : upper])
   })
 
   useEffect(() => {
     setRoutine(
-      intervals.reduce((acc, interval, idx) => [
-        ...acc,
-        [
-          [acc[idx - 1][1] + 0.001, interval.cadence],
-          [acc[idx - 1][1] + interval.duration, interval.cadence]
+      intervals.reduce((acc, interval, idx) => {
+        return [
+          ...acc,
+          ...[
+            [idx === 0 ? 0 : acc[idx * 2 - 1][0], interval.cadence],
+            [
+              (idx === 0 ? 0 : acc[idx * 2 - 1][0]) + interval.duration,
+              interval.cadence
+            ]
+          ]
         ]
-      ])
+      }, [])
     )
   }, [])
-  console.log(routine)
 
   return routine && routine.length > 1 ? (
     <VictoryChart
       // animate={{duration: 500, easing: 'quadIn'}}
       domain={domainSetting ? {x: domain} : {}}
-      domainPadding={{y: 10}}
-      scale={{x: 'time'}}
+      domainPadding={{y: 50}}
     >
       <VictoryLine
-        x={() => elapsedTime}
+        x={() => totalTimeElapsed}
         style={{data: {strokeDasharray: 8}}}
         samples={1}
       />
@@ -80,8 +80,8 @@ export default ({
       {workoutData.length > 2 ? (
         <VictoryLine
           interpolation="catmullRom"
-          data={workoutData}
-          x={d => d.timestamp}
+          data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
+          x={d => d.timestamp / 1000}
           y={d => d.cadence}
           style={{data: {stroke: 'red', strokeWidth: 1}}}
         />

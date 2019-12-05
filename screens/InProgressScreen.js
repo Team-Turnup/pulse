@@ -1,24 +1,21 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
-import {
-  Container,
-  Text,
-  Content,
-  Card,
-  CardItem,
-} from 'native-base'
+import {Container, Text, Content, Card, CardItem, Button} from 'native-base'
 import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
 import socket from '../socket'
+import RoutineBarGraphic from '../components/RoutineBarGraphic'
+import activityTypes from '../assets/images/activityTypes'
 
 class InProgressScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      startTime: Date.now(),
       clearCadence: null,
-      avgCadences: [{timestamp: Date.now(), cadence: 0}],
+      avgCadences: [{timestamp: 0, cadence: 0}],
       totalTimeElapsed: 0,
       totalTime: props.routine.intervals.reduce(
         (sum, interval) => sum + interval.duration,
@@ -34,7 +31,8 @@ class InProgressScreen extends React.Component {
       isPedometerAvailable: 'checking',
       // pastStepCount: 0,
       currentStepCount: 0,
-      cadences: []
+      cadences: [],
+      paused: false
     }
   }
 
@@ -52,7 +50,7 @@ class InProgressScreen extends React.Component {
   _subscribe = () => {
     this._subscription = Pedometer.watchStepCount(result => {
       let {avgCadences, currentStepCount, cadences} = this.state
-      const timestamp = Date.now()
+      const timestamp = Date.now() - this.state.startTime
       const cadence =
         ((result.steps - currentStepCount) /
           (timestamp - avgCadences[avgCadences.length - 1].timestamp)) *
@@ -73,7 +71,13 @@ class InProgressScreen extends React.Component {
         cadences,
         avgCadences
       })
-      socket.emit('workoutTimestamp', {workoutTimestamp: {...workoutTimestamp, goalCadence: this.state.intervals[this.state.currentInterval].cadence}, workoutId: this.props.workout.id})
+      socket.emit('workoutTimestamp', {
+        workoutTimestamp: {
+          ...workoutTimestamp,
+          goalCadence: this.state.intervals[this.state.currentInterval].cadence
+        },
+        workoutId: this.props.workout.id
+      })
     })
 
     Pedometer.isAvailableAsync().then(
@@ -91,7 +95,6 @@ class InProgressScreen extends React.Component {
   }
 
   _startWorkout = async () => {
-
     // const soundObject = new Audio.Sound();
     //   try {
     //     await soundObject.loadAsync(tick)
@@ -101,21 +104,31 @@ class InProgressScreen extends React.Component {
     const clearCadence = setInterval(async () => {
       // soundObject.stopAsync().then(()=>soundObject.playFromPositionAsync(0))
       // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-      const withinGoalCadence = this.state.avgCadences[this.state.avgCadences.length-1].cadence>0.85*this.state.intervals[this.state.currentInterval].cadence && this.state.avgCadences[this.state.avgCadences.length-1].cadence<1.15*this.state.intervals[this.state.currentInterval].cadence
-      if (this.props.option.hapticWhen==='everybeat' || (this.props.option.hapticWhen==='muteAtGoal' && !withinGoalCadence)) {
+      const withinGoalCadence =
+        this.state.avgCadences[this.state.avgCadences.length - 1].cadence >
+          0.85 * this.state.intervals[this.state.currentInterval].cadence &&
+        this.state.avgCadences[this.state.avgCadences.length - 1].cadence <
+          1.15 * this.state.intervals[this.state.currentInterval].cadence
+      if (
+        this.props.option.hapticWhen === 'everybeat' ||
+        (this.props.option.hapticWhen === 'muteAtGoal' && !withinGoalCadence)
+      ) {
         haptic(
-        this.props.option.hapticWhat,
-        this.state.intervals[this.state.currentInterval].cadence
-      )()
-        }
+          this.props.option.hapticWhat,
+          this.state.intervals[this.state.currentInterval].cadence
+        )()
+      }
 
-        if (this.props.option.visualWhen==='everybeat' || (this.props.option.visualWhen==='muteAtGoal' && !withinGoalCadence)) {
-      this.setState({opacity: 1})
-      setTimeout(
-        () => this.setState({opacity: 0.3}),
-        (30 / this.state.intervals[this.state.currentInterval].cadence) * 1000
-      )
-        }
+      if (
+        this.props.option.visualWhen === 'everybeat' ||
+        (this.props.option.visualWhen === 'muteAtGoal' && !withinGoalCadence)
+      ) {
+        this.setState({opacity: 1})
+        setTimeout(
+          () => this.setState({opacity: 0.3}),
+          (30 / this.state.intervals[this.state.currentInterval].cadence) * 1000
+        )
+      }
     }, (60 / this.state.intervals[this.state.currentInterval].cadence) * 1000)
 
     const pauseTime = setInterval(async () => {
@@ -146,23 +159,40 @@ class InProgressScreen extends React.Component {
           //     1000
           // )
           clearCadence = setInterval(async () => {
+            const withinGoalCadence =
+              this.state.avgCadences[this.state.avgCadences.length - 1]
+                .cadence >
+                0.85 *
+                  this.state.intervals[this.state.currentInterval].cadence &&
+              this.state.avgCadences[this.state.avgCadences.length - 1]
+                .cadence <
+                1.15 * this.state.intervals[this.state.currentInterval].cadence
             // await soundObject.stopAsync(async () => {
             //   await soundObject.setPositionAsync(0)
             //   await soundObject.playAsync()
             // })
-            if (this.props.option.hapticWhen==='everybeat' || (this.props.option.hapticWhen==='muteAtGoal' && !withinGoalCadence)) {
-            haptic(
-              this.props.option.hapticWhat,
-              this.state.intervals[this.state.currentInterval].cadence
-            )()
+            if (
+              this.props.option.hapticWhen === 'everybeat' ||
+              (this.props.option.hapticWhen === 'muteAtGoal' &&
+                !withinGoalCadence)
+            ) {
+              haptic(
+                this.props.option.hapticWhat,
+                this.state.intervals[this.state.currentInterval].cadence
+              )()
             }
-            if (this.props.option.visualWhen==='everybeat' || (this.props.option.visualWhen==='muteAtGoal' && !withinGoalCadence)) {
-            this.setState({opacity: 1})
-            setTimeout(
-              () => this.setState({opacity: 0.3}),
-              (30 / this.state.intervals[this.state.currentInterval].cadence) *
-                1000
-            )
+            if (
+              this.props.option.visualWhen === 'everybeat' ||
+              (this.props.option.visualWhen === 'muteAtGoal' &&
+                !withinGoalCadence)
+            ) {
+              this.setState({opacity: 1})
+              setTimeout(
+                () => this.setState({opacity: 0.3}),
+                (30 /
+                  this.state.intervals[this.state.currentInterval].cadence) *
+                  1000
+              )
             }
           }, (60 / intervals[currentInterval].cadence) * 1000)
         } else {
@@ -195,116 +225,214 @@ class InProgressScreen extends React.Component {
     this._subscription = null
   }
 
+  hexToRgb(hex, opacity) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    const r = parseInt(result[1], 16)
+    const g = parseInt(result[2], 16)
+    const b = parseInt(result[3], 16)
+    const rgba = `rgba(${r},${g},${b},${opacity})`
+    return rgba
+  }
+
   render() {
+    const {
+      intervals,
+      currentInterval,
+      totalTimeElapsed,
+      totalTime,
+      intervalTime,
+      avgCadences,
+      paused
+    } = this.state
+    const totalTimeLeft = totalTime - totalTimeElapsed
+    const intervalTimeLeft = intervals[currentInterval].duration - intervalTime
+    const withinGoalCadence =
+      avgCadences[avgCadences.length - 1].cadence >
+        0.85 * intervals[currentInterval].cadence &&
+      avgCadences[avgCadences.length - 1].cadence <
+        1.15 * intervals[currentInterval].cadence
     return (
       <Container>
-              <Content
-              >
-                <View style={styles.info}>
-                <View style={styles.col}>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                      <Text>Total Time Elapsed:</Text>
-                      <Text>{this.state.totalTimeElapsed}</Text>
-                  </CardItem>
-                </Card>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                      <Text>Total Time Left:</Text>
-                      <Text>
-                        {this.state.totalTime - this.state.totalTimeElapsed}
-                      </Text>
-                  </CardItem>
-                </Card>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                        <Text>Time Left in Interval:</Text>
-                      <Text>
-                        {this.state.intervals[this.state.currentInterval]
-                          .duration - this.state.intervalTime}
-                      </Text>
-                  </CardItem>
-                </Card>
-                </View>
-
-                <View style={styles.col}>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                        <Text>Goal Cadence:</Text>
-                      <Text>
-                        {
-                          this.state.intervals[this.state.currentInterval]
-                            .cadence
-                        }
-                      </Text>
-                  </CardItem>
-                </Card>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                        <Text>Current Cadence:</Text>
-                      <Text>
-                        {
-                          this.state.avgCadences[
-                            this.state.avgCadences.length - 1
-                          ].cadence.toFixed(0)
-                        }
-                      </Text>
-                  </CardItem>
-                </Card>
-                <Card transparent style={styles.card}>
-                  <CardItem>
-                      <Text>Total Steps:</Text>
-                      <Text>{this.state.currentStepCount}</Text>
-                  </CardItem>
-                </Card>
-                </View>
-                </View>
-          {/* <Row size={4} style={{justifyContent: 'center'}}> */}
-            <WorkoutGraph intervals={this.state.intervals} workoutData={this.state.avgCadences} startTime={this.state.avgCadences[0].timestamp}/>
+        <View
+          style={{
+            padding: 20,
+            backgroundColor: this.hexToRgb(
+              this.props.option.visualColor,
+              this.state.opacity
+            ),
+            width: '100%',
+            height: '70%'
+          }}
+        >
           <View
             style={{
-              ...styles.visual,
-              backgroundColor: this.props.option.visualColor,
-              opacity: this.state.opacity
+              backgroundColor: 'white',
+              width: '100%',
+              height: '100%',
+              borderRadius: 10,
+              opacity: 1
             }}
-          ></View>
-          {/* </Row> */}
-              </Content>
-          {/* </Row> */}
+          >
+            <View>
+              <Text style={{textAlign: 'center'}}>
+                Routine Name:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {this.props.routine.name}
+                </Text>
+              </Text>
+              <Text style={{textAlign: 'center'}}>
+                Activity Type:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {this.state.routineType !== 'combo'
+                    ? activityTypes[this.props.routine.activityType].icon
+                    : 'Combo'}
+                </Text>
+              </Text>
+            </View>
+            <RoutineBarGraphic
+              routine={intervals}
+              changeIndex={() => {}}
+              index={currentInterval}
+              removeInterval={() => {}}
+              finished={false}
+              routineType={this.props.routine.activityType}
+            />
+            <View>
+              <View style={styles.info}>
+                <View style={styles.col}>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Time Elapsed:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(totalTimeElapsed / 60)
+                        ? `${Math.floor(totalTimeElapsed / 60)}m`
+                        : ''}{' '}
+                      {totalTimeElapsed % 60 ? `${totalTimeElapsed % 60}s` : ''}
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Time Left:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(totalTimeLeft / 60)
+                        ? `${Math.floor(totalTimeLeft / 60)}m`
+                        : ''}{' '}
+                      {totalTimeLeft % 60 ? `${totalTimeLeft % 60}s` : ''}
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Time Left in Interval:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(intervalTimeLeft / 60)
+                        ? `${Math.floor(intervalTimeLeft / 60)}m`
+                        : ''}{' '}
+                      {intervalTimeLeft % 60 ? `${intervalTimeLeft % 60}s` : ''}
+                    </Text>
+                  </Card>
+                </View>
 
-
-          {/* <Row
-            size={1.5}
-            style={{
-              flex: 1,
-              justifyContent: 'space-evenly'
-            }}
-          > */}
-          {/* </Row> */}
-        {/* </Grid> */}
+                <View style={styles.col}>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Goal Cadence:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {intervals[currentInterval].cadence} bpm
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Current Cadence:</Text>
+                    <Text
+                      style={{
+                        color: withinGoalCadence ? 'rgb(84, 130, 53)' : 'red'
+                      }}
+                    >
+                      {this.state.avgCadences[
+                        this.state.avgCadences.length - 1
+                      ].cadence.toFixed(0)}{' '}
+                      bpm
+                    </Text>
+                  </Card>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Total Steps:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {this.state.currentStepCount} steps
+                    </Text>
+                  </Card>
+                </View>
+              </View>
+              <WorkoutGraph
+                intervals={intervals}
+                workoutData={avgCadences}
+                totalTimeElapsed={totalTimeElapsed}
+                totalTime={totalTime}
+                paused={paused}
+              />
+              <View style={styles.buttonContainer}>
+                {this.state.paused ? (
+                  <Button
+                    onPress={() => {
+                      this._startWorkout()
+                      this.setState({paused: false})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Resume</Text>
+                  </Button>
+                ) : null}
+                {!this.state.paused ? (
+                  <Button
+                    onPress={() => {
+                      this._pauseWorkout()
+                      this.setState({paused: true})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Pause</Text>
+                  </Button>
+                ) : null}
+                <Button onPress={this._restartWorkout} style={styles.button}>
+                  <Text>Restart</Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  visual: {
-    width: '100%',
-    height: 200,
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eee',
+    padding: 5,
+    height: 30,
+    width: '45%',
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   col: {
     width: '50%',
-    height: 50,
+    height: 35,
     display: 'flex',
     flexDirection: 'column'
   },
   card: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    display: 'flex',
+    margin: 0,
+    padding: 0,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   info: {
     width: '100%',
-    height: 150,
+    height: 105,
     display: 'flex',
     flexDirection: 'row'
   }
@@ -315,6 +443,11 @@ InProgressScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = ({routine, option, user, workout}) => ({routine, option, user, workout})
+const mapStateToProps = ({routine, option, user, workout}) => ({
+  routine,
+  option,
+  user,
+  workout
+})
 
 export default connect(mapStateToProps)(InProgressScreen)

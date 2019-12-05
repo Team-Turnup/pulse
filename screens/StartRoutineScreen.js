@@ -5,6 +5,7 @@ import {Container, Content, Text, Button} from 'native-base'
 import InProgressScreen from './InProgressScreen'
 import {createWorkoutThunk} from '../store/workout'
 import PrepStartRoutine from './PrepStartRoutine'
+import AppHeader from '../components/AppHeader'
 
 class StartRoutineScreen extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class StartRoutineScreen extends Component {
   render() {
     return (
       <Container>
+        <AppHeader />
         {!this.state.startPressed ? (
           <Container style={{marginTop: 75, marginBottom: 75, margin: 15}}>
             <PrepStartRoutine navigation={this.props.navigation} />
