@@ -78,6 +78,15 @@ router.get('/', authenticatedUser, async (req, res, next) => {
           through: {
             attributes: []
           }
+        },
+        {
+          model: Routine,
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'activityType', 'cadence', 'duration']
+            }
+          ]
         }
       ],
       ...(search && {
@@ -116,7 +125,7 @@ router.get('/:classId', authenticatedUser, async (req, res, next) => {
       include.push({
         model: User,
         as: 'attendees',
-        attributes: ['id', 'email', 'age', 'gender'],
+        attributes: ['id', 'name', 'age', 'gender'],
         through: {
           attributes: []
         }
@@ -189,7 +198,7 @@ router.post('/', authenticatedUser, (req, res, next) => {
           {
             model: User,
             as: 'attendees',
-            attributes: ['id', 'email', 'age', 'gender'],
+            attributes: ['id', 'name', 'age', 'gender'],
             through: {
               attributes: []
             }

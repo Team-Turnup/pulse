@@ -53,7 +53,7 @@ class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(
+    this.clear = setInterval(
       () =>
         this.setState(prevState => ({
           for: (prevState.for + 1) % this.state.forArray.length
@@ -78,7 +78,12 @@ class LoginScreen extends React.Component {
       message: ''
     })
     if (result.user && result.user.error) {
-      this.setState({message: formName==='login' ? 'Wrong username and/or password' : 'Unable to sign up with given username and/or password'})
+      this.setState({
+        message:
+          formName === 'login'
+            ? 'Wrong username and/or password'
+            : 'Unable to sign up with given username and/or password'
+      })
       setTimeout(() => this.setState({message: ''}), 2000)
     } else {
       this.props.navigation.navigate('HomeWorkoutsStack')
@@ -118,13 +123,13 @@ class LoginScreen extends React.Component {
             style={{
               backgroundColor: 'rgb(84, 130, 53)',
               width: '100%',
-              paddingTop: 5,
-              paddingBottom: 5
+              paddingTop: 15,
+              paddingBottom: 15,
             }}
           >
             <Text
               style={{
-                fontSize: 30,
+                fontSize: 35,
                 fontWeight: '600',
                 color: 'white',
                 textAlign: 'center'
@@ -154,10 +159,10 @@ class LoginScreen extends React.Component {
                   overflow: 'hidden'
                 }}
               >
-                <Text style={{textAlign: 'center'}}>
+                <Text style={{fontSize: 18, textAlign: 'center'}}>
                   A solo- or class-based tempo trainer
                 </Text>
-                <Text style={{textAlign: 'center'}}>
+                <Text style={{fontSize: 18, textAlign: 'center'}}>
                   with visual and vibrational feedback
                 </Text>
                 <View
@@ -165,7 +170,7 @@ class LoginScreen extends React.Component {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'space-evenly',
                     marginTop: 20
                   }}
                 >
@@ -177,7 +182,7 @@ class LoginScreen extends React.Component {
                       alignItems: 'center'
                     }}
                   >
-                    <Text>For</Text>
+                    <Text style={{fontSize: 18}}>For</Text>
                     <Text
                       style={{
                         fontSize: 18,
@@ -192,7 +197,7 @@ class LoginScreen extends React.Component {
                   <Image
                     medium
                     source={require('../assets/images/Pic.png')}
-                    style={{width: 100, height: 120}}
+                    style={{width: 110, height: 140}}
                   />
                 </View>
               </View>
@@ -223,7 +228,9 @@ class LoginScreen extends React.Component {
               </Item>
             </Form>
           ) : null}
-          <Text style={{textAlign: 'center', fontSize: 12}}>{this.state.message}</Text>
+          <Text style={{textAlign: 'center', fontSize: 12}}>
+            {this.state.message}
+          </Text>
           {/* <View style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent: 'center'}}> */}
           {!isUser ? (
             <Button
@@ -320,6 +327,10 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
+
+LoginScreen.navigationOptions = {
+  header: 'screen'
+}
 
 /**
  * CONTAINER

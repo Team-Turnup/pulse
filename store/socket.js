@@ -1,19 +1,18 @@
-import axios from 'axios';
+import axios from 'axios'
 import {ngrok} from '../ngrok'
 
 // const GET_EXERCISE = 'GET_EXERCISE';
-const SET_SOCKET = 'SET_SOCKET';
-const REMOVE_SOCKET = 'REMOVE_SOCKET';
+const SET_SOCKET = 'SET_SOCKET'
+const REMOVE_SOCKET = 'REMOVE_SOCKET'
 
 export const setSocket = socket => ({
   type: SET_SOCKET,
-  socket,
-});
+  socket
+})
 
-export const removeSocket = socket => ({
-    type: REMOVE_SOCKET,
-    socket,
-  });
+export const removeSocket = () => ({
+  type: REMOVE_SOCKET
+})
 
 // export const thunk = id => async dispatch => {
 //   try {
@@ -24,17 +23,19 @@ export const removeSocket = socket => ({
 //   }
 // };
 
-const initialState = {};
+const initialState = {}
 
 //should be a GET_SOCKETS probably
 const socketReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_SOCKET:
-      return action.socket;
-      case REMOVE_SOCKET:
-        return initialState;
+      action.socket.connect()
+      return action.socket
+    case REMOVE_SOCKET:
+      state.disconnect()
+      return initialState
     default:
-      return state;
+      return state
   }
-};
-export default socketReducer;
+}
+export default socketReducer

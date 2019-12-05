@@ -17,6 +17,7 @@ import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
 import RNPickerSelect from 'react-native-picker-select'
 
+import {getClassThunk} from '../store/singleClass'
 import AppHeader from '../components/AppHeader'
 
 class HomeClassesScreen extends Component {
@@ -126,6 +127,12 @@ class HomeClassesScreen extends Component {
           <View></View>
         </View>
         <View>
+          <Button
+            style={styles.button}
+            onPress={() => navigation.navigate('TrainerWaitingScreen')}
+          >
+            <Text>Start Test Class</Text>
+          </Button>
           <Content style={{margin: 15}}>
             <Card
               style={{
@@ -484,7 +491,7 @@ class HomeClassesScreen extends Component {
               })
             }
           >
-            <Text>Join Class</Text>
+            <Text>Enroll in Class</Text>
           </Button>
 
           <Button
@@ -516,6 +523,10 @@ const mapStateToProps = ({user, workouts, myClasses}) => ({
   myClasses
 })
 
-const mapDispatchToProps = {getMyClassesThunk, getMyWorkoutsThunk}
+const mapDispatchToProps = {
+  getMyClassesThunk,
+  getMyWorkoutsThunk,
+  getClassThunk
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)

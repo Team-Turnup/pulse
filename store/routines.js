@@ -52,7 +52,7 @@ export const createAndStartRoutineThunk = routine => async dispatch => {
 
 export const deleteRoutineThunk = routineId => async dispatch => {
   try {
-    const response = await axios.delete(`api/routines/${routineId}`)
+    const response = await axios.delete(`${ngrok}/api/routines/${routineId}`)
     dispatch(removeRoutine(routineId))
   } catch (error) {
     console.error(error)

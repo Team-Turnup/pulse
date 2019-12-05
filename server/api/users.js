@@ -27,7 +27,7 @@ router.get('/myClasses', authenticatedUser, async (req, res, next) => {
       include: [{model: User}, {model: Routine, include: [{model: Interval}]}]
     })
     if (!myClasses) res.status(404).send("can't find user's classes")
-    res.json(myClasses).status(200)
+    res.json({upcoming, previous}).status(200)
   } catch (err) {
     next(err)
   }
@@ -39,7 +39,8 @@ router.get('/myWorkouts', authenticatedUser, async (req, res, next) => {
       where: {
         userId: req.user.id
       },
-      include: [Routine]
+      include: [{model: Routine, include: [Interval]}],
+      order: [['timestamp', 'DESC']]
     })
     if (!myWorkouts) res.status(404).send("can't find user's workouts")
     res.json(myWorkouts)
@@ -66,7 +67,6 @@ router.get('/myRoutines', authenticatedUser, async (req, res, next) => {
 
 router.put('/', authenticatedUser, async (req, res, next) => {
   try {
-    console.log(req.body)
     const user = await User.findByPk(req.user.id)
     await user.update(req.body)
     res.sendStatus(200)

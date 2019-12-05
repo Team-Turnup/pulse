@@ -8,6 +8,13 @@ module.exports = io => {
   io.on('connection', socket => {
     console.log(`A socket connection to the server has been made: ${socket.id}`)
 
+    const informLeader = (classId, event, ...payload) => {
+      if (classes[classId] && classes[classId].leader) {
+        console.log(`Leader of ${classId} is being informed of ${event}`)
+        socket.to(classes[classId].leader.socket).emit(event, ...payload)
+      }
+    }
+
     socket.on('disconnect', () => {
       console.log(`Connection ${socket.id} has left the building`)
     })
@@ -25,50 +32,41 @@ module.exports = io => {
 
     socket.on('subscribe', (classId, userId, isLeader = false) => {
       if (!classes[classId]) {
-        classes[classId] = {leader: {...initialLeader}, followers: []}
+        classes[classId] = {leader: {...initialLeader}, followers: new Set()}
         console.log(`class ${classId} created`)
       }
-      console.log('classId', classId, 'userId', userId, 'isLeader', isLeader)
       if (
         isLeader &&
         (!classes[classId].leader.userId ||
           classes[classId].leader.userId === userId)
       ) {
-        console.log(userId)
         classes[classId].leader.socket = socket.id
         classes[classId].leader.userId = userId
-        socket.to(socket.id).emit('classList', classes[classId].followers)
-      } else classes[classId].followers.push(userId)
+      } else classes[classId].followers.add(userId)
       socket.join(classId)
-      console.log(classes)
+      informLeader(classId, 'classList', Array.from(classes[classId].followers))
+    })
+
+    socket.on('joined', (classId, user) => {
+      console.log(`${user.name} has joined ${classId}`)
+      informLeader(classId, 'joined', user)
     })
 
     socket.on('unsubscribe', (classId, userId, isLeader = false) => {
       if (isLeader && classes[classId].leader.socket === socket.id) {
-        console.log('bye leader')
         classes[classId].leader = initialLeader
       }
       socket.leave(classId)
-      classes[classId].followers = classes[classId].followers.filter(
-        d => d !== userId
-      )
+      classes[classId].followers.delete(userId)
+      informLeader(classId, 'classList', Array.from(classes[classId].followers))
       if (
         !classes[classId].leader.socket &&
         !classes[classId].leader.userId &&
-        !classes[classId].followers.length
-      )
+        !classes[classId].followers.size
+      ) {
         delete classes[classId]
-      console.log(classes)
-    })
-
-    socket.on('message', (classId, message) => {
-      console.log(message)
-      socket.to(classes[classId].leader.socket).emit('message', message)
-    })
-
-    socket.on('ready', (classId, userId) => {
-      console.log(userId)
-      socket.to(classes[classId].leader.socket).emit('ready', userId)
+        console.log(`class ${classId} deleted`)
+      }
     })
   })
 }

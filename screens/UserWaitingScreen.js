@@ -14,10 +14,10 @@ import {
 } from 'native-base'
 import {StartTime, styles} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
-import socket from '../socket'
 import {leaveClass} from '../store/singleClass'
+import {SocketContext} from '../socket'
 
-export default ({navigation}) => {
+const UserWaitingScreen = ({navigation, socket}) => {
   // get user from store
   const user = useSelector(({user}) => user)
   // get dummy data for class right now
@@ -69,3 +69,9 @@ export default ({navigation}) => {
     </Container>
   )
 }
+
+export default props => (
+  <SocketContext.Consumer>
+    {socket => <UserWaitingScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
