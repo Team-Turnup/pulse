@@ -138,81 +138,99 @@ class HomeClassesScreen extends Component {
               <View
                 style={{
                   display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-evenly'
+                  flexDirection: 'column'
                 }}
               >
-                <Input
-                  placeholder="Search"
-                  autoCorrect={false}
-                  value={searchUpcoming}
-                  onChangeText={searchUpcoming =>
-                    this.setState({searchUpcoming})
-                  }
-                  style={{
-                    backgroundColor: 'lightgray'
-                    // width: '50%',
-                    // margin: 2
-                  }}
-                />
-                <RNPickerSelect
-                  placeholder={{label: 'Filter', value: null}}
-                  onValueChange={value =>
-                    this.handleChange('futureFilter', value)
-                  }
-                  value={futureFilter}
-                  items={activityTypeSelects}
-                  userNativeAndroidPickerStyle={false}
-                />
-                {futureClassesPage > 1 ? (
-                  <TouchableOpacity
-                    style={{
-                      width: 25,
-                      height: 35,
-                      backgroundColor: 'rgb(84, 130, 53)',
-                      borderRadius: 5,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}
-                    onPress={() =>
-                      this.setState(prevState => ({
-                        futureClassesPage: prevState.futureClassesPage - 1
-                      }))
-                    }
-                  >
-                    <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View></View>
-                )}
 
-                <Text style={{fontWeight: '600', marginBottom: 10}}>
-                  My Upcoming Classes
-                </Text>
-                {futureClassesPage < futureClassesPages ? (
-                  <TouchableOpacity
-                    style={{
-                      width: 25,
-                      height: 35,
-                      backgroundColor: 'rgb(84, 130, 53)',
-                      borderRadius: 5,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}
-                    onPress={() =>
-                      this.setState(prevState => ({
-                        futureClassesPage: prevState.futureClassesPage + 1
-                      }))
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-evenly'
+                  }}
+                >
+                  {futureClassesPage > 1 ? (
+                    <TouchableOpacity
+                      style={{
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      onPress={() =>
+                        this.setState(prevState => ({
+                          futureClassesPage: prevState.futureClassesPage - 1
+                        }))
+                      }
+                    >
+                      <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View></View>
+                  )}
+
+                  <Text style={{fontWeight: '600', marginBottom: 10}}>
+                    My Upcoming Classes
+                  </Text>
+                  {futureClassesPage < futureClassesPages ? (
+                    <TouchableOpacity
+                      style={{
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      onPress={() =>
+                        this.setState(prevState => ({
+                          futureClassesPage: prevState.futureClassesPage + 1
+                        }))
+                      }
+                    >
+                      <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View></View>
+                  )}
+                </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                  }}
+                >
+                  <Input
+                    placeholder="Search"
+                    autoCorrect={false}
+                    value={searchUpcoming}
+                    onChangeText={searchUpcoming =>
+                      this.setState({searchUpcoming})
                     }
-                  >
-                    <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View></View>
-                )}
+                    style={{
+                      borderBottomColor: 'gray',
+                      borderBottomWidth: 1,
+                      fontSize: 14,
+                      height: 16,
+                      width: '30%',
+                      margin: 2
+                    }}
+                  />
+                  <RNPickerSelect
+                    placeholder={{label: 'Filter', value: null}}
+                    onValueChange={value =>
+                      this.handleChange('futureFilter', value)
+                    }
+                    value={futureFilter}
+                    items={activityTypeSelects}
+                    userNativeAndroidPickerStyle={false}
+                  />
+                </View>
               </View>
 
               {viewFutureClasses.length ? (
@@ -286,90 +304,107 @@ class HomeClassesScreen extends Component {
               }}
             >
               <View>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-evenly'
-                  }}
-                >
-                  <Input
-                    placeholder="Search"
-                    autoCorrect={false}
-                    value={searchPrevious}
-                    onChangeText={searchPrevious =>
-                      this.setState({searchPrevious})
-                    }
+                <View>
+
+                  <View
                     style={{
-                      backgroundColor: 'lightgray'
-                      // width: '50%',
-                      // margin: 2
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-evenly'
                     }}
-                  />
-                  <RNPickerSelect
-                    placeholder={{label: 'Filter', value: null}}
-                    onValueChange={value =>
-                      this.handleChange('pastFilter', value)
-                    }
-                    value={pastFilter}
-                    items={activityTypeSelects}
-                    userNativeAndroidPickerStyle={false}
-                  />
-                  {pastClassesPage > 1 ? (
-                    <TouchableOpacity
-                      style={{
-                        width: 25,
-                        height: 35,
-                        backgroundColor: 'rgb(84, 130, 53)',
-                        borderRadius: 5,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                      onPress={() =>
-                        this.setState(prevState => ({
-                          pastClassesPage: prevState.pastClassesPage - 1
-                        }))
-                      }
-                    >
-                      <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View></View>
-                  )}
+                  >
+                    {pastClassesPage > 1 ? (
+                      <TouchableOpacity
+                        style={{
+                          width: 25,
+                          height: 35,
+                          backgroundColor: 'rgb(84, 130, 53)',
+                          borderRadius: 5,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                        onPress={() =>
+                          this.setState(prevState => ({
+                            pastClassesPage: prevState.pastClassesPage - 1
+                          }))
+                        }
+                      >
+                        <Text style={{color: 'white', fontSize: 25}}>
+                          {'<'}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View></View>
+                    )}
 
-                  <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    My Previous Classes
-                  </Text>
+                    <Text style={{fontWeight: '600', marginBottom: 10}}>
+                      My Previous Classes
+                    </Text>
 
-                  {pastClassesPage < pastClassesPages ? (
-                    <TouchableOpacity
-                      style={{
-                        width: 25,
-                        height: 35,
-                        backgroundColor: 'rgb(84, 130, 53)',
-                        borderRadius: 5,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                      onPress={() =>
-                        this.setState(prevState => ({
-                          pastClassesPage: prevState.pastClassesPage + 1
-                        }))
+                    {pastClassesPage < pastClassesPages ? (
+                      <TouchableOpacity
+                        style={{
+                          width: 25,
+                          height: 35,
+                          backgroundColor: 'rgb(84, 130, 53)',
+                          borderRadius: 5,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                        onPress={() =>
+                          this.setState(prevState => ({
+                            pastClassesPage: prevState.pastClassesPage + 1
+                          }))
+                        }
+                      >
+                        <Text style={{color: 'white', fontSize: 25}}>
+                          {'>'}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View
+                      // style={{
+                      //   width: 25,
+                      //   height: 35
+                      // }}
+                      ></View>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row'
+                    }}
+                  >
+                    <Input
+                      placeholder="Search"
+                      autoCorrect={false}
+                      value={searchPrevious}
+                      onChangeText={searchPrevious =>
+                        this.setState({searchPrevious})
                       }
-                    >
-                      <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View
-                    // style={{
-                    //   width: 25,
-                    //   height: 35
-                    // }}
-                    ></View>
-                  )}
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 1,
+                        fontSize: 14,
+                        height: 16,
+                        width: '30%',
+                        margin: 2
+                      }}
+                    />
+                    <RNPickerSelect
+                      placeholder={{label: 'Filter', value: null}}
+                      onValueChange={value =>
+                        this.handleChange('pastFilter', value)
+                      }
+                      value={pastFilter}
+                      items={activityTypeSelects}
+                      userNativeAndroidPickerStyle={false}
+                    />
+                  </View>
                 </View>
 
                 <View>
