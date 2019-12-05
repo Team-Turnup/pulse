@@ -31,7 +31,7 @@ class ClassesScreen extends React.Component {
       filter: null,
       sort: null,
       search: '',
-      routineId: null
+      classId: null
     }
     this.handleChange = this.handleChange.bind(this)
   }
@@ -48,7 +48,7 @@ class ClassesScreen extends React.Component {
   this.props.classes is an array (empty at mount, filled after)
   this.props.classes is an array of attendees objects which is an array of objects with id (prob user)
   this.props.classes is array .userId is the owner id
-  this.props.classes is array .routineId
+  this.props.classes is array .classId
   this.props.enrollClass
   this.props.getClasses
 
@@ -107,28 +107,25 @@ class ClassesScreen extends React.Component {
       }
     }
 
-    const {page, numPerPage, search, sort, filter, routineId} = this.state
-    const {routines} = this.props
+    const {page, numPerPage, search, sort, filter, classId} = this.state
+    const {classes} = this.props
     const activityTypeSelects = Object.keys(activityTypes).map(activity => ({
       label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
       value: activity
     }))
-    let viewRoutines = [...this.props.routines]
-    viewRoutines = search.length
-      ? viewRoutines.filter(routine =>
-          routine.name.toLowerCase().includes(search.toLowerCase())
+    let viewClasss = [...this.props.classes]
+    viewClasss = search.length
+      ? viewClasss.filter(aClass =>
+          aClass.name.toLowerCase().includes(search.toLowerCase())
         )
-      : viewRoutines
-    viewRoutines = filter
-      ? viewRoutines.filter(routine => routine.activityType === filter)
-      : viewRoutines
-    sort ? viewRoutines.sort(sorter(sort)) : {}
-    const numResults = viewRoutines.length
+      : viewClasss
+    viewClasss = filter
+      ? viewClasss.filter(aClass => aClass.activityType === filter)
+      : viewClasss
+    sort ? viewClasss.sort(sorter(sort)) : {}
+    const numResults = viewClasss.length
     const numPages = Math.ceil(numResults / numPerPage)
-    viewRoutines = viewRoutines.slice(
-      (page - 1) * numPerPage,
-      page * numPerPage
-    )
+    viewClasss = viewClasss.slice((page - 1) * numPerPage, page * numPerPage)
     return (
       <Container>
         <Content>
@@ -189,7 +186,7 @@ class ClassesScreen extends React.Component {
               >
                 <ScrollView>
                   <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    Select One of Your Previous Routines
+                    Select One of Your Previous Classs
                   </Text>
                   <View
                     style={{
@@ -266,16 +263,16 @@ class ClassesScreen extends React.Component {
                     </View>
                   </View>
                   <Text style={{fontSize: 12, textAlign: 'center'}}>
-                    {viewRoutines.length
+                    {viewClasss.length
                       ? `Showing ${(page - 1) * numPerPage + 1}-${Math.min(
                           numResults,
                           page * numPerPage
                         )} of ${numResults}`
                       : ''}
                   </Text>
-                  {viewRoutines.length ? (
-                    viewRoutines.map((routine, i) => {
-                      const duration = routine.intervals.reduce(
+                  {viewClasss.length ? (
+                    viewClasss.map((aClass, i) => {
+                      const duration = aClass.intervals.reduce(
                         (sum, interval) => sum + interval.duration,
                         0
                       )
@@ -292,10 +289,10 @@ class ClassesScreen extends React.Component {
                             }}
                             onPress={() =>
                               this.setState(prevState => ({
-                                routineId:
-                                  prevState.routineId === routine.id
+                                classId:
+                                  prevState.classId === aClass.id
                                     ? null
-                                    : routine.id
+                                    : aClass.id
                               }))
                             }
                           >
@@ -308,7 +305,7 @@ class ClassesScreen extends React.Component {
                                   fontSize: 18
                                 }}
                               >
-                                {routine.name}
+                                {aClass.name}
                               </Text>
                             </Text>
                             <View
@@ -326,7 +323,7 @@ class ClassesScreen extends React.Component {
                                     fontStyle: 'italic'
                                   }}
                                 >
-                                  {activityTypes[routine.activityType].icon}
+                                  {activityTypes[aClass.activityType].icon}
                                 </Text>
                               </Text>
                               <Text>
@@ -344,25 +341,25 @@ class ClassesScreen extends React.Component {
                                 </Text>
                               </Text>
                             </View>
-                            <RoutineBarMini
-                              routine={routine.intervals}
+                            <ClassBarMini
+                              class={aClass.intervals}
                               totalDuration={duration}
-                              activityType={routine.activityType}
+                              activityType={aClass.activityType}
                             />
                           </TouchableOpacity>
-                          {routineId === routine.id ? (
+                          {classId === aClass.id ? (
                             <View
                               style={{display: 'flex', flexDirection: 'row'}}
                             >
                               <Button
                                 onPress={() => {
-                                  this.props.setRoutine(
-                                    routines.find(
-                                      routine => routine.id === routineId
+                                  this.props.setClass(
+                                    classes.find(
+                                      aClass => aClass.id === classId
                                     )
                                   )
                                   this.props.navigation.navigate(
-                                    'StartRoutineScreen'
+                                    'StartClassScreen'
                                   )
                                 }}
                                 style={{
@@ -376,13 +373,13 @@ class ClassesScreen extends React.Component {
                               </Button>
                               <Button
                                 onPress={() => {
-                                  this.props.setRoutine(
-                                    routines.find(
-                                      routine => routine.id === routineId
+                                  this.props.setClass(
+                                    classes.find(
+                                      aClass => aClass.id === classId
                                     )
                                   )
                                   this.props.navigation.navigate(
-                                    'BuildRoutineScreen'
+                                    'BuildClassScreen'
                                   )
                                 }}
                                 style={{
@@ -392,7 +389,7 @@ class ClassesScreen extends React.Component {
                                   marginRight: 5
                                 }}
                               >
-                                <Text>Edit Routine</Text>
+                                <Text>Edit Class</Text>
                               </Button>
                             </View>
                           ) : null}
@@ -400,7 +397,7 @@ class ClassesScreen extends React.Component {
                       )
                     })
                   ) : (
-                    <Text>- No routines</Text>
+                    <Text>- No classes</Text>
                   )}
                 </ScrollView>
               </Card>
@@ -439,11 +436,11 @@ class ClassesScreen extends React.Component {
           <Button
             style={styles.button}
             onPress={() => {
-              this.props.setRoutine({})
-              this.props.navigation.navigate('BuildRoutineScreen')
+              this.props.setClass({})
+              this.props.navigation.navigate('BuildClassScreen')
             }}
           >
-            <Text>Create New Routine</Text>
+            <Text>Create New Class</Text>
           </Button>
           {/* <Text
           style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
@@ -451,10 +448,10 @@ class ClassesScreen extends React.Component {
           or
         </Text>
         <Button
-          onPress={() => this.props.navigation.navigate('PreviousRoutine')}
+          onPress={() => this.props.navigation.navigate('PreviousClass')}
           style={styles.button}
         >
-          <Text>Search Public Routines</Text>
+          <Text>Search Public Classs</Text>
         </Button> */}
         </Content>
       </Container>
