@@ -15,10 +15,12 @@ class HomeClassesScreen extends Component {
   }
 
   render() {
-    const {navigation} = this.props
+    const {navigation, myClasses} = this.props
+    const upcomingClasses = myClasses.upcoming
+    const previousClasses = myClasses.previous
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={navigation} />
         <View>
           <Button
             style={styles.button}
@@ -38,8 +40,8 @@ class HomeClassesScreen extends Component {
               <Text style={{fontWeight: '600', marginBottom: 10}}>
                 My Upcoming Classes
               </Text>
-              {this.props.myClasses.length ? (
-                this.props.myClasses.map((aClass, i) => {
+              {upcomingClasses.length ? (
+                upcomingClasses.map((aClass, i) => {
                   return <Text key={i}>{aClass.name}</Text>
                 })
               ) : (
@@ -58,8 +60,8 @@ class HomeClassesScreen extends Component {
               <Text style={{fontWeight: '600', marginBottom: 10}}>
                 My Previous Classes
               </Text>
-              {this.props.myClasses.length ? (
-                this.props.myClasses.map((aClass, i) => {
+              {previousClasses.length ? (
+                previousClasses.map((aClass, i) => {
                   return <Text key={i}>{aClass.name}</Text>
                 })
               ) : (
@@ -75,7 +77,7 @@ class HomeClassesScreen extends Component {
               })
             }
           >
-            <Text>Join Class</Text>
+            <Text>Enroll in Class</Text>
           </Button>
 
           <Button
@@ -84,7 +86,7 @@ class HomeClassesScreen extends Component {
           >
             <Text>Create Class</Text>
           </Button>
-          <Card>
+          {/* <Card>
             <CardItem header>
               <Text>My Upcoming Classes</Text>
             </CardItem>
@@ -110,7 +112,7 @@ class HomeClassesScreen extends Component {
             <CardItem header>
               <Text>My Previous Classes</Text>
             </CardItem>
-          </Card>
+          </Card> */}
         </View>
       </Content>
     )
