@@ -126,12 +126,28 @@ class HomeClassesScreen extends Component {
           <View></View>
         </View>
         <View>
+        <Button
+            style={styles.button}
+            onPress={() => navigation.navigate('ClassesScreen')}
+          >
+            <Text>Enroll in Class</Text>
+          </Button>
+
           <Button
+            style={styles.button}
+            onPress={() => {
+              this.props.setClass({})
+              this.props.navigation.navigate('BuildClassScreen')
+            }}
+          >
+            <Text>Create Class</Text>
+          </Button>
+          {/* <Button
             style={styles.button}
             onPress={() => navigation.navigate('TrainerWaitingScreen')}
           >
             <Text>Start Test Class</Text>
-          </Button>
+          </Button> */}
           <Content style={{margin: 15}}>
             <Card
               style={{
@@ -228,6 +244,13 @@ class HomeClassesScreen extends Component {
                       margin: 2
                     }}
                   />
+                  <View style={{
+                        width: '30%',
+                        margin: 2,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        borderRadius: 5
+                      }}>
                   <RNPickerSelect
                     placeholder={{label: 'Filter', value: null}}
                     onValueChange={value =>
@@ -237,6 +260,7 @@ class HomeClassesScreen extends Component {
                     items={activityTypeSelects}
                     userNativeAndroidPickerStyle={false}
                   />
+                  </View>
                 </View>
               </View>
 
@@ -439,6 +463,13 @@ class HomeClassesScreen extends Component {
                         margin: 2
                       }}
                     />
+                    <View style={{
+                        width: '30%',
+                        margin: 2,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        borderRadius: 5
+                      }}>
                     <RNPickerSelect
                       placeholder={{label: 'Filter', value: null}}
                       onValueChange={value =>
@@ -448,6 +479,7 @@ class HomeClassesScreen extends Component {
                       items={activityTypeSelects}
                       userNativeAndroidPickerStyle={false}
                     />
+                    </View>
                   </View>
                 </View>
 
@@ -516,23 +548,6 @@ class HomeClassesScreen extends Component {
               </View>
             </Card>
           </Content>
-
-          <Button
-            style={styles.button}
-            onPress={() => navigation.navigate('ClassesScreen')}
-          >
-            <Text>Enroll in Class</Text>
-          </Button>
-
-          <Button
-            style={styles.button}
-            onPress={() => {
-              this.props.setClass({})
-              this.props.navigation.navigate('BuildClassScreen')
-            }}
-          >
-            <Text>Create Class</Text>
-          </Button>
         </View>
       </Content>
     )

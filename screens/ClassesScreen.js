@@ -37,7 +37,9 @@ class ClassesScreen extends React.Component {
       filter: null,
       sort: null,
       search: '',
-      classId: null
+      classId: null,
+      classPasscode: '',
+      passcodeMessage: 'passcode'
     }
     this.handleChange = this.handleChange.bind(this)
   }
@@ -274,6 +276,16 @@ class ClassesScreen extends React.Component {
                             0
                           )
                         : 0
+                      let parseDate = aClass.when
+                        .toString()
+                        .split('GMT')[0]
+                        .split('T')
+                      let parseTime = parseDate[1].split('.')[0]
+                      parseDate = parseDate[0].split('-')
+                      parseDate = `${parseDate[2]}/${
+                        parseDate[1]
+                      }/${parseDate[0].slice(2)}`
+                      parseDate = `${parseDate} ${parseTime}`
                       return (
                         <View key={i}>
                           <TouchableOpacity
@@ -287,6 +299,8 @@ class ClassesScreen extends React.Component {
                             }}
                             onPress={() =>
                               this.setState(prevState => ({
+                                classPasscode: '',
+                                passcodeMessage: 'passcode',
                                 classId:
                                   prevState.classId === aClass.id
                                     ? null
@@ -294,37 +308,56 @@ class ClassesScreen extends React.Component {
                               }))
                             }
                           >
-                            <Text style={{textAlign: 'center'}}>
-                              Name:{' '}
-                              <Text
-                                style={{
-                                  color: 'rgb(84, 130, 53)',
-                                  fontWeight: '600',
-                                  fontSize: 18
-                                }}
-                              >
-                                {aClass.name}
-                              </Text>
-                            </Text>
                             <View
                               style={{
                                 display: 'flex',
                                 flexDirection: 'row',
-                                justifyContent: 'space-evenly'
+                                justifyContent: 'space-between'
                               }}
                             >
                               <Text>
-                                Activity:{' '}
+                                <Text
+                                  style={{
+                                    color: 'rgb(84, 130, 53)',
+                                    fontWeight: '600',
+                                    fontSize: 18
+                                  }}
+                                >
+                                  {aClass.name}{' '}
+                                  {
+                                    activityTypes[aClass.routine.activityType]
+                                      .icon
+                                  }
+                                </Text>
+                              </Text>
+                              <Text>
+                                Trainer:{' '}
                                 <Text
                                   style={{
                                     color: 'rgb(84, 130, 53)',
                                     fontStyle: 'italic'
                                   }}
                                 >
-                                  {
-                                    activityTypes[aClass.routine.activityType]
-                                      .icon
-                                  }
+                                  {aClass.user.name.split(' ')[0]}
+                                </Text>
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between'
+                              }}
+                            >
+                              <Text>
+                                Date:{' '}
+                                <Text
+                                  style={{
+                                    color: 'rgb(84, 130, 53)',
+                                    fontStyle: 'italic'
+                                  }}
+                                >
+                                  {parseDate}
                                 </Text>
                               </Text>
                               <Text>
@@ -352,7 +385,12 @@ class ClassesScreen extends React.Component {
                           </TouchableOpacity>
                           {classId === aClass.id ? (
                             <View
-                              style={{display: 'flex', flexDirection: 'row'}}
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                              }}
                             >
                               <Button
                                 onPress={async () => {
@@ -361,21 +399,29 @@ class ClassesScreen extends React.Component {
                                   //     aClass => aClass.id === classId
                                   //   )
                                   // )
-                                  await this.props.enrollClass(
-                                    aClass.id,
-                                    this.props.user.id
-                                  )
+                                  if (
+                                    aClass.classPasscode.length &&
+                                    aClass.classPasscode !==
+                                      this.state.classPasscode
+                                  ) {
+                                    this.setState({
+                                      classPasscode: '',
+                                      passcodeMessage: 'incorrect'
+                                    })
+                                    return
+                                  }
+                                  await this.props.enrollClass(aClass.id)
                                   this.props.socket.emit(
                                     'joined',
                                     aClass.id,
                                     this.props.user
                                   )
                                   this.props.navigation.navigate(
-                                    'UserWaitingScreen'
+                                    new Date(aClass.when) - new Date() <
+                                      10 * 60 * 1000
+                                      ? 'UserWaitingScreen'
+                                      : 'HomeClassesScreen'
                                   )
-                                  // this.props.navigation.navigate(
-                                  //   'StartClassScreen'
-                                  // )
                                 }}
                                 style={{
                                   ...styles.button,
@@ -386,27 +432,24 @@ class ClassesScreen extends React.Component {
                               >
                                 <Text>Join Class</Text>
                               </Button>
-                              {/* <Button
-                                onPress={() => {
-                                  this.props.setClass(
-                                    classes.find(
-                                      aClass => aClass.id === classId
-                                    )
-                                  )
-
-                                  this.props.navigation.navigate(
-                                    'BuildClassScreen'
-                                  )
-                                }}
-                                style={{
-                                  ...styles.button,
-                                  width: '47%',
-                                  marginLeft: 5,
-                                  marginRight: 5
-                                }}
-                              >
-                                <Text>Edit Class</Text>
-                              </Button> */}
+                              {aClass.classPasscode.length ? (
+                                <View style={{width: '30%', margin: 2}}>
+                                  <Input
+                                    placeholder={this.state.passcodeMessage}
+                                    autoCorrect={false}
+                                    value={this.state.classPasscode}
+                                    onChangeText={classPasscode =>
+                                      this.setState({classPasscode})
+                                    }
+                                    style={{
+                                      borderBottomColor: 'gray',
+                                      borderBottomWidth: 1,
+                                      fontSize: 14,
+                                      height: 16
+                                    }}
+                                  />
+                                </View>
+                              ) : null}
                             </View>
                           ) : null}
                         </View>
