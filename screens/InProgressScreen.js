@@ -37,12 +37,22 @@ class InProgressScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._subscribe()
-    this._startWorkout()
+    if (this.props.proposedStart) {
+      const wait = setInterval(() => {
+        if (Date.now() >= this.props.proposedStart) {
+          this._subscribe()
+          this._startWorkout()
+          clearInterval(wait)
+        }
+      }, 10)
+    } else {
+      this._subscribe()
+      this._startWorkout()
+    }
   }
 
   componentWillUnmount() {
-this._endWorkout()
+    this._endWorkout()
   }
 
   _subscribe = () => {
@@ -69,13 +79,16 @@ this._endWorkout()
         cadences,
         avgCadences
       })
-      this.props.socket.emit('workoutTimestamp', {
-        workoutTimestamp: {
+      this.props.socket.emit(
+        'workoutTimestamp',
+        this.props.user.id,
+        {
           ...workoutTimestamp,
           goalCadence: this.state.intervals[this.state.currentInterval].cadence
         },
-        workoutId: this.props.workout.id
-      })
+        this.props.workout.id,
+        this.props.singleClass.id || null
+      )
     })
 
     Pedometer.isAvailableAsync().then(
@@ -100,7 +113,7 @@ this._endWorkout()
     //     console.log(error)
     //   }
     const clearCadence = setInterval(async () => {
-      if (this.state.totalTimeElapsed>=this.state.totalTime) {
+      if (this.state.totalTimeElapsed >= this.state.totalTime) {
         console.log('here')
         this._endWorkout()
         return
@@ -146,13 +159,13 @@ this._endWorkout()
       } = this.state
       totalTimeElapsed++
       intervalTime++
-      if (this.state.totalTimeElapsed>=this.state.totalTime) {
+      if (this.state.totalTimeElapsed >= this.state.totalTime) {
         console.log('here')
         this._endWorkout()
         return
       }
       if (intervalTime > intervals[currentInterval].duration - 1) {
-        if (currentInterval < intervals.length-1) {
+        if (currentInterval < intervals.length - 1) {
           currentInterval++
           intervalTime = 0
           clearInterval(clearCadence)
@@ -168,7 +181,7 @@ this._endWorkout()
           //     1000
           // )
           clearCadence = setInterval(async () => {
-            if (this.state.totalTimeElapsed>=this.state.totalTime) {
+            if (this.state.totalTimeElapsed >= this.state.totalTime) {
               console.log('here')
               this._endWorkout()
               return
@@ -271,8 +284,7 @@ this._endWorkout()
         0.85 * intervals[currentInterval].cadence &&
       avgCadences[avgCadences.length - 1].cadence <
         1.15 * intervals[currentInterval].cadence
-    return (
-      currentInterval>intervals.length ? null :
+    return currentInterval > intervals.length ? null : (
       <Container>
         <View
           style={{
@@ -467,11 +479,12 @@ InProgressScreen.navigationOptions = {
   header: null
 }
 
-const mapStateToProps = ({routine, option, user, workout}) => ({
+const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   routine,
   option,
   user,
-  workout
+  workout,
+  singleClass
 })
 
 const SocketConnectedInProgressScreen = props => (
