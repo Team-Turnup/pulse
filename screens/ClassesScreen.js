@@ -19,6 +19,7 @@ import {
 } from 'native-base'
 import {enrollClass} from '../store/singleClass'
 import {getClassesThunk} from '../store/classes'
+import {SocketContext} from '../socket'
 
 class ClassesScreen extends React.Component {
   constructor() {
@@ -38,9 +39,7 @@ class ClassesScreen extends React.Component {
   }
 
   render() {
-    const studentId = this.props.navigation.getParam('loggedInUserId', 'NA')
-
-    const {classes} = this.props
+    const {classes, user} = this.props
     let allClasses = classes.filter(aClass =>
       aClass.name.toLowerCase().includes(this.state.search.toLowerCase())
     )
@@ -67,7 +66,8 @@ class ClassesScreen extends React.Component {
                 return (
                   <CardItem
                     onPress={async () => {
-                      await this.props.enrollClass(aClass.id, studentId),
+                      this.props.socket.emit('joined', aClass.id, user)
+                      await this.props.enrollClass(aClass.id, user.id),
                         this.props.navigation.navigate('UserWaitingScreen')
                     }}
                     button
@@ -88,7 +88,8 @@ class ClassesScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  classes: state.classes
+  classes: state.classes,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -97,4 +98,13 @@ const mapDispatchToProps = dispatch => ({
   getClasses: () => dispatch(getClassesThunk())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClassesScreen)
+const SocketConnectedClassesScreen = props => (
+  <SocketContext.Consumer>
+    {socket => <ClassesScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SocketConnectedClassesScreen)

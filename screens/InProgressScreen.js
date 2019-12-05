@@ -5,9 +5,9 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
-import socket from '../socket'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
+import {SocketContext} from '../socket'
 
 class InProgressScreen extends React.Component {
   constructor(props) {
@@ -71,7 +71,7 @@ class InProgressScreen extends React.Component {
         cadences,
         avgCadences
       })
-      socket.emit('workoutTimestamp', {
+      this.props.socket.emit('workoutTimestamp', {
         workoutTimestamp: {
           ...workoutTimestamp,
           goalCadence: this.state.intervals[this.state.currentInterval].cadence
@@ -449,4 +449,10 @@ const mapStateToProps = ({routine, option, user, workout}) => ({
   workout
 })
 
-export default connect(mapStateToProps)(InProgressScreen)
+const SocketConnectedInProgressScreen = props => (
+  <SocketContext.Consumer>
+    {socket => <InProgressScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
+
+export default connect(mapStateToProps)(SocketConnectedInProgressScreen)
