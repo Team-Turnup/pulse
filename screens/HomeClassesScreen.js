@@ -29,7 +29,7 @@ class HomeClassesScreen extends Component {
       pastClassesPages: 0,
       futureClassesPages: 0,
       futureFilter: null,
-      pastFilter:null,
+      pastFilter: null,
       sort: null,
       searchUpcoming: '',
       searchPrevious: '',
@@ -75,10 +75,8 @@ class HomeClassesScreen extends Component {
       : myClasses
 
     let pastFilteredClasses = pastFilter
-      ? myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
+      ? myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
       : myClasses
-
-
 
     let searchedFutureClasses = futureFilteredClasses.filter(aClass =>
       aClass.name
@@ -125,15 +123,7 @@ class HomeClassesScreen extends Component {
             justifyContent: 'space-evenly'
           }}
         >
-          <View>
-            <RNPickerSelect
-              placeholder={{label: 'Filter', value: null}}
-              onValueChange={value => this.handleChange('futureFilter', value)}
-              value={futureFilter}
-              items={activityTypeSelects}
-              userNativeAndroidPickerStyle={false}
-            />
-          </View>
+          <View></View>
         </View>
         <View>
           <Content style={{margin: 15}}>
@@ -165,6 +155,15 @@ class HomeClassesScreen extends Component {
                     // width: '50%',
                     // margin: 2
                   }}
+                />
+                <RNPickerSelect
+                  placeholder={{label: 'Filter', value: null}}
+                  onValueChange={value =>
+                    this.handleChange('futureFilter', value)
+                  }
+                  value={futureFilter}
+                  items={activityTypeSelects}
+                  userNativeAndroidPickerStyle={false}
                 />
                 {futureClassesPage > 1 ? (
                   <TouchableOpacity
@@ -307,6 +306,15 @@ class HomeClassesScreen extends Component {
                       // width: '50%',
                       // margin: 2
                     }}
+                  />
+                  <RNPickerSelect
+                    placeholder={{label: 'Filter', value: null}}
+                    onValueChange={value =>
+                      this.handleChange('pastFilter', value)
+                    }
+                    value={pastFilter}
+                    items={activityTypeSelects}
+                    userNativeAndroidPickerStyle={false}
                   />
                   {pastClassesPage > 1 ? (
                     <TouchableOpacity
