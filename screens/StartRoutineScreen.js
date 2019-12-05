@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 75,
-    color: 'blue'
+    color: 'rgb(84, 130, 53)'
   },
   smallText: {
     textAlign: 'center',

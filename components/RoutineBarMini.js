@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import activityTypes from '../assets/images/activityTypes'
 
-export default RoutineBarDisplay = props => {
+export default RoutineBarMini = props => {
   const {routine, totalDuration, activityType} = props
 
   return (
@@ -21,9 +21,11 @@ export default RoutineBarDisplay = props => {
           >
             {width > 10 ? (
               <View style={styles.intervalInfo}>
-                {activityType==='combo' ? <Text style={styles.text}>
-                  {activityTypes[interval.activityType].icon}
-                </Text> : null }
+                {activityType === 'combo' ? (
+                  <Text style={styles.text}>
+                    {activityTypes[interval.activityType].icon}
+                  </Text>
+                ) : null}
                 <Text style={styles.text}>{interval.cadence}bpm</Text>
               </View>
             ) : null}

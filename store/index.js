@@ -19,7 +19,6 @@ const reducer = combineReducers({
   user,
   singleClass,
   classes,
-  socket,
   option,
   myClasses,
   workout,
