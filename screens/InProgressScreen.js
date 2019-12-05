@@ -50,7 +50,7 @@ class InProgressScreen extends React.Component {
   _subscribe = () => {
     this._subscription = Pedometer.watchStepCount(result => {
       let {avgCadences, currentStepCount, cadences} = this.state
-      const timestamp = Date.now()-this.state.startTime
+      const timestamp = Date.now() - this.state.startTime
       const cadence =
         ((result.steps - currentStepCount) /
           (timestamp - avgCadences[avgCadences.length - 1].timestamp)) *
@@ -357,12 +357,13 @@ class InProgressScreen extends React.Component {
                   </Card>
                 </View>
               </View>
-              {/* <WorkoutGraph
-            intervals={intervals}
-            workoutData={avgCadences}
-            startTime={avgCadences[0].timestamp}
-            paused={paused}
-          /> */}
+              <WorkoutGraph
+                intervals={intervals}
+                workoutData={avgCadences}
+                totalTimeElapsed={totalTimeElapsed}
+                totalTime={totalTime}
+                paused={paused}
+              />
               <View style={styles.buttonContainer}>
                 {this.state.paused ? (
                   <Button
