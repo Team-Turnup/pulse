@@ -47,7 +47,6 @@ class MyPreviousWorkouts extends React.Component {
   }
 
   render() {
-    // console.log(this.props.workouts)
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
@@ -123,26 +122,14 @@ class MyPreviousWorkouts extends React.Component {
       page * numPerPage
     )
     return (
-      <Container>
-        <Content>
-          <Text
-            style={{
-              paddingTop: 15,
-              textAlign: 'center',
-              fontWeight: '600',
-              fontSize: 20,
-              color: 'rgb(84, 130, 53)'
-            }}
-          >
-            Start New Solo Workout
-          </Text>
+      <View style={{height:415}}>
           <View
             style={{
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center'
-              //height: 650
+              alignItems: 'center',
+              height: '100%'
             }}
           >
             {page > 1 ? (
@@ -178,12 +165,12 @@ class MyPreviousWorkouts extends React.Component {
                   padding: 15,
                   margin: 15,
                   // height: 650
-                  height: 435
+                  height: 405
                 }}
               >
                 <ScrollView>
                   <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    Select One of Your Previous Workouts
+                    My Previous Workouts
                   </Text>
                   <View
                     style={{
@@ -286,16 +273,18 @@ class MyPreviousWorkouts extends React.Component {
                               borderRadius: 10,
                               overflow: 'hidden'
                             }}
-                            onPress={() =>
-                              this.setState(prevState => ({
-                                workoutId:
-                                  prevState.workoutId === workout.routine.id
-                                    ? null
-                                    : workout.routine.id
-                              }))
+                            onPress={() => {}
+                              // this.props.navigation.navigate('PreviousWorkoutScreen')
                             }
                           >
-                            <Text style={{textAlign: 'center'}}>
+                            <View
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-evenly'
+                              }}
+                            >
+                            <Text>
                               Name:{' '}
                               <Text
                                 style={{
@@ -307,6 +296,18 @@ class MyPreviousWorkouts extends React.Component {
                                 {workout.routine.name}
                               </Text>
                             </Text>
+                            <Text>
+                              Date:{' '}
+                              <Text
+                                style={{
+                                  color: 'rgb(84, 130, 53)',
+                                  fontStyle: 'italic'
+                                }}
+                              >
+                                {workout.timestamp.split('T')[0]}
+                              </Text>
+                            </Text>
+                            </View>
                             <View
                               style={{
                                 display: 'flex',
@@ -351,59 +352,11 @@ class MyPreviousWorkouts extends React.Component {
                               />
                             ) : null}
                           </TouchableOpacity>
-                          {workoutId === workout.routine.id ? (
-                            <View
-                              style={{display: 'flex', flexDirection: 'row'}}
-                            >
-                              <Button
-                                onPress={() => {
-                                  this.props.setWorkout(
-                                    workouts.find(
-                                      workout =>
-                                        workout.routine.id === workoutId
-                                    )
-                                  )
-                                  // this.props.navigation.navigate(
-                                  //   'StartWorkoutScreen'
-                                  // )
-                                }}
-                                style={{
-                                  ...styles.button,
-                                  width: '47%',
-                                  marginLeft: 5,
-                                  marginRight: 5
-                                }}
-                              >
-                                <Text>Start Workout</Text>
-                              </Button>
-                              <Button
-                                onPress={() => {
-                                  this.props.setWorkout(
-                                    workouts.find(
-                                      workout =>
-                                        workout.routine.id === workoutId
-                                    )
-                                  )
-                                  // this.props.navigation.navigate(
-                                  //   'BuildWorkoutScreen'
-                                  // )
-                                }}
-                                style={{
-                                  ...styles.button,
-                                  width: '47%',
-                                  marginLeft: 5,
-                                  marginRight: 5
-                                }}
-                              >
-                                <Text>Edit Workout</Text>
-                              </Button>
-                            </View>
-                          ) : null}
                         </View>
                       )
                     })
                   ) : (
-                    <Text>- No workouts</Text>
+                    <Text>- No previous workouts</Text>
                   )}
                 </ScrollView>
               </Card>
@@ -434,13 +387,7 @@ class MyPreviousWorkouts extends React.Component {
               ></View>
             )}
           </View>
-          <Text
-            style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
-          >
-            or
-          </Text>
-        </Content>
-      </Container>
+      </View>
     )
   }
 }
