@@ -59,6 +59,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
           danger
           style={{margin: 7}}
           onPress={() => {
+            socket.emit('left', _class.id, user.id)
             dispatch(leaveClass(_class.id, user.id))
             navigation.navigate('HomeClassesScreen')
           }}

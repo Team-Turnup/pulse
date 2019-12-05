@@ -52,6 +52,11 @@ module.exports = io => {
       informLeader(classId, 'joined', user)
     })
 
+    socket.on('left', (classId, userId) => {
+      console.log(`${userId} has left ${classId}`)
+      informLeader(classId, 'left', userId)
+    })
+
     socket.on('unsubscribe', (classId, userId, isLeader = false) => {
       if (isLeader && classes[classId].leader.socket === socket.id) {
         classes[classId].leader = initialLeader

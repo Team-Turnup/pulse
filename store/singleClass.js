@@ -7,6 +7,7 @@ const SET_CLASS = 'SET_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
 const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
+const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE'
 
 const setClass = singleClass => ({
   type: SET_CLASS,
@@ -115,10 +116,14 @@ const classReducer = (state = initialState, action) => {
         )
       }
     case ADD_NEW_ATTENDEE:
-      console.log(action)
       return {
         ...state,
         attendees: [...state.attendees, action.attendee]
+      }
+    case REMOVE_ATTENDEE:
+      return {
+        ...state,
+        attendees: state.attendees.filter(({id}) => id !== action.id)
       }
     default:
       return state

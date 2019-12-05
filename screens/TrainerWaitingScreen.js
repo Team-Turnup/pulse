@@ -2,7 +2,11 @@
 import React, {useEffect, useState, Fragment} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import useInterval from 'use-interval'
-import {setReadyAttendees, addNewAttendee} from '../store/singleClass'
+import {
+  setReadyAttendees,
+  addNewAttendee,
+  removeAttendee
+} from '../store/singleClass'
 import {SocketContext} from '../socket'
 
 // Components
@@ -34,7 +38,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   useEffect(() => {
     // listen for socket messages
     socket.on('joined', user => dispatch(addNewAttendee(user)))
-    socket.on('left', user => dispatch(removeAttendee(user)))
+    socket.on('left', id => dispatch(removeAttendee(id)))
     socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
   }, [])
 
@@ -59,7 +63,8 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
           <Fragment>
             <View style={styles.startView}>
               {when < curTime ||
-              attendees.length === attendees.filter(a => a.ready).length ? (
+              (attendees.length &&
+                attendees.length === attendees.filter(a => a.ready).length) ? (
                 <StartButton _onPress={_onPress} />
               ) : (
                 <StartTime when={when} />
