@@ -12,7 +12,6 @@ import {
   CheckBox,
   View
 } from 'native-base'
-import {Platform} from 'react-native'
 import {StartTime, styles} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
 import {leaveClass} from '../store/singleClass'

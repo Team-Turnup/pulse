@@ -19,12 +19,17 @@ module.exports = io => {
       console.log(`Connection ${socket.id} has left the building`)
     })
 
-    socket.on('workoutTimestamp', async ({workoutTimestamp, workoutId}) => {
-      const newWorkoutTimestamp = await WorkoutTimestamp.create(
-        workoutTimestamp
-      )
-      newWorkoutTimestamp.setWorkout(workoutId)
-    })
+    socket.on(
+      'workoutTimestamp',
+      async (userId, workoutTimestamp, workoutId, classId) => {
+        const newWorkoutTimestamp = await WorkoutTimestamp.create(
+          workoutTimestamp
+        )
+        newWorkoutTimestamp.setWorkout(workoutId)
+        if (classId)
+          informLeader(classId, 'workoutTimestamp', userId, workoutTimestamp)
+      }
+    )
 
     socket.on('start', (classId, userId, proposedStart) => {
       if (classes[classId] && classes[classId].leader.userId === userId) {

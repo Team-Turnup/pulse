@@ -1,31 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {VictoryLine, VictoryChart} from 'victory-native'
 import {Text} from 'native-base'
-// import {DateTime} from 'luxon'
-// import useInterval from 'use-interval'
-
-// // using useReducer since we've got an array of DateTimes
-// const ADD = 'ADD'
-// const addInterval = (payload, startTime) => ({type: ADD, payload, startTime})
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case ADD:
-//       const {
-//         payload: {duration, cadence},
-//         startTime
-//       } = action
-//       // initialize to provided startTime or peek back at previous interval
-//       const lastInterval =
-//         (startTime && [DateTime.fromMillis(startTime)]) || state.slice(-1)[0]
-//       // calculate beginning and end from last interval
-//       const begin = lastInterval[0].plus({milliseconds: 1})
-//       const end = begin.plus({seconds: duration})
-//       // adds two new arrays to state w/ start and cadence, end and cadence
-//       return [...state, [begin, cadence], [end, cadence]]
-//     default:
-//       return state
-//   }
-// }
 
 export default ({
   domainSetting = true,
@@ -37,7 +12,6 @@ export default ({
   paused
 }) => {
   const [domain, setDomain] = useState([0, 30])
-  const [tick, setTick] = useState(true)
 
   const [routine, setRoutine] = useState([])
 
@@ -77,7 +51,7 @@ export default ({
         samples={1}
       />
       <VictoryLine data={routine} x={0} y={1} />
-      {workoutData.length > 2 ? (
+      {workoutData.length > 4 ? (
         <VictoryLine
           interpolation="catmullRom"
           data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
