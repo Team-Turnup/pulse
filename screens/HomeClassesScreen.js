@@ -23,8 +23,9 @@ class HomeClassesScreen extends Component {
     super(props)
     this.state = {
       page: 1,
-      numPerPage: 2,
+      numPerPage: 4,
       pastClassesPages: 0,
+      futureClassesPages: 0,
       sort: null,
       search: '',
       classId: null
@@ -65,6 +66,14 @@ class HomeClassesScreen extends Component {
       page * numPerPage
     )
 
+    let viewFutureClasses = [...futureClasses]
+    let futureClassesResults = viewFutureClasses.length
+    let futureClassesPages = Math.ceil(futureClassesResults / numPerPage)
+    viewFutureClasses = viewFutureClasses.slice(
+      (page - 1) * numPerPage,
+      page * numPerPage
+    )
+
     return (
       <Content>
         <AppHeader />
@@ -78,9 +87,68 @@ class HomeClassesScreen extends Component {
                 margin: 15
               }}
             >
-              <Text style={{fontWeight: '600', marginBottom: 10}}>
-                My Upcoming Classes
-              </Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-evenly'
+                }}
+              >
+                {page > 1 ? (
+                  <TouchableOpacity
+                    style={{
+                      width: 25,
+                      height: 35,
+                      backgroundColor: 'rgb(84, 130, 53)',
+                      borderRadius: 5,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                    onPress={() =>
+                      this.setState(prevState => ({
+                        page: prevState.page - 1
+                      }))
+                    }
+                  >
+                    <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+
+                <Text style={{fontWeight: '600', marginBottom: 10}}>
+                  My Upcoming Classes
+                </Text>
+                {page < pastClassesPages ? (
+                  <TouchableOpacity
+                    style={{
+                      width: 25,
+                      height: 35,
+                      backgroundColor: 'rgb(84, 130, 53)',
+                      borderRadius: 5,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                    onPress={() =>
+                      this.setState(prevState => ({
+                        page: prevState.page + 1
+                      }))
+                    }
+                  >
+                    <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View
+                  // style={{
+                  //   width: 25,
+                  //   height: 35
+                  // }}
+                  ></View>
+                )}
+              </View>
               {/* <View style={{width: '30%', margin: 2}}>
                     <Input
                       placeholder="Search"
@@ -95,8 +163,8 @@ class HomeClassesScreen extends Component {
                       }}
                     />
                   </View> */}
-              {futureClasses.length ? (
-                futureClasses.map((aClass, i) => {
+              {viewFutureClasses.length ? (
+                viewFutureClasses.map((aClass, i) => {
                   const duration = aClass.routine.intervals.reduce(
                     (sum, interval) => sum + interval.duration,
                     0
@@ -174,7 +242,6 @@ class HomeClassesScreen extends Component {
                     justifyContent: 'space-evenly'
                   }}
                 >
-                  {/* <View> */}
                   {page > 1 ? (
                     <TouchableOpacity
                       style={{
@@ -195,12 +262,7 @@ class HomeClassesScreen extends Component {
                       <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
                     </TouchableOpacity>
                   ) : (
-                    <View
-                    // style={{
-                    //   width: 25,
-                    //   height: 35
-                    // }}
-                    ></View>
+                    <View></View>
                   )}
 
                   <Text style={{fontWeight: '600', marginBottom: 10}}>
@@ -234,7 +296,6 @@ class HomeClassesScreen extends Component {
                     // }}
                     ></View>
                   )}
-                  {/* </View> */}
                 </View>
 
                 <View>
