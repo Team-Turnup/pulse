@@ -10,6 +10,7 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
 
 class CadenceVibrationSettings extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class CadenceVibrationSettings extends Component {
     this.state = {
       name: this.props.user.name || '',
       age: this.props.user.age || 0,
-      gender: this.props.user.gender ||null,
+      gender: this.props.user.gender || null,
       weight: this.props.user.weight || 0,
       height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',
@@ -38,7 +39,7 @@ class CadenceVibrationSettings extends Component {
 
   handleChange(key, value) {
     this.setState({[key]: value})
-    if (key!=='visualColor') {
+    if (key !== 'visualColor') {
       this.props.updateOptionThunk({[key]: value})
     }
   }
@@ -70,10 +71,12 @@ class CadenceVibrationSettings extends Component {
 
   handleVisualColor(value) {
     this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(setInterval(()=>{
-      this.setState({opacity: 0.3})
-      setTimeout(()=>this.setState({opacity: 1}), 300)
-    }, 600))
+    this.clearVisual.push(
+      setInterval(() => {
+        this.setState({opacity: 0.3})
+        setTimeout(() => this.setState({opacity: 1}), 300)
+      }, 600)
+    )
     setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
     // if (value) {
     //     if (this.clear.length) {
@@ -83,13 +86,14 @@ class CadenceVibrationSettings extends Component {
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
-  arrayBufferToBase64( buffer) {
+  arrayBufferToBase64(buffer) {
     return btoa(
-      new Uint8Array(buffer)
-        .reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-}
-
+      new Uint8Array(buffer).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ''
+      )
+    )
+  }
 
   render() {
     // console.log(this.props.user.image.data)
@@ -102,6 +106,7 @@ class CadenceVibrationSettings extends Component {
     return (
       <Container>
         <Content>
+          <AppHeader navigation={this.props.navigation} />
 
           {/* <Button
           info
@@ -110,35 +115,36 @@ class CadenceVibrationSettings extends Component {
             <Text>Edit User Info</Text>
           </Button> */}
 
-          <Text style={styles.sectionHeader}>Cadence Settings</Text>
-          <Text style={styles.sectionHeader}>Vibration Settings</Text>
-          <Label>Vibration Feedback Style</Label>
-          <RNPickerSelect
-            onValueChange={value => this.handleHaptic(value)}
-            style={{display: 'flex', alignItems: 'center'}}
-            value={this.state.hapticWhat}
-            items={[
-              {label: 'Single Beat', value: 'singlebeat'},
-              {label: 'Heartbeat', value: 'heartbeat'},
-              {label: 'Triplet', value: 'triplet'},
-              {label: 'Double-time', value: 'doubletime'},
-              {label: 'Triple-time', value: 'tripletime'},
-              {label: 'Quadruple-time', value: 'quadrupletime'}
-            ]}
-          />
-          <Label>When to Play Vibration Feedback</Label>
-          <RNPickerSelect
-            onValueChange={value => this.handleChange('hapticWhen', value)}
-            style={{display: 'flex', alignItems: 'center'}}
-            value={this.state.hapticWhen}
-            items={[
-              {label: 'Every Beat', value: 'everybeat'},
-              {label: 'Mute at Goal', value: 'muteAtGoal'},
-              {label: 'Mute', value: 'mute'}
-            ]}
-          />
+          <Text style={styles.header}>Vibration Settings</Text>
+          <View style={styles.viewPicker}>
+            <Label>Vibration Feedback Style</Label>
 
-
+            <RNPickerSelect
+              onValueChange={value => this.handleHaptic(value)}
+              value={this.state.hapticWhat}
+              items={[
+                {label: 'Single Beat', value: 'singlebeat'},
+                {label: 'Heartbeat', value: 'heartbeat'},
+                {label: 'Triplet', value: 'triplet'},
+                {label: 'Double-time', value: 'doubletime'},
+                {label: 'Triple-time', value: 'tripletime'},
+                {label: 'Quadruple-time', value: 'quadrupletime'}
+              ]}
+            />
+          </View>
+          <View style={styles.viewPicker}>
+            <Label>When to Play Vibration Feedback</Label>
+            <RNPickerSelect
+              onValueChange={value => this.handleChange('hapticWhen', value)}
+              style={{display: 'flex', alignItems: 'center'}}
+              value={this.state.hapticWhen}
+              items={[
+                {label: 'Every Beat', value: 'everybeat'},
+                {label: 'Mute at Goal', value: 'muteAtGoal'},
+                {label: 'Mute', value: 'mute'}
+              ]}
+            />
+          </View>
         </Content>
       </Container>
     )
@@ -147,11 +153,21 @@ class CadenceVibrationSettings extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 20,
+    paddingTop: 15,
     textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    marginBottom: 25
+  },
+  viewPicker: {
     width: '100%',
-    color: 'rgba(255,255,255, 0.9)',
-    backgroundColor: 'gray'
+    margin: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    display: 'flex',
+    alignItems: 'center'
   },
   buttons: {
     display: 'flex',
@@ -211,7 +227,11 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({user, option}) => ({user, option})
 
 const mapDispatchToProps = {
-  changeUserInfoThunk, updateOptionThunk
+  changeUserInfoThunk,
+  updateOptionThunk
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CadenceVibrationSettings)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CadenceVibrationSettings)
