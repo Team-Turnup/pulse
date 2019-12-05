@@ -12,7 +12,7 @@ import {
 } from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
-import {getClassThunk} from '../store/singleClass'
+import {getClassThunk, setClass} from '../store/singleClass'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
@@ -141,12 +141,14 @@ class HomeClassesScreen extends Component {
                 margin: 15
               }}
             >
+
               <View
                 style={{
                   display: 'flex',
                   flexDirection: 'column'
                 }}
               >
+
                 <View
                   style={{
                     display: 'flex',
@@ -244,16 +246,11 @@ class HomeClassesScreen extends Component {
                     (sum, interval) => sum + interval.duration,
                     0
                   )
-                  let parseDate = aClass.when
-                    .toString()
-                    .split('GMT')[0]
-                    .split('T')
+                  let parseDate = aClass.when.toString().split('GMT')[0].split('T')
                   let parseTime = parseDate[1].split('.')[0]
-                  parseDate = parseDate[0].split('-')
-                  parseDate = `${parseDate[2]}/${
-                    parseDate[1]
-                  }/${parseDate[0].slice(2)}`
-                  parseDate = `${parseDate} ${parseTime}`
+                  parseDate=parseDate[0].split('-')
+                  parseDate=`${parseDate[2]}/${parseDate[1]}/${parseDate[0].slice(2)}`
+                  parseDate=`${parseDate} ${parseTime}`
                   return (
                     <TouchableOpacity
                       key={i}
@@ -265,35 +262,28 @@ class HomeClassesScreen extends Component {
                         borderRadius: 10,
                         overflow: 'hidden'
                       }}
-                      onPress={async () => {
+                      onPress={ async () => {
                         await this.props.getClassThunk(aClass.id)
-                        this.props.navigation.navigate(
-                          aClass.userId === this.props.user.id
-                            ? 'TrainerWaitingScreen'
-                            : 'UserWaitingScreen'
-                        )
+                         this.props.navigation.navigate(aClass.userId===this.props.user.id ? 'TrainerWaitingScreen' : 'UserWaitingScreen')
                       }}
                     >
-                      <View
-                        style={{
+                      <View style={{
                           display: 'flex',
                           flexDirection: 'row',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <Text>
-                          <Text
-                            style={{
-                              color: 'rgb(84, 130, 53)',
-                              fontWeight: '600',
-                              fontSize: 18
-                            }}
-                          >
-                            {aClass.name}{' '}
-                            {activityTypes[aClass.routine.activityType].icon}
-                          </Text>
+                          justifyContent: 'space-between'}}>
+                      <Text>
+                        <Text
+                          style={{
+                            color: 'rgb(84, 130, 53)',
+                            fontWeight: '600',
+                            fontSize: 18
+                          }}
+                        >
+                          {aClass.name}{' '}
+                          {activityTypes[aClass.routine.activityType].icon}
                         </Text>
-                        <Text>
+                      </Text>
+                      <Text>
                           Trainer:{' '}
                           <Text
                             style={{
@@ -305,13 +295,10 @@ class HomeClassesScreen extends Component {
                           </Text>
                         </Text>
                       </View>
-                      <View
-                        style={{
+                      <View style={{
                           display: 'flex',
                           flexDirection: 'row',
-                          justifyContent: 'space-between'
-                        }}
-                      >
+                          justifyContent: 'space-between'}}>
                         <Text>
                           Date:{' '}
                           <Text
@@ -331,12 +318,13 @@ class HomeClassesScreen extends Component {
                               fontStyle: 'italic'
                             }}
                           >
-                            {Math.floor(duration / 60)
-                              ? `${Math.floor(duration / 60)}m`
-                              : ''}{' '}
-                            {duration % 60 ? `${duration % 60}s` : ''}
+                             {Math.floor(duration / 60)
+                                  ? `${Math.floor(duration / 60)}m`
+                                  : ''}{' '}
+                                {duration % 60 ? `${duration % 60}s` : ''}
                           </Text>
                         </Text>
+
                       </View>
                       <RoutineBarMini
                         routine={aClass.routine.intervals}
@@ -361,6 +349,7 @@ class HomeClassesScreen extends Component {
             >
               <View>
                 <View>
+
                   <View
                     style={{
                       display: 'flex',
@@ -571,7 +560,8 @@ const mapStateToProps = ({user, workouts, myClasses, routine}) => ({
 const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
-  getClassThunk
+  getClassThunk,
+  setClass,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)
