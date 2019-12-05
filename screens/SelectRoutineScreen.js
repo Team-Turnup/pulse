@@ -41,7 +41,6 @@ class SelectRoutineScreen extends Component {
   }
 
   render() {
-    console.log('this.props.routines in selectroutine', this.props.routines)
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
