@@ -74,7 +74,8 @@ export const createClassThunk = singleClass => async dispatch => {
   try {
     const {
       data: {routine, ..._class}
-    } = await axios.get(`${ngrok}/api/classes/`, singleClass)
+    } = await axios.post(`${ngrok}/api/classes/`, singleClass)
+
     _class.when = Date.parse(_class.when)
     dispatch(setClass(_class))
     dispatch(setRoutine(routine))

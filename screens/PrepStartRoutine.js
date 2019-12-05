@@ -7,28 +7,35 @@ const PrepStartRoutine = props => {
   //const chestActivity = 'breathing'
   //const ankleActivity = 'cycling'
 
+  const routineActivityTypes = props.routine.intervals.map(
+    interval => interval.activityType
+  )
+
   return (
     <Container
     // style={{marginTop: 15}}
     >
       <Content>
-        {props.routine.activityType === 'breathing' ? (
-          <Text style={styles.text}>
-            Please strap your phone{'\n'}to your chest
-          </Text>
-        ) : props.routine.activityType === 'cycling' ? (
-          <Text style={styles.text}>
-            Please strap your phone{'\n'}to your ankle
-          </Text>
-        ) : props.routine.activityType === 'combo' ? (
-          <Text style={styles.text}>
-            Please strap your phone{'\n'}to your chest for breathing intervals,
-            {'\n'}to your ankle for cycling intervals,{'\n'}and to your wrist
-            {'\n'}for all other activities
-          </Text>
-        ) : (
-          <Text style={styles.text}>Please strap your phone to your wrist</Text>
-        )}
+      <Text style={styles.text}>Please strap your phone</Text>
+          {routineActivityTypes.includes('breathing') ? (
+            <Text style={styles.text}>
+              to your chest for breathing intervals
+            </Text>
+          ) : null}
+          {routineActivityTypes.includes('cycling') ? (
+            <Text style={styles.text}>to your ankle for cycling intervals</Text>
+          ) : null}
+          {routineActivityTypes.filter(type=>type!=='breathing'&&type!=='cycling').length ? <Text style={styles.text}>
+            {routineActivityTypes.includes('breathing') ||
+            routineActivityTypes.includes('cycling')
+              ? 'and '
+              : ''}
+            to your wrist{' '}
+            {routineActivityTypes.includes('breathing') ||
+            routineActivityTypes.includes('cycling')
+              ? 'for all other intervals'
+              : ''}
+          </Text>: null}
       </Content>
     </Container>
   )

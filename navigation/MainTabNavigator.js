@@ -9,12 +9,15 @@ import HomeWorkoutsScreen from '../screens/HomeWorkoutsScreen'
 import SelectRoutineScreen from '../screens/SelectRoutineScreen'
 import UserWaitingScreen from '../screens/UserWaitingScreen'
 import ClassesScreen from '../screens/ClassesScreen'
-import CreateClassScreen from '../screens/CreateClassScreen'
 import BuildRoutineScreen from '../screens/BuildRoutineScreen'
+import BuildClassScreen from '../screens/BuildClassScreen'
 import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import PreviousWorkoutScreen from '../screens/PreviousWorkoutScreen'
+import OptionUserInfoScreen from '../screens/OptionsUserInfoScreen'
+import OptionsCadenceVibrationScreen from '../screens/OptionsCadenceVibrationScreen'
+import OptionsVisualSettingsScreen from '../screens/OptionsVisualSettingsScreen'
 // import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
@@ -79,8 +82,10 @@ const HomeClassesStack = createStackNavigator({
   HomeClassesScreen,
   ClassesScreen,
   UserWaitingScreen,
-  CreateClassScreen
-
+  BuildClassScreen,
+  TrainerWaitingScreen,
+  BuildRoutineScreen,
+  SelectRoutineScreen
 })
 
 HomeClassesStack.navigationOptions = {
@@ -97,7 +102,10 @@ HomeClassesStack.path = ''
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: OptionsScreen
+    Settings: OptionsScreen,
+    UserInfo:OptionUserInfoScreen,
+    CadenceVibration: OptionsCadenceVibrationScreen,
+    VisualSettings:OptionsVisualSettingsScreen
   },
   config
 )
@@ -119,7 +127,7 @@ const tabNavigator = createBottomTabNavigator(
     // LoginStack,
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack
+    SettingsStack,
     // TrainerWorkScreen,
     // TakePhotoStack
   },
