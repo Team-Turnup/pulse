@@ -31,6 +31,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
+    console.log('starting the class')
     socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
