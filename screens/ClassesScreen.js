@@ -20,6 +20,12 @@ import {
 import {enrollClass} from '../store/singleClass'
 import {getClassesThunk} from '../store/classes'
 import {SocketContext} from '../socket'
+import activityTypes from '../assets/images/activityTypes'
+import AppHeader from '../components/AppHeader'
+import RoutineBarMini from '../components/RoutineBarMini'
+import {TouchableOpacity} from 'react-native-gesture-handler'
+import RNPickerSelect from 'react-native-picker-select'
+import {setClass} from '../store/singleClass'
 
 class ClassesScreen extends React.Component {
   constructor() {
@@ -51,26 +57,26 @@ class ClassesScreen extends React.Component {
   this.props.classes is array .classId
   this.props.enrollClass
   this.props.getClasses
-
+intervals?
   */
 
   render() {
     const sorter = sort => {
       if (sort === 'dateCreated') {
         return (A, B) => {
-          return A.createdAt < B.createdAt
+          return A.routine.createdAt < B.routine.createdAt
             ? 1
-            : A.createdAt > B.createdAt
+            : A.routine.createdAt > B.routine.createdAt
             ? -1
             : 0
         }
       } else if (sort === 'durationHighLow') {
         return (A, B) => {
-          Aduration = A.intervals.reduce(
+          Aduration = A.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
-          Bduration = B.intervals.reduce(
+          Bduration = B.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
@@ -78,11 +84,11 @@ class ClassesScreen extends React.Component {
         }
       } else if (sort === 'durationLowHigh') {
         return (A, B) => {
-          Aduration = A.intervals.reduce(
+          Aduration = A.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
-          Bduration = B.intervals.reduce(
+          Bduration = B.routine.intervals.reduce(
             (sum, interval) => sum + interval.duration,
             0
           )
@@ -90,17 +96,17 @@ class ClassesScreen extends React.Component {
         }
       } else if (sort === 'ZA') {
         return (A, B) => {
-          return A.name.toLowerCase() > B.name.toLowerCase()
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
             ? -1
-            : A.name.toLowerCase() < B.name.toLowerCase()
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
             ? 1
             : 0
         }
       } else if (sort === 'AZ') {
         return (A, B) => {
-          return A.name.toLowerCase() > B.name.toLowerCase()
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
             ? 1
-            : A.name.toLowerCase() < B.name.toLowerCase()
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
             ? -1
             : 0
         }
@@ -120,7 +126,7 @@ class ClassesScreen extends React.Component {
         )
       : viewClasss
     viewClasss = filter
-      ? viewClasss.filter(aClass => aClass.activityType === filter)
+      ? viewClasss.filter(aClass => aClass.routine.activityType === filter)
       : viewClasss
     sort ? viewClasss.sort(sorter(sort)) : {}
     const numResults = viewClasss.length
@@ -139,7 +145,7 @@ class ClassesScreen extends React.Component {
               color: 'rgb(84, 130, 53)'
             }}
           >
-            Start New Solo Workout
+            Enroll in a Class
           </Text>
           <View
             style={{
@@ -186,7 +192,7 @@ class ClassesScreen extends React.Component {
               >
                 <ScrollView>
                   <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    Select One of Your Previous Classs
+                    Select a Class to Enroll in
                   </Text>
                   <View
                     style={{
@@ -272,10 +278,12 @@ class ClassesScreen extends React.Component {
                   </Text>
                   {viewClasss.length ? (
                     viewClasss.map((aClass, i) => {
-                      const duration = aClass.intervals.reduce(
-                        (sum, interval) => sum + interval.duration,
-                        0
-                      )
+                      const duration = aClass.routine.intervals
+                        ? aClass.routine.intervals.reduce(
+                            (sum, interval) => sum + interval.duration,
+                            0
+                          )
+                        : 0
                       return (
                         <View key={i}>
                           <TouchableOpacity
@@ -323,7 +331,10 @@ class ClassesScreen extends React.Component {
                                     fontStyle: 'italic'
                                   }}
                                 >
-                                  {activityTypes[aClass.activityType].icon}
+                                  {
+                                    activityTypes[aClass.routine.activityType]
+                                      .icon
+                                  }
                                 </Text>
                               </Text>
                               <Text>
@@ -341,13 +352,16 @@ class ClassesScreen extends React.Component {
                                 </Text>
                               </Text>
                             </View>
-                            <ClassBarMini
-                              class={aClass.intervals}
-                              totalDuration={duration}
-                              activityType={aClass.activityType}
-                            />
+                            {aClass.routine.intervals ? (
+                              <RoutineBarMini
+                                routine={aClass.routine.intervals}
+                                totalDuration={duration}
+                                activityType={aClass.routine.activityType}
+                              />
+                            ) : null}
                           </TouchableOpacity>
-                          {classId === aClass.id ? (
+
+                          {/* {classId === aClass.id ? (
                             <View
                               style={{display: 'flex', flexDirection: 'row'}}
                             >
@@ -392,7 +406,7 @@ class ClassesScreen extends React.Component {
                                 <Text>Edit Class</Text>
                               </Button>
                             </View>
-                          ) : null}
+                          ) : null} */}
                         </View>
                       )
                     })
@@ -507,6 +521,20 @@ class ClassesScreen extends React.Component {
 //     )
 //   }
 // }
+
+const styles = StyleSheet.create({
+  button: {
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
+  }
+})
 
 const mapStateToProps = state => ({
   classes: state.classes,
