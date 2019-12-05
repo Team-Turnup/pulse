@@ -19,7 +19,7 @@ const PrepStartRoutine = props => {
         ) : props.routine.activityType === 'combo' ? (
           <Text style={styles.text}>
             Please strap your phone{"\n"}to your chest for breathing intervals,{"\n"}to your ankle for
-            cycling intervals,{"\n"}and to your wrist for all other activities
+        cycling intervals,{"\n"}and to your wrist{"\n"}for all other activities
           </Text>
         ) : (
           <Text style={styles.text}>Please mount your phone on your wrist</Text>
@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
     fontSize: 20,
-    color: 'rgb(84, 130, 53)'
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
   },
   header: {
     fontSize: 20,
