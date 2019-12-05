@@ -186,10 +186,7 @@ class BuildRoutineScreen extends Component {
                     this.handleChange('routineType', value)
                   }
                   value={this.state.routineType}
-                  items={[
-                    {label: 'Combo', value: 'combo'},
-                    ...activityTypeSelects
-                  ]}
+                  items={activityTypeSelects}
                 />
               </View>
               {/* </Item> */}
@@ -250,9 +247,7 @@ class BuildRoutineScreen extends Component {
                 <Text>
                   Activity Type:{' '}
                   <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                    {this.state.routineType !== 'combo'
-                      ? activityTypes[this.state.routineType].icon
-                      : 'Combo'}
+                    {activityTypes[this.state.routineType].icon}
                   </Text>
                 </Text>
 
@@ -296,10 +291,10 @@ class BuildRoutineScreen extends Component {
                       <Text>Activity Type</Text>
                       <RNPickerSelect
                         onValueChange={value =>
-                          this.handleChange('intervalType', value)
+                          this.handleChange('activityType', value)
                         }
                         value={this.state.intervalType}
-                        items={activityTypeSelects}
+                        items={activityTypeNoComboSelects}
                       />
                     </View>
                   ) : (
@@ -331,9 +326,10 @@ class BuildRoutineScreen extends Component {
                 <View>
                   <Button
                     style={styles.button}
-                    onPress={() =>
-                      this.state.activityType ? this.saveInterval() : {}
-                    }
+                    onPress={() => {
+                      console.log(this.state.activityType)
+                      this.state.activityType ? this.addInterval() : {}
+                    }}
                   >
                     <Text>
                       Insert {this.state.routine.length ? 'Next ' : ''}Interval
