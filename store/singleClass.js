@@ -3,7 +3,6 @@ import {ngrok} from '../ngrok'
 import {setRoutine} from './routine'
 import {getMyClassesThunk} from './myClasses'
 
-// const GET_EXERCISE = 'GET_EXERCISE';
 const SET_CLASS = 'SET_CLASS'
 const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
@@ -12,6 +11,8 @@ const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE'
 const SET_USER_COLORS = 'SET_USER_COLORS'
 const SET_USER_OPACITY = 'SET_USER_OPACITY'
 const INITIALIZE_COLOR_OPACITY = 'INITIALIZE_COLOR_OPACITY'
+const UPDATE_START_TIME = 'UPDATE_START_TIME'
+const UPDATE_TIMESTAMPS = 'UPDATE_TIMESTAMPS'
 
 export const setClass = singleClass => ({
   type: SET_CLASS,
@@ -52,6 +53,18 @@ export const setUserOpacity = (userId, opacity) => ({
 export const initializeColorOpacity = attendees => ({
   type: INITIALIZE_COLOR_OPACITY,
   attendees
+})
+
+export const updateStartTime = when => ({
+  type: UPDATE_START_TIME,
+  when
+})
+
+export const updateTimestamps = (userId, timestamps, latest) => ({
+  type: UPDATE_TIMESTAMPS,
+  userId,
+  timestamps,
+  latest
 })
 
 export const leaveClass = classId => async dispatch => {
@@ -106,17 +119,6 @@ export const createClassThunk = singleClass => async dispatch => {
   }
 }
 
-// this no longer means that the instructor is deleting the class now with
-// leaveClass thunk sending a DELETE to :classId. May need to clean this up
-// export const deleteClassThunk = classId => async dispatch => {
-//   try {
-//     await axios.delete(`${ngrok}/api/class/${classId}`)
-//     dispatch(removeClass())
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-
 const initialState = {
   id: 0,
   name: '',
@@ -124,7 +126,9 @@ const initialState = {
   when: 0,
   attendees: [],
   userColors: {},
-  userOpacities: {}
+  userOpacities: {},
+  userTimestamps: {},
+  userLatest: {}
 }
 
 const classReducer = (state = initialState, action) => {
@@ -167,13 +171,24 @@ const classReducer = (state = initialState, action) => {
       return {
         ...state,
         userColors: action.attendees.reduce(
-          (a, {id}) => ({...a, [id]: '#fff'}),
+          (a, {id}) => ({...a, [id]: '#ffffff'}),
           {}
         ),
         userOpacities: action.attendees.reduce(
           (a, {id}) => ({...a, [id]: 0.3}),
           {}
         )
+      }
+    case UPDATE_START_TIME:
+      return {...state, when: action.when}
+    case UPDATE_TIMESTAMPS:
+      return {
+        ...state,
+        userTimestamps: {
+          ...state.userTimestamps,
+          [action.userId]: action.timestamps
+        },
+        userLatest: {...state.userLatest, [action.userId]: action.latest}
       }
     default:
       return state

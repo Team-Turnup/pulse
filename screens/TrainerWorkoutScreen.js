@@ -15,7 +15,17 @@ import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
 import {SocketContext} from '../socket'
 import userData from '../assets/images/userData'
-import {setUserOpacity} from '../store/singleClass'
+import {setUserOpacity, updateTimestamps} from '../store/singleClass'
+
+const cadenceEval = ({cadence, goalCadence}) => {
+  const timeDiff = Math.abs(cadence - goalCadence)
+  const red = goalCadence * 0.15
+  const yellow = goalCadence * 0.075
+
+  if (timeDiff >= red) return '#ff0000'
+  else if (timeDiff >= yellow) return '#ffff00'
+  else return '#00ff00'
+}
 
 export const OverviewStats = ({
   totalTime,
@@ -84,6 +94,8 @@ const TrainerWorkoutScreen = ({socket}) => {
     name,
     userColors,
     userOpacities,
+    userTimestamps,
+    userLatest,
     ..._class
   } = useSelector(({singleClass}) => singleClass)
   const routine = useSelector(({intervals, ...routine}) => routine)
@@ -96,7 +108,8 @@ const TrainerWorkoutScreen = ({socket}) => {
 
   // set up event listeners for WS
   useEffect(() => {
-    socket.on('workoutTimestamp', (userId, workoutTimestamp) => {
+    socket.on('workoutTimestamp', (userId, timestamps, latest) => {
+      dispatch(updateTimestamps(userId, timestamps, latest))
       dispatch(setUserOpacity(userId, 1))
       setTimeout(() => dispatch(setUserOpacity(userId, 0.3)), 50)
     })
@@ -112,17 +125,19 @@ const TrainerWorkoutScreen = ({socket}) => {
             <Text style={[styles.age, styles.listHeader]}>Age</Text>
             <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
           </ListItem>
-          {attendees && attendees.length && userColors && userOpacities
+          {attendees && attendees.length && userOpacities
             ? attendees.map(
                 ({id: userId, name, age, gender, ready = false}) => (
                   <ListItem
                     key={userId}
                     style={[
                       styles.listItem,
-                      {
-                        backgroundColor: userColors[userId] || '#fff',
-                        opacity: userOpacities[userId] || 1
-                      }
+                      userLatest
+                        ? {
+                            backgroundColor: cadenceEval(userLatest[userId]),
+                            opacity: userOpacities[userId] || 1
+                          }
+                        : {}
                     ]}
                   >
                     <Text style={styles.name}>{name} </Text>
