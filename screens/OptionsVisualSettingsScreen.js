@@ -10,6 +10,7 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
 
 class VisualSettingsScreen extends Component {
   constructor(props) {
@@ -78,6 +79,22 @@ class VisualSettingsScreen extends Component {
     )
   }
 
+  handleSubmit() {
+    Alert.alert(
+      'Done',
+      'Your settings are saved!',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.props.navigation.navigate('Settings')
+        }
+      ],
+      {
+        cancelable: false
+      }
+    )
+  }
+
   render() {
     // console.log(this.props.user.image.data)
     // console.log(encode(this.props.user.image)
@@ -89,6 +106,7 @@ class VisualSettingsScreen extends Component {
     return (
       <Container>
         <Content>
+          <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>Visual Settings</Text>
           {/* <View
           style={{
@@ -134,6 +152,12 @@ class VisualSettingsScreen extends Component {
             />
           </View>
           <View style={styles.viewDivider}></View>
+          <Button
+            style={{...styles.button, marginTop: 15}}
+            onPress={() => this.handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Save Visual Settings</Text>
+          </Button>
         </Content>
       </Container>
     )
@@ -170,18 +194,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  button: {
-    width: '30%',
-    margin: 5,
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5
-  },
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
     color: 'white'
+  },
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   message: {
     fontSize: 10,

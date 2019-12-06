@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Button, Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
@@ -59,6 +59,22 @@ class CadenceVibrationSettings extends Component {
     )
   }
 
+  handleSubmit() {
+    Alert.alert(
+      'Done',
+      'Your settings are saved!',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.props.navigation.navigate('Settings')
+        }
+      ],
+      {
+        cancelable: false
+      }
+    )
+  }
+
   render() {
     // console.log(this.props.user.image.data)
     // console.log(encode(this.props.user.image)
@@ -111,6 +127,12 @@ class CadenceVibrationSettings extends Component {
             />
           </View>
           <View style={styles.viewDivider}></View>
+          <Button
+            style={{...styles.button, marginTop: 15}}
+            onPress={() => this.handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Save Vibration Settings</Text>
+          </Button>
         </Content>
       </Container>
     )
@@ -147,18 +169,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  button: {
-    width: '30%',
-    margin: 5,
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5
-  },
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
     color: 'white'
+  },
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   message: {
     fontSize: 10,

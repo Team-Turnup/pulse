@@ -10,6 +10,7 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
 
 class UserInfoScreen extends Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class UserInfoScreen extends Component {
     this.props.changeUserInfoThunk({name, age, gender, height, weight})
     Alert.alert(
       'Done',
-      'Thanks for signing up!',
+      'Your settings are saved!',
       [
         {
           text: 'OK',
@@ -71,6 +72,7 @@ class UserInfoScreen extends Component {
     return (
       <Container>
         <Content>
+          <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>User Info</Text>
           <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
