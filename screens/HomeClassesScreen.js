@@ -111,7 +111,7 @@ class HomeClassesScreen extends Component {
 
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation}/>
+        <AppHeader navigation={this.props.navigation} />
         <View
           style={{
             display: 'flex',
@@ -123,7 +123,7 @@ class HomeClassesScreen extends Component {
           <View></View>
         </View>
         <View>
-        <Button
+          <Button
             style={styles.button}
             onPress={() => navigation.navigate('ClassesScreen')}
           >
@@ -154,14 +154,12 @@ class HomeClassesScreen extends Component {
                 margin: 15
               }}
             >
-
               <View
                 style={{
                   display: 'flex',
                   flexDirection: 'column'
                 }}
               >
-
                 <View
                   style={{
                     display: 'flex',
@@ -241,22 +239,24 @@ class HomeClassesScreen extends Component {
                       margin: 2
                     }}
                   />
-                  <View style={{
-                        width: '30%',
-                        margin: 2,
-                        borderWidth: 1,
-                        borderColor: 'gray',
-                        borderRadius: 5
-                      }}>
-                  <RNPickerSelect
-                    placeholder={{label: 'Filter', value: null}}
-                    onValueChange={value =>
-                      this.handleChange('futureFilter', value)
-                    }
-                    value={futureFilter}
-                    items={activityTypeSelects}
-                    userNativeAndroidPickerStyle={false}
-                  />
+                  <View
+                    style={{
+                      width: '30%',
+                      margin: 2,
+                      borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 5
+                    }}
+                  >
+                    <RNPickerSelect
+                      placeholder={{label: 'Filter', value: null}}
+                      onValueChange={value =>
+                        this.handleChange('futureFilter', value)
+                      }
+                      value={futureFilter}
+                      items={activityTypeSelects}
+                      userNativeAndroidPickerStyle={false}
+                    />
                   </View>
                 </View>
               </View>
@@ -267,11 +267,16 @@ class HomeClassesScreen extends Component {
                     (sum, interval) => sum + interval.duration,
                     0
                   )
-                  let parseDate = aClass.when.toString().split('GMT')[0].split('T')
+                  let parseDate = aClass.when
+                    .toString()
+                    .split('GMT')[0]
+                    .split('T')
                   let parseTime = parseDate[1].split('.')[0]
-                  parseDate=parseDate[0].split('-')
-                  parseDate=`${parseDate[2]}/${parseDate[1]}/${parseDate[0].slice(2)}`
-                  parseDate=`${parseDate} ${parseTime}`
+                  parseDate = parseDate[0].split('-')
+                  parseDate = `${parseDate[2]}/${
+                    parseDate[1]
+                  }/${parseDate[0].slice(2)}`
+                  parseDate = `${parseDate} ${parseTime}`
                   return (
                     <TouchableOpacity
                       key={i}
@@ -283,28 +288,35 @@ class HomeClassesScreen extends Component {
                         borderRadius: 10,
                         overflow: 'hidden'
                       }}
-                      onPress={ async () => {
+                      onPress={async () => {
                         await this.props.getClassThunk(aClass.id)
-                         this.props.navigation.navigate(aClass.userId===this.props.user.id ? 'TrainerWaitingScreen' : 'UserWaitingScreen')
+                        this.props.navigation.navigate(
+                          aClass.userId === this.props.user.id
+                            ? 'TrainerWaitingScreen'
+                            : 'UserWaitingScreen'
+                        )
                       }}
                     >
-                      <View style={{
+                      <View
+                        style={{
                           display: 'flex',
                           flexDirection: 'row',
-                          justifyContent: 'space-between'}}>
-                      <Text>
-                        <Text
-                          style={{
-                            color: 'rgb(84, 130, 53)',
-                            fontWeight: '600',
-                            fontSize: 18
-                          }}
-                        >
-                          {aClass.name}{' '}
-                          {activityTypes[aClass.routine.activityType].icon}
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Text>
+                          <Text
+                            style={{
+                              color: 'rgb(84, 130, 53)',
+                              fontWeight: '600',
+                              fontSize: 18
+                            }}
+                          >
+                            {aClass.name}{' '}
+                            {activityTypes[aClass.routine.activityType].icon}
+                          </Text>
                         </Text>
-                      </Text>
-                      <Text>
+                        <Text>
                           Trainer:{' '}
                           <Text
                             style={{
@@ -312,14 +324,18 @@ class HomeClassesScreen extends Component {
                               fontStyle: 'italic'
                             }}
                           >
+                            {aClass.userId === this.props.user.id ? '🧑‍' : ''}
                             {aClass.user.name.split(' ')[0]}
                           </Text>
                         </Text>
                       </View>
-                      <View style={{
+                      <View
+                        style={{
                           display: 'flex',
                           flexDirection: 'row',
-                          justifyContent: 'space-between'}}>
+                          justifyContent: 'space-between'
+                        }}
+                      >
                         <Text>
                           Date:{' '}
                           <Text
@@ -339,13 +355,12 @@ class HomeClassesScreen extends Component {
                               fontStyle: 'italic'
                             }}
                           >
-                             {Math.floor(duration / 60)
-                                  ? `${Math.floor(duration / 60)}m`
-                                  : ''}{' '}
-                                {duration % 60 ? `${duration % 60}s` : ''}
+                            {Math.floor(duration / 60)
+                              ? `${Math.floor(duration / 60)}m`
+                              : ''}{' '}
+                            {duration % 60 ? `${duration % 60}s` : ''}
                           </Text>
                         </Text>
-
                       </View>
                       <RoutineBarMini
                         routine={aClass.routine.intervals}
@@ -370,7 +385,6 @@ class HomeClassesScreen extends Component {
             >
               <View>
                 <View>
-
                   <View
                     style={{
                       display: 'flex',
@@ -460,22 +474,24 @@ class HomeClassesScreen extends Component {
                         margin: 2
                       }}
                     />
-                    <View style={{
+                    <View
+                      style={{
                         width: '30%',
                         margin: 2,
                         borderWidth: 1,
                         borderColor: 'gray',
                         borderRadius: 5
-                      }}>
-                    <RNPickerSelect
-                      placeholder={{label: 'Filter', value: null}}
-                      onValueChange={value =>
-                        this.handleChange('pastFilter', value)
-                      }
-                      value={pastFilter}
-                      items={activityTypeSelects}
-                      userNativeAndroidPickerStyle={false}
-                    />
+                      }}
+                    >
+                      <RNPickerSelect
+                        placeholder={{label: 'Filter', value: null}}
+                        onValueChange={value =>
+                          this.handleChange('pastFilter', value)
+                        }
+                        value={pastFilter}
+                        items={activityTypeSelects}
+                        userNativeAndroidPickerStyle={false}
+                      />
                     </View>
                   </View>
                 </View>
@@ -573,7 +589,7 @@ const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
   getClassThunk,
-  setClass,
+  setClass
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeClassesScreen)
