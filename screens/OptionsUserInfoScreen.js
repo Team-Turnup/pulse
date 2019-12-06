@@ -10,6 +10,8 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
+
 
 class UserInfoScreen extends Component {
   constructor(props) {
@@ -97,6 +99,7 @@ class UserInfoScreen extends Component {
   render() {
     return (
       <Container>
+        <AppHeader />
         <Content>
           <Text style={styles.header}>User Info</Text>
           <View style={styles.viewPicker}>

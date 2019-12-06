@@ -10,6 +10,8 @@ import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
+import AppHeader from '../components/AppHeader'
+
 
 class VisualSettingsScreen extends Component {
   constructor(props) {
@@ -104,6 +106,7 @@ class VisualSettingsScreen extends Component {
     // console.log(imageSrc.slice(0,50))
     return (
       <Container>
+        <AppHeader />
         <Content>
           <Text style={styles.header}>Visual Settings</Text>
           {/* <View

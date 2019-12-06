@@ -8,6 +8,7 @@ import CheckBox from 'react-native-check-box'
 import {createClassThunk} from '../store/singleClass'
 import {setRoutine} from '../store/routine'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
+import AppHeader from '../components/AppHeader'
 
 class BuildClassScreen extends Component {
   constructor(props) {
@@ -73,6 +74,7 @@ class BuildClassScreen extends Component {
     const {routine} = this.state
     return (
       <Container>
+        <AppHeader />
         <Content>
           <View style={{margin: 15}}>
             <Text
@@ -232,8 +234,8 @@ class BuildClassScreen extends Component {
               </Text>
             </Button>
           ) : null}
-          
-          {this.state.showRoutineOptions ? 
+
+          {this.state.showRoutineOptions ?
           !Object.keys(routine).length ? (
             <View>
               <View style={{margin: 15}}>
@@ -275,7 +277,7 @@ class BuildClassScreen extends Component {
                 <Text>Create New Routine</Text>
               </Button>
             </View>
-          ) : 
+          ) :
           <View>
             <View style={{margin: 15}}>
                 <Text

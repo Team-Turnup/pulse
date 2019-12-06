@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, View} from 'react-native'
 import {Container, Content, Text, Button} from 'native-base'
+import AppHeader from '../components/AppHeader'
+
 
 const PrepStartRoutine = props => {
   //const chestActivity = 'breathing'
@@ -12,9 +14,7 @@ const PrepStartRoutine = props => {
   )
 
   return (
-    <Container
-    // style={{marginTop: 15}}
-    >
+    <Container>
       <Content>
       <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (

@@ -7,6 +7,8 @@ import {removeWorkout} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {DateTime} from 'luxon'
+import AppHeader from '../components/AppHeader'
+
 
 export default () => {
   const dispatch = useDispatch()
@@ -28,6 +30,7 @@ export default () => {
   useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (
     <Container>
+      <AppHeader />
       <View
         style={{
           padding: 20,
