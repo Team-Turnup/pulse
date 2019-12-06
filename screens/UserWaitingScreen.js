@@ -16,6 +16,7 @@ import {StartTime, styles} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
 import {leaveClass} from '../store/singleClass'
 import {SocketContext} from '../socket'
+import AppHeader from '../components/AppHeader'
 
 const UserWaitingScreen = ({navigation, socket}) => {
   // get user from store
@@ -39,6 +40,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
 
   useEffect(() => {
     socket.on('start', (proposedStart, followers) => {
+      console.log('start signal received')
       navigation.navigate('StartRoutineScreen', {
         classStart: proposedStart + followers[user.id]
       })
@@ -52,15 +54,23 @@ const UserWaitingScreen = ({navigation, socket}) => {
     return () => socket.off('start')
   }, [])
 
+  // this triggers onPress and sends user to edit this routine so they can save if they want it
+  const navigateRoutine = () => {
+    navigation.navigate('BuildRoutineScreen', {
+      routine: routine
+    })
+  }
+
   useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
     <Container>
-      <Header>
-        <Text style={{fontWeight: 'bold'}}>{name}</Text>
-      </Header>
+      <AppHeader navigation={this.props.navigation} />
       <Content>
         <View style={styles.startView}>
+          <Text style={styles.text}>This is {name}</Text>
+          {/* below is displaying logged in user name not trainer name */}
+          {/* <Text style={styles.text}>The Trainer is: {user.name}</Text> */}
           {when < curTime ? (
             <Text>Waiting for Trainer</Text>
           ) : (
@@ -73,6 +83,10 @@ const UserWaitingScreen = ({navigation, socket}) => {
           <Text>Loading Routine</Text>
         )}
         <Content>
+          <Text
+            onPress={() => navigateRoutine()}
+            style={{textAlign: 'center', paddingBottom: 20}}
+          >{`Routine: ${routine.name}`}</Text>
           <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>

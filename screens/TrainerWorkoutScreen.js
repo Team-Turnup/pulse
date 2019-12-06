@@ -38,6 +38,7 @@ export const OverviewStats = ({
   useEffect(() => {
     console.log('I sense a change')
   }, [workoutData])
+  console.log('intervals', intervals)
   return (
     <View style={styles.info}>
       <View style={styles.col}>

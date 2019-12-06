@@ -103,9 +103,9 @@ HomeClassesStack.path = ''
 const SettingsStack = createStackNavigator(
   {
     Settings: OptionsScreen,
-    UserInfo:OptionUserInfoScreen,
+    UserInfo: OptionUserInfoScreen,
     CadenceVibration: OptionsCadenceVibrationScreen,
-    VisualSettings:OptionsVisualSettingsScreen
+    VisualSettings: OptionsVisualSettingsScreen
   },
   config
 )
@@ -127,7 +127,7 @@ const tabNavigator = createBottomTabNavigator(
     // LoginStack,
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack,
+    SettingsStack
     // TrainerWorkScreen,
     // TakePhotoStack
   },

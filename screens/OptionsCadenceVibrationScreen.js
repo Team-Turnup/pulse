@@ -1,13 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Button, Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
-import NumericInput from 'react-native-numeric-input'
-import CheckBox from 'react-native-check-box'
 import {changeUserInfoThunk} from '../store/user'
 import {haptic} from '../assets/options/haptics'
-import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
 import AppHeader from '../components/AppHeader'
@@ -16,23 +13,11 @@ class CadenceVibrationSettings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: this.props.user.name || '',
-      age: this.props.user.age || 0,
-      gender: this.props.user.gender || null,
-      weight: this.props.user.weight || 0,
-      height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',
-      hapticWhen: this.props.option.hapticWhen || 'everybeat',
-      visualWhat: this.props.option.visualWhat || 'blink',
-      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
-      opacity: 1,
-      visualWhen: this.props.option.visualWhen || 'everybeat'
+      hapticWhen: this.props.option.hapticWhen || 'everybeat'
     }
     this.handleChange = this.handleChange.bind(this)
-    this.updateUserInfo = this.updateUserInfo.bind(this)
     this.handleHaptic = this.handleHaptic.bind(this)
-    this.handleVisual = this.handleVisual.bind(this)
-    this.handleVisualColor = this.handleVisualColor.bind(this)
     this.clear = []
     this.clearVisual = []
   }
@@ -44,11 +29,6 @@ class CadenceVibrationSettings extends Component {
     }
   }
 
-  updateUserInfo() {
-    const {name, age, gender, height, weight} = this.state
-    this.props.changeUserInfoThunk({name, age, gender, height, weight})
-  }
-
   handleHaptic(value) {
     if (value) {
       this.props.updateOptionThunk({hapticWhat: value})
@@ -58,40 +38,28 @@ class CadenceVibrationSettings extends Component {
     }
   }
 
-  handleVisual(value) {
-    this.props.updateOptionThunk({visualWhat: value})
-    this.setState({visualWhat: value})
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
-  }
-
-  handleVisualColor(value) {
-    this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(
-      setInterval(() => {
-        this.setState({opacity: 0.3})
-        setTimeout(() => this.setState({opacity: 1}), 300)
-      }, 600)
-    )
-    setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
-  }
-
   arrayBufferToBase64(buffer) {
     return btoa(
       new Uint8Array(buffer).reduce(
         (data, byte) => data + String.fromCharCode(byte),
         ''
       )
+    )
+  }
+
+  handleSubmit() {
+    Alert.alert(
+      'Done',
+      'Your settings are saved!',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.props.navigation.navigate('Settings')
+        }
+      ],
+      {
+        cancelable: false
+      }
     )
   }
 
@@ -116,9 +84,9 @@ class CadenceVibrationSettings extends Component {
           </Button> */}
 
           <Text style={styles.header}>Vibration Settings</Text>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>Vibration Feedback Style</Label>
-
             <RNPickerSelect
               onValueChange={value => this.handleHaptic(value)}
               value={this.state.hapticWhat}
@@ -132,6 +100,7 @@ class CadenceVibrationSettings extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>When to Play Vibration Feedback</Label>
             <RNPickerSelect
@@ -145,6 +114,13 @@ class CadenceVibrationSettings extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
+          <Button
+            style={{...styles.button, marginTop: 15}}
+            onPress={() => this.handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Save Vibration Settings</Text>
+          </Button>
         </Content>
       </Container>
     )
@@ -163,29 +139,36 @@ const styles = StyleSheet.create({
   viewPicker: {
     width: '100%',
     margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 5,
     display: 'flex',
     alignItems: 'center'
+  },
+  viewDivider: {
+    width: '100%',
+    // margin: 5,
+    //borderWidth: 1,
+    borderColor: 'gray',
+    borderBottomWidth: 1
   },
   buttons: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  button: {
-    width: '30%',
-    margin: 5,
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5
-  },
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
     color: 'white'
+  },
+  button: {
+    margin: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   },
   message: {
     fontSize: 10,

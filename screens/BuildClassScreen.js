@@ -9,6 +9,7 @@ import {createClassThunk} from '../store/singleClass'
 import {setRoutine} from '../store/routine'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
 import {SocketContext} from '../socket'
+import AppHeader from '../components/AppHeader'
 
 class BuildClassScreen extends Component {
   constructor(props) {
@@ -75,6 +76,7 @@ class BuildClassScreen extends Component {
     const {routine} = this.state
     return (
       <Container>
+        <AppHeader navigation={this.props.navigation} />
         <Content>
           <View style={{margin: 15}}>
             <Text

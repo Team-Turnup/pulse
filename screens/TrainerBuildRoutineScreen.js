@@ -7,6 +7,8 @@ import NumericInput from 'react-native-numeric-input'
 import CheckBox from 'react-native-check-box'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
+import AppHeader from '../components/AppHeader'
+
 import {
   getRoutineThunk,
   createRoutineThunk,
@@ -120,6 +122,7 @@ class TrainerBuildRoutineScreen extends Component {
 
     return (
       <Container>
+        <AppHeader navigation={this.props.navigation} />
         {/* <Header>
           <Text style={styles.header}>Build Routine</Text>
         </Header> */}

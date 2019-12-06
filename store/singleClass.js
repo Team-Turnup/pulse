@@ -149,7 +149,9 @@ const classReducer = (state = initialState, action) => {
     case ADD_NEW_ATTENDEE:
       return {
         ...state,
-        attendees: [...state.attendees, action.attendee],
+        attendees: state.attendees.includes(action.attendee)
+          ? state.attendees
+          : [...state.attendees, action.attendee],
         userColors: {...state.userColors, [action.userId]: action.color}
       }
     case REMOVE_ATTENDEE:

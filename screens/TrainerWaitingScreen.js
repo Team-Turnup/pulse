@@ -14,6 +14,8 @@ import {SocketContext} from '../socket'
 // Components
 import {Container, Header, Content, Text, H3, View} from 'native-base'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
+import AppHeader from '../components/AppHeader'
+
 import {
   StartButton,
   StartTime,
@@ -33,11 +35,12 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   } = useSelector(({singleClass}) => singleClass)
 
   const routine = useSelector(({routine}) => routine)
-
+  const userName = useSelector(({user}) => user.name)
   const userId = useSelector(({user}) => user.id)
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
+    console.log('starting the class')
     socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
@@ -68,16 +71,17 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
 
   // tick
   useInterval(() => setCurTime(Date.now()), 1000)
-
   return (
     <Container>
-      <Header>
-        <Text style={{fontWeight: 'bold'}}>{name}</Text>
-      </Header>
+      <AppHeader navigation={this.props.navigation} />
       <Content>
         {name && routine && attendees ? (
           <Fragment>
             <View style={styles.startView}>
+              <Text style={styles.text}>This is {name}</Text>
+              <Text style={styles.text}>
+                You are the Trainer for this Class
+              </Text>
               {when < curTime ||
               (attendees.length &&
                 attendees.length === attendees.filter(a => a.ready).length) ? (
