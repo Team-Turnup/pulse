@@ -1,17 +1,13 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Container, Content, Item, Label, Input, Text, Button} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
-import CheckBox from 'react-native-check-box'
 import {changeUserInfoThunk} from '../store/user'
-import {haptic} from '../assets/options/haptics'
-import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
 import AppHeader from '../components/AppHeader'
-
 
 class UserInfoScreen extends Component {
   constructor(props) {
@@ -21,19 +17,10 @@ class UserInfoScreen extends Component {
       age: this.props.user.age || 0,
       gender: this.props.user.gender || null,
       weight: this.props.user.weight || 0,
-      height: this.props.user.height || 0,
-      hapticWhat: this.props.option.hapticWhat || 'singlebeat',
-      hapticWhen: this.props.option.hapticWhen || 'everybeat',
-      visualWhat: this.props.option.visualWhat || 'blink',
-      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
-      opacity: 1,
-      visualWhen: this.props.option.visualWhen || 'everybeat'
+      height: this.props.user.height || 0
     }
     this.handleChange = this.handleChange.bind(this)
     this.updateUserInfo = this.updateUserInfo.bind(this)
-    this.handleHaptic = this.handleHaptic.bind(this)
-    this.handleVisual = this.handleVisual.bind(this)
-    this.handleVisualColor = this.handleVisualColor.bind(this)
     this.clear = []
     this.clearVisual = []
   }
@@ -48,43 +35,19 @@ class UserInfoScreen extends Component {
   updateUserInfo() {
     const {name, age, gender, height, weight} = this.state
     this.props.changeUserInfoThunk({name, age, gender, height, weight})
-  }
-
-  handleHaptic(value) {
-    if (value) {
-      this.props.updateOptionThunk({hapticWhat: value})
-      this.setState({hapticWhat: value})
-      this.clear.push(setInterval(haptic(value, 100), 600))
-      setTimeout(() => clearInterval(this.clear.shift()), 5000)
-    }
-  }
-
-  handleVisual(value) {
-    this.props.updateOptionThunk({visualWhat: value})
-    this.setState({visualWhat: value})
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
-  }
-
-  handleVisualColor(value) {
-    this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(
-      setInterval(() => {
-        this.setState({opacity: 0.3})
-        setTimeout(() => this.setState({opacity: 1}), 300)
-      }, 600)
+    Alert.alert(
+      'Done',
+      'Your settings are saved!',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.props.navigation.navigate('Settings')
+        }
+      ],
+      {
+        cancelable: false
+      }
     )
-    setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
   arrayBufferToBase64(buffer) {
@@ -99,9 +62,10 @@ class UserInfoScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader />
         <Content>
+          <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>User Info</Text>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Name</Label>
@@ -115,6 +79,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Age</Label>
@@ -124,6 +89,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Height (inches)</Label>
@@ -133,6 +99,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Weight (lb)</Label>
@@ -142,6 +109,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>Gender</Label>
             <RNPickerSelect
@@ -155,6 +123,7 @@ class UserInfoScreen extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
           <Button
             style={{...styles.button, marginTop: 15}}
             onPress={this.updateUserInfo}
@@ -179,11 +148,18 @@ const styles = StyleSheet.create({
   viewPicker: {
     width: '100%',
     margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 5,
     display: 'flex',
     alignItems: 'center'
+  },
+  viewDivider: {
+    width: '100%',
+    // margin: 5,
+    //borderWidth: 1,
+    borderColor: 'gray',
+    borderBottomWidth: 1
   },
   buttons: {
     display: 'flex',

@@ -1,14 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
-import {
-  Container,
-  Button,
-  Text,
-  Content,
-  Card,
-  CardItem
-} from 'native-base'
+import {Container, Button, Text, Content, Card, CardItem} from 'native-base'
 import {me} from '../store/user'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
@@ -16,7 +9,6 @@ import MyPreviousWorkouts from '../components/MyPreviousWorkouts'
 import AppHeader from '../components/AppHeader'
 
 class HomeScreen extends Component {
-
   componentDidMount() {
     this.props.me()
     this.props.getMyClassesThunk()
@@ -27,7 +19,7 @@ class HomeScreen extends Component {
     const {navigation} = this.props
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation}/>
+        <AppHeader navigation={this.props.navigation} />
         <Content style={{backgroundColor: 'midnightblue'}}>
           <Button
             block
