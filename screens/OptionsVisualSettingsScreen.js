@@ -68,6 +68,18 @@ class VisualSettingsScreen extends Component {
     //     }
     // this.clear.push(setInterval(haptic(value, 100), 600))
     // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
+    Alert.alert(
+      'Done',
+      'Your color is saved!',
+      [
+        {
+          text: 'OK'
+        }
+      ],
+      {
+        cancelable: false
+      }
+    )
   }
 
   arrayBufferToBase64(buffer) {
