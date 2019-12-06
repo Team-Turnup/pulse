@@ -2,13 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
 import {
-  Container,
   Button,
   Text,
   Content,
-  Card,
-  Input,
-  CardItem
 } from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
@@ -21,11 +17,11 @@ class HomeClassesScreen extends Component {
   constructor(props) {
     super(props)
   }
-
   render() {
+    const {navigation} = this.props
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader/>
         <View
           style={{
             display: 'flex',
@@ -48,7 +44,7 @@ class HomeClassesScreen extends Component {
             style={styles.button}
             onPress={() => {
               this.props.setClass({})
-              this.props.navigation.navigate('BuildClassScreen')
+              navigation.navigate('BuildClassScreen')
             }}
           >
             <Text>Create Class</Text>

@@ -111,6 +111,7 @@ class ClassesScreen extends React.Component {
       label: `${activityTypes[activity].icon} ${activityTypes[activity].display}`,
       value: activity
     }))
+
     let viewClasss = [...this.props.classes]
     viewClasss = search.length
       ? viewClasss.filter(aClass =>
@@ -120,6 +121,7 @@ class ClassesScreen extends React.Component {
     viewClasss = filter
       ? viewClasss.filter(aClass => aClass.routine.activityType === filter)
       : viewClasss
+
     sort ? viewClasss.sort(sorter(sort)) : {}
     const numResults = viewClasss.length
     const numPages = Math.ceil(numResults / numPerPage)

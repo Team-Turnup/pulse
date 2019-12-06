@@ -43,6 +43,57 @@ class PreviousClasses extends Component {
 
   render() {
     const {navigation, myClasses} = this.props
+    const sorter = sort => {
+      if (sort === 'dateCreated') {
+        return (A, B) => {
+          return A.routine.createdAt < B.routine.createdAt
+            ? 1
+            : A.routine.createdAt > B.routine.createdAt
+            ? -1
+            : 0
+        }
+      } else if (sort === 'durationHighLow') {
+        return (A, B) => {
+          Aduration = A.routine.intervals.reduce(
+            (sum, interval) => sum + interval.duration,
+            0
+          )
+          Bduration = B.routine.intervals.reduce(
+            (sum, interval) => sum + interval.duration,
+            0
+          )
+          return Aduration > Bduration ? -1 : Aduration < Bduration ? 1 : 0
+        }
+      } else if (sort === 'durationLowHigh') {
+        return (A, B) => {
+          Aduration = A.routine.intervals.reduce(
+            (sum, interval) => sum + interval.duration,
+            0
+          )
+          Bduration = B.routine.intervals.reduce(
+            (sum, interval) => sum + interval.duration,
+            0
+          )
+          return Aduration > Bduration ? 1 : Aduration < Bduration ? -1 : 0
+        }
+      } else if (sort === 'ZA') {
+        return (A, B) => {
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
+            ? -1
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
+            ? 1
+            : 0
+        }
+      } else if (sort === 'AZ') {
+        return (A, B) => {
+          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
+            ? 1
+            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
+            ? -1
+            : 0
+        }
+      }
+    }
     const {
       pastClassesPage,
       numPerPage,
@@ -63,6 +114,9 @@ class PreviousClasses extends Component {
       ? myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
       : myClasses
 
+    sort ? pastFilteredClasses.sort(sorter(sort)) : {}
+
+
     let searchedPastClasses = pastFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
@@ -74,6 +128,8 @@ class PreviousClasses extends Component {
     )
 
     let viewPastClasses = [...pastClasses]
+
+
     let pastClassesResults = viewPastClasses.length
     let pastClassesPages = Math.ceil(pastClassesResults / numPerPage)
     viewPastClasses = viewPastClasses.slice(
@@ -148,19 +204,21 @@ class PreviousClasses extends Component {
                 </TouchableOpacity>
               ) : (
                 <View
-                style={{
-                  width: 25,
-                  height: 35
-                }}
+                  style={{
+                    width: 25,
+                    height: 35
+                  }}
                 ></View>
               )}
             </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row'
-              }}
+            <View style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
             >
+            <View style={{width: '30%', margin: 2}}>
               <Input
                 placeholder="Search"
                 autoCorrect={false}
@@ -170,11 +228,18 @@ class PreviousClasses extends Component {
                   borderBottomColor: 'gray',
                   borderBottomWidth: 1,
                   fontSize: 14,
-                  height: 16,
-                  width: '30%',
-                  margin: 2
+                  height: 16
                 }}
               />
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
               <View
                 style={{
                   width: '30%',
@@ -194,71 +259,101 @@ class PreviousClasses extends Component {
                   userNativeAndroidPickerStyle={false}
                 />
               </View>
+              <View
+                style={{
+                  width: '30%',
+                  margin: 2,
+                  borderWidth: 1,
+                  borderColor: 'gray',
+                  borderRadius: 5
+                }}
+              >
+                <RNPickerSelect
+                  placeholder={{label: 'Sort', value: null}}
+                  onValueChange={value => this.handleChange('sort', value)}
+                  value={sort}
+                  items={[
+                    {label: 'Date created', value: 'dateCreated'},
+                    {
+                      label: 'Duration (low>high)',
+                      value: 'durationLowHigh'
+                    },
+                    {
+                      label: 'Duration (high>low)',
+                      value: 'durationHighLow'
+                    },
+                    {label: 'Name (A>Z)', value: 'AZ'},
+                    {label: 'Name (Z>A)', value: 'ZA'}
+                  ]}
+                  userNativeAndroidPickerStyle={false}
+                />
+              </View>
             </View>
           </View>
+        </View>
 
-          <View>
-            {viewPastClasses.length ? (
-              viewPastClasses.map((aClass, i) => {
-                const duration = aClass.routine.intervals.reduce(
-                  (sum, interval) => sum + interval.duration,
-                  0
-                )
-                return (
-                  <TouchableOpacity
-                    key={i}
+        <View>
+          {viewPastClasses.length ? (
+            viewPastClasses.map((aClass, i) => {
+              const duration = aClass.routine.intervals.reduce(
+                (sum, interval) => sum + interval.duration,
+                0
+              )
+              return (
+                <TouchableOpacity
+                  key={i}
+                  style={{
+                    marginTop: 5,
+                    marginBottom: 5,
+                    borderColor: 'gray',
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    overflow: 'hidden'
+                  }}
+                >
+                  <Text style={{textAlign: 'center'}}>
+                    <Text
+                      style={{
+                        color: 'rgb(84, 130, 53)',
+                        fontWeight: '600',
+                        fontSize: 18
+                      }}
+                    >
+                      {aClass.name}{' '}
+                      {activityTypes[aClass.routine.activityType].icon}
+                    </Text>
+                  </Text>
+                  <View
                     style={{
-                      marginTop: 5,
-                      marginBottom: 5,
-                      borderColor: 'gray',
-                      borderWidth: 1,
-                      borderRadius: 10,
-                      overflow: 'hidden'
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly'
                     }}
                   >
-                    <Text style={{textAlign: 'center'}}>
+                    <Text>
+                      Trainer:{' '}
                       <Text
                         style={{
                           color: 'rgb(84, 130, 53)',
-                          fontWeight: '600',
-                          fontSize: 18
+                          fontStyle: 'italic'
                         }}
                       >
-                        {aClass.name}{' '}
-                        {activityTypes[aClass.routine.activityType].icon}
+                        {aClass.user.name.split(' ')[0]}
                       </Text>
                     </Text>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly'
-                      }}
-                    >
-                      <Text>
-                        Trainer:{' '}
-                        <Text
-                          style={{
-                            color: 'rgb(84, 130, 53)',
-                            fontStyle: 'italic'
-                          }}
-                        >
-                          {aClass.user.name.split(' ')[0]}
-                        </Text>
-                      </Text>
-                    </View>
-                    <RoutineBarMini
-                      routine={aClass.routine.intervals}
-                      totalDuration={duration}
-                      activityType={aClass.routine.activityType}
-                    />
-                  </TouchableOpacity>
-                )
-              })
-            ) : (
-              <Text>- No previous classes</Text>
-            )}
-          </View>
+                  </View>
+                  <RoutineBarMini
+                    routine={aClass.routine.intervals}
+                    totalDuration={duration}
+                    activityType={aClass.routine.activityType}
+                  />
+                </TouchableOpacity>
+              )
+            })
+          ) : (
+            <Text>- No previous classes</Text>
+          )}
+        </View>
         </View>
       </Card>
     )
