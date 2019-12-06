@@ -25,6 +25,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
+
   const routine = useSelector(({routine}) => routine)
 
   const routineActivityTypes = routine.intervals.map(
@@ -54,13 +55,23 @@ const UserWaitingScreen = ({navigation, socket}) => {
     })
   }, [])
 
+  // this triggers onPress and sends user to edit this routine so they can save if they want it
+  const navigateRoutine = () => {
+    navigation.navigate('BuildRoutineScreen', {
+      routine: routine
+    })
+  }
+
   useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
     <Container>
-      <AppHeader />
+      <AppHeader navigation={this.props.navigation} />
       <Content>
         <View style={styles.startView}>
+          <Text style={styles.text}>This is {name}</Text>
+          {/* below is displaying logged in user name not trainer name */}
+          {/* <Text style={styles.text}>The Trainer is: {user.name}</Text> */}
           {when < curTime ? (
             <Text>Waiting for Trainer</Text>
           ) : (
@@ -73,6 +84,10 @@ const UserWaitingScreen = ({navigation, socket}) => {
           <Text>Loading Routine</Text>
         )}
         <Content>
+          <Text
+            onPress={() => navigateRoutine()}
+            style={{textAlign: 'center', paddingBottom: 20}}
+          >{`Routine: ${routine.name}`}</Text>
           <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>

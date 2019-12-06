@@ -2,6 +2,7 @@ import axios from 'axios'
 import {ngrok} from '../ngrok'
 import {addWorkout} from './workouts'
 import {setRoutine} from './routine'
+import {createRoutineThunk} from './routines'
 
 const SET_WORKOUT = 'SET_WORKOUT'
 const REMOVE_WORKOUT = 'REMOVE_WORKOUT'
@@ -16,7 +17,7 @@ export const removeWorkout = workoutId => ({
   workoutId
 })
 
-export const createWorkoutThunk = routineId => async dispatch => {
+export const createWorkoutThunk = (routineId, classStart) => async dispatch => {
   try {
     const response = await axios.post(`${ngrok}/api/workouts/`, {routineId})
     const {workout, routine} = response.data
@@ -24,6 +25,7 @@ export const createWorkoutThunk = routineId => async dispatch => {
     const workoutWithRoutine = workout
     workoutWithRoutine.routine = routine
     dispatch(addWorkout(workoutWithRoutine))
+    dispatch(createRoutineThunk(classStart))
   } catch (err) {
     console.error(err)
   }

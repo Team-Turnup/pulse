@@ -11,6 +11,8 @@ import {
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
+//maybe delete socketContext?
+import {SocketContext} from '../socket'
 
 export const OverviewStats = ({
   totalTime,
@@ -23,6 +25,7 @@ export const OverviewStats = ({
   useEffect(() => {
     console.log('I sense a change')
   }, [workoutData])
+  console.log('intervals', intervals)
   return (
     <View style={styles.info}>
       <View style={styles.col}>

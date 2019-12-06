@@ -122,7 +122,7 @@ class TrainerBuildRoutineScreen extends Component {
 
     return (
       <Container>
-        <AppHeader />
+        <AppHeader navigation={this.props.navigation} />
         {/* <Header>
           <Text style={styles.header}>Build Routine</Text>
         </Header> */}
