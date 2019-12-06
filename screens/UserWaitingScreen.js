@@ -25,6 +25,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
+
   const routine = useSelector(({routine}) => routine)
 
   const routineActivityTypes = routine.intervals.map(
@@ -61,6 +62,9 @@ const UserWaitingScreen = ({navigation, socket}) => {
       <AppHeader />
       <Content>
         <View style={styles.startView}>
+          <Text style={styles.text}>This is {name}</Text>
+          {/* below is displaying logged in user name not trainer name */}
+          {/* <Text style={styles.text}>The Trainer is: {user.name}</Text> */}
           {when < curTime ? (
             <Text>Waiting for Trainer</Text>
           ) : (

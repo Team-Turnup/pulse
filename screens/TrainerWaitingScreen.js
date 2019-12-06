@@ -26,9 +26,8 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const {attendees, when, name, id: classId, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
-
   const routine = useSelector(({routine}) => routine)
-
+  const userName = useSelector(({user}) => user.name)
   const userId = useSelector(({user}) => user.id)
   const [curTime, setCurTime] = useState(Date.now())
 
@@ -63,6 +62,10 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
         {name && routine && attendees ? (
           <Fragment>
             <View style={styles.startView}>
+              <Text style={styles.text}>This is {name}</Text>
+              <Text style={styles.text}>
+                You are the Trainer for this Class
+              </Text>
               {when < curTime ||
               (attendees.length &&
                 attendees.length === attendees.filter(a => a.ready).length) ? (
