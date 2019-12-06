@@ -29,10 +29,7 @@ class CadenceVibrationSettings extends Component {
       visualWhen: this.props.option.visualWhen || 'everybeat'
     }
     this.handleChange = this.handleChange.bind(this)
-    this.updateUserInfo = this.updateUserInfo.bind(this)
     this.handleHaptic = this.handleHaptic.bind(this)
-    this.handleVisual = this.handleVisual.bind(this)
-    this.handleVisualColor = this.handleVisualColor.bind(this)
     this.clear = []
     this.clearVisual = []
   }
@@ -44,11 +41,6 @@ class CadenceVibrationSettings extends Component {
     }
   }
 
-  updateUserInfo() {
-    const {name, age, gender, height, weight} = this.state
-    this.props.changeUserInfoThunk({name, age, gender, height, weight})
-  }
-
   handleHaptic(value) {
     if (value) {
       this.props.updateOptionThunk({hapticWhat: value})
@@ -56,34 +48,6 @@ class CadenceVibrationSettings extends Component {
       this.clear.push(setInterval(haptic(value, 100), 600))
       setTimeout(() => clearInterval(this.clear.shift()), 5000)
     }
-  }
-
-  handleVisual(value) {
-    this.props.updateOptionThunk({visualWhat: value})
-    this.setState({visualWhat: value})
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
-  }
-
-  handleVisualColor(value) {
-    this.props.updateOptionThunk({visualColor: value})
-    this.clearVisual.push(
-      setInterval(() => {
-        this.setState({opacity: 0.3})
-        setTimeout(() => this.setState({opacity: 1}), 300)
-      }, 600)
-    )
-    setTimeout(() => clearInterval(this.clearVisual.shift()), 5000)
-    // if (value) {
-    //     if (this.clear.length) {
-    //         clearInterval(this.clear.shift())
-    //     }
-    // this.clear.push(setInterval(haptic(value, 100), 600))
-    // setTimeout(()=>clearInterval(this.clear.shift()), 5000)
   }
 
   arrayBufferToBase64(buffer) {

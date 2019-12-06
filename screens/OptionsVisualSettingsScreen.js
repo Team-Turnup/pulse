@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Button, Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
@@ -28,8 +28,6 @@ class VisualSettingsScreen extends Component {
       visualWhen: this.props.option.visualWhen || 'everybeat'
     }
     this.handleChange = this.handleChange.bind(this)
-    this.updateUserInfo = this.updateUserInfo.bind(this)
-    this.handleHaptic = this.handleHaptic.bind(this)
     this.handleVisual = this.handleVisual.bind(this)
     this.handleVisualColor = this.handleVisualColor.bind(this)
     this.clear = []
@@ -40,20 +38,6 @@ class VisualSettingsScreen extends Component {
     this.setState({[key]: value})
     if (key !== 'visualColor') {
       this.props.updateOptionThunk({[key]: value})
-    }
-  }
-
-  updateUserInfo() {
-    const {name, age, gender, height, weight} = this.state
-    this.props.changeUserInfoThunk({name, age, gender, height, weight})
-  }
-
-  handleHaptic(value) {
-    if (value) {
-      this.props.updateOptionThunk({hapticWhat: value})
-      this.setState({hapticWhat: value})
-      this.clear.push(setInterval(haptic(value, 100), 600))
-      setTimeout(() => clearInterval(this.clear.shift()), 5000)
     }
   }
 
