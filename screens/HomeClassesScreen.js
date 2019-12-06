@@ -37,9 +37,6 @@ class HomeClassesScreen extends Component {
     }
     this.handleChange = this.handleChange.bind(this)
   }
-  static navigationOptions = {
-    header: null
-  }
 
   componentDidMount() {
     this.props.getMyClassesThunk()

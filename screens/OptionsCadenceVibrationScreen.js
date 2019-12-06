@@ -3,11 +3,8 @@ import {connect} from 'react-redux'
 import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Button, Container, Content, Item, Label, Input, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
-import NumericInput from 'react-native-numeric-input'
-import CheckBox from 'react-native-check-box'
 import {changeUserInfoThunk} from '../store/user'
 import {haptic} from '../assets/options/haptics'
-import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
 import AppHeader from '../components/AppHeader'
@@ -16,17 +13,8 @@ class CadenceVibrationSettings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: this.props.user.name || '',
-      age: this.props.user.age || 0,
-      gender: this.props.user.gender || null,
-      weight: this.props.user.weight || 0,
-      height: this.props.user.height || 0,
       hapticWhat: this.props.option.hapticWhat || 'singlebeat',
-      hapticWhen: this.props.option.hapticWhen || 'everybeat',
-      visualWhat: this.props.option.visualWhat || 'blink',
-      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
-      opacity: 1,
-      visualWhen: this.props.option.visualWhen || 'everybeat'
+      hapticWhen: this.props.option.hapticWhen || 'everybeat'
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleHaptic = this.handleHaptic.bind(this)

@@ -91,11 +91,6 @@ class HomeScreen extends Component {
   }
 }
 
-HomeScreen.navigationOptions = {
-  title: '⚡️ Stride ⚡️',
-  header: null
-}
-
 const mapStateToProps = ({user, workouts, myClasses}) => ({
   user,
   workouts,

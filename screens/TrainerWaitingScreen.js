@@ -12,6 +12,8 @@ import {SocketContext} from '../socket'
 // Components
 import {Container, Header, Content, Text, H3, View} from 'native-base'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
+import AppHeader from '../components/AppHeader'
+
 import {
   StartButton,
   StartTime,
@@ -56,9 +58,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
 
   return (
     <Container>
-      <Header>
-        <Text style={{fontWeight: 'bold'}}>{name}</Text>
-      </Header>
+      <AppHeader />
       <Content>
         {name && routine && attendees ? (
           <Fragment>

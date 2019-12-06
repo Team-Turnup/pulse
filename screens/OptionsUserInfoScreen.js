@@ -4,9 +4,7 @@ import {StyleSheet, View, TouchableOpacity, Image, Alert} from 'react-native'
 import {Container, Content, Item, Label, Input, Text, Button} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
 import NumericInput from 'react-native-numeric-input'
-import CheckBox from 'react-native-check-box'
 import {changeUserInfoThunk} from '../store/user'
-import {haptic} from '../assets/options/haptics'
 import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker'
 import {updateOptionThunk} from '../store/option'
 import {encode} from 'base-64'
@@ -20,13 +18,7 @@ class UserInfoScreen extends Component {
       age: this.props.user.age || 0,
       gender: this.props.user.gender || null,
       weight: this.props.user.weight || 0,
-      height: this.props.user.height || 0,
-      hapticWhat: this.props.option.hapticWhat || 'singlebeat',
-      hapticWhen: this.props.option.hapticWhen || 'everybeat',
-      visualWhat: this.props.option.visualWhat || 'blink',
-      visualColor: toHsv(this.props.option.visualColor) || {h: 0, s: 1, v: 1},
-      opacity: 1,
-      visualWhen: this.props.option.visualWhen || 'everybeat'
+      height: this.props.user.height || 0
     }
     this.handleChange = this.handleChange.bind(this)
     this.updateUserInfo = this.updateUserInfo.bind(this)
@@ -71,6 +63,7 @@ class UserInfoScreen extends Component {
   render() {
     return (
       <Container>
+        <AppHeader />
         <Content>
           <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>User Info</Text>
