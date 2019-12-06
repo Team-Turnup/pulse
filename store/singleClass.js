@@ -110,7 +110,6 @@ const classReducer = (state = initialState, action) => {
     case REMOVE_CLASS:
       return initialState
     case SET_READY_ATTENDEES:
-      console.log(state.attendees, action)
       return {
         ...state,
         attendees: state.attendees.map(a =>
@@ -122,7 +121,9 @@ const classReducer = (state = initialState, action) => {
     case ADD_NEW_ATTENDEE:
       return {
         ...state,
-        attendees: [...state.attendees, action.attendee]
+        attendees: state.attendees.includes(action.attendee)
+          ? state.attendees
+          : [...state.attendees, action.attendee]
       }
     case REMOVE_ATTENDEE:
       return {
