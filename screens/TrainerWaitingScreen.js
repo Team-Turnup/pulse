@@ -54,7 +54,6 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
 
   // tick
   useInterval(() => setCurTime(Date.now()), 1000)
-
   return (
     <Container>
       <AppHeader />

@@ -55,6 +55,13 @@ const UserWaitingScreen = ({navigation, socket}) => {
     })
   }, [])
 
+  // this triggers onPress and sends user to edit this routine so they can save if they want it
+  const navigateRoutine = () => {
+    navigation.navigate('BuildRoutineScreen', {
+      routine: routine
+    })
+  }
+
   useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
@@ -77,6 +84,10 @@ const UserWaitingScreen = ({navigation, socket}) => {
           <Text>Loading Routine</Text>
         )}
         <Content>
+          <Text
+            onPress={() => navigateRoutine()}
+            style={{textAlign: 'center', paddingBottom: 20}}
+          >{`Routine: ${routine.name}`}</Text>
           <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>

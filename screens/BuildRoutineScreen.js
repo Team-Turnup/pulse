@@ -9,11 +9,11 @@ import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import activityTypesNoCombo from '../assets/images/activityTypesNoCombo'
 import {
-  getRoutineThunk,
   createRoutineThunk,
   createAndStartRoutineThunk,
   updateRoutineThunk
 } from '../store/routines'
+import {getRoutineThunk} from '../store/routine'
 import AppHeader from '../components/AppHeader'
 import {Platform} from '@unimodules/core'
 
@@ -27,9 +27,13 @@ class BuildRoutineScreen extends Component {
       index: 0,
       cadence: 100,
       duration: 60,
-      activityType: routine.intervals && routine.intervals.length ? routine.intervals[0].activityType : '',
+      activityType:
+        routine.intervals && routine.intervals.length
+          ? routine.intervals[0].activityType
+          : '',
       routine: routine.intervals || [],
-      makePublic: routine.makePublic || this.props.navigation.getParam('isClass', false),
+      makePublic:
+        routine.makePublic || this.props.navigation.getParam('isClass', false),
       showAddIntervals: (routine.activityType && routine.name) || false,
       addAnotherInterval: false,
       finished: false
@@ -42,6 +46,11 @@ class BuildRoutineScreen extends Component {
     this.saveInterval = this.saveInterval.bind(this)
     this.changeIndex = this.changeIndex.bind(this)
     this.handleChange = this.handleChange.bind(this)
+  }
+  //this is new, meant to try to use for other users to get a copy of class's routine
+  componentDidMount() {
+    console.log('this.props.routine', this.props.routine)
+    getRoutineThunk(this.props.routine)
   }
 
   handleChange(key, value) {
@@ -67,7 +76,9 @@ class BuildRoutineScreen extends Component {
     console.log(createdRoutine)
     const isClass = this.props.navigation.getParam('isClass', false)
     if (isClass) {
-      this.props.navigation.navigate('BuildClassScreen', {routine: createdRoutine})
+      this.props.navigation.navigate('BuildClassScreen', {
+        routine: createdRoutine
+      })
     } else {
       this.props.navigation.navigate('HomeWorkoutsScreen')
     }
@@ -152,7 +163,8 @@ class BuildRoutineScreen extends Component {
               color: 'rgb(84, 130, 53)'
             }}
           >
-            Create Routine{'\n'}{isClass ? 'for New Class' : 'for New Solo Workout'}
+            Create Routine{'\n'}
+            {isClass ? 'for New Class' : 'for New Solo Workout'}
           </Text>
           <Text
             style={{
@@ -160,7 +172,8 @@ class BuildRoutineScreen extends Component {
               ...styles.message
             }}
           >
-            You can reuse your routines for future workouts{isClass ? ' and classes' : ''}
+            You can reuse your routines for future workouts
+            {isClass ? ' and classes' : ''}
           </Text>
         </View>
         {/* <Header>
@@ -198,30 +211,32 @@ class BuildRoutineScreen extends Component {
                 />
               </View>
               {/* </Item> */}
-              {!isClass ? <Item fixedLabel style={styles.item}>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: 125,
-                    justifyContent: 'flex-start',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text>Make Public</Text>
-                  <CheckBox
-                    onClick={() =>
-                      this.setState(prevState => ({
-                        makePublic: !prevState.makePublic
-                      }))
-                    }
-                    isChecked={this.state.makePublic}
-                  />
-                </View>
-                <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>
-                  Allows other users to search for and workout to your routine
-                </Text>
-              </Item> : null}
+              {!isClass ? (
+                <Item fixedLabel style={styles.item}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      width: 125,
+                      justifyContent: 'flex-start',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text>Make Public</Text>
+                    <CheckBox
+                      onClick={() =>
+                        this.setState(prevState => ({
+                          makePublic: !prevState.makePublic
+                        }))
+                      }
+                      isChecked={this.state.makePublic}
+                    />
+                  </View>
+                  <Text style={{fontSize: 10, width: 200, textAlign: 'right'}}>
+                    Allows other users to search for and workout to your routine
+                  </Text>
+                </Item>
+              ) : null}
             </View>
           ) : null}
 
@@ -371,43 +386,44 @@ class BuildRoutineScreen extends Component {
                 </View>
               ) : null}
 
-              {this.state.finished ? 
-              !isClass ? (
-                <View>
-                  {/* <Button
+              {this.state.finished ? (
+                !isClass ? (
+                  <View>
+                    {/* <Button
                   style={styles.button}
                 >
                   <Text>Generate Playlist</Text>
                 </Button> */}
+                    <Button
+                      style={styles.button}
+                      onPress={
+                        this.state.routine.length ? this.createRoutine : null
+                      }
+                    >
+                      <Text>Create Routine & Return Home</Text>
+                    </Button>
+                    <Button
+                      style={styles.button}
+                      onPress={
+                        this.state.routine.length
+                          ? this.createAndStartRoutine
+                          : null
+                      }
+                    >
+                      <Text>Create and Start Routine</Text>
+                    </Button>
+                  </View>
+                ) : (
                   <Button
                     style={styles.button}
                     onPress={
                       this.state.routine.length ? this.createRoutine : null
                     }
                   >
-                    <Text>Create Routine & Return Home</Text>
+                    <Text>Create Routine for Class</Text>
                   </Button>
-                  <Button
-                    style={styles.button}
-                    onPress={
-                      this.state.routine.length
-                        ? this.createAndStartRoutine
-                        : null
-                    }
-                  >
-                    <Text>Create and Start Routine</Text>
-                  </Button>
-                </View>
-              ) :
-              <Button
-                style={styles.button}
-                onPress={
-                  this.state.routine.length ? this.createRoutine  : null
-                }
-              >
-                <Text>Create Routine for Class</Text>
-              </Button>
-          : null}
+                )
+              ) : null}
             </View>
           ) : (
             <View></View>
