@@ -113,9 +113,9 @@ class VisualSettingsScreen extends Component {
             opacity: this.state.opacity
           }}
           ></View> */}
-          <View style={styles.viewPicker}>
+          <View style={styles.viewDivider}></View>
+          <View>
             <Label>Visual Feedback Style</Label>
-
             <RNPickerSelect
               onValueChange={value => this.handleVisual(value)}
               style={{display: 'flex', alignItems: 'center'}}
@@ -123,7 +123,8 @@ class VisualSettingsScreen extends Component {
               items={[{label: 'Blink', value: 'blink'}]}
             />
           </View>
-          <View style={styles.viewPicker}>
+          <View style={styles.viewDivider}></View>
+          <View>
             <Label>Visual Feedback Color</Label>
             <Text>(click the center circle to confirm color)</Text>
           </View>
@@ -134,7 +135,8 @@ class VisualSettingsScreen extends Component {
             color={this.state.visualColor}
             // hideSliders={true}
           />
-          <View style={styles.viewPicker}>
+          <View>
+            <View style={styles.viewDivider}></View>
             <Label>When to Play Visual Feedback</Label>
             <RNPickerSelect
               onValueChange={value => this.handleChange('visualWhen', value)}
@@ -147,6 +149,7 @@ class VisualSettingsScreen extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
         </Content>
       </Container>
     )
@@ -165,11 +168,18 @@ const styles = StyleSheet.create({
   viewPicker: {
     width: '100%',
     margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 5,
     display: 'flex',
     alignItems: 'center'
+  },
+  viewDivider: {
+    width: '100%',
+    // margin: 5,
+    //borderWidth: 1,
+    borderColor: 'gray',
+    borderBottomWidth: 1
   },
   buttons: {
     display: 'flex',

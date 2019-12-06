@@ -116,9 +116,9 @@ class CadenceVibrationSettings extends Component {
           </Button> */}
 
           <Text style={styles.header}>Vibration Settings</Text>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>Vibration Feedback Style</Label>
-
             <RNPickerSelect
               onValueChange={value => this.handleHaptic(value)}
               value={this.state.hapticWhat}
@@ -132,6 +132,7 @@ class CadenceVibrationSettings extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>When to Play Vibration Feedback</Label>
             <RNPickerSelect
@@ -145,6 +146,7 @@ class CadenceVibrationSettings extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
         </Content>
       </Container>
     )
@@ -163,11 +165,18 @@ const styles = StyleSheet.create({
   viewPicker: {
     width: '100%',
     margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 5,
     display: 'flex',
     alignItems: 'center'
+  },
+  viewDivider: {
+    width: '100%',
+    // margin: 5,
+    //borderWidth: 1,
+    borderColor: 'gray',
+    borderBottomWidth: 1
   },
   buttons: {
     display: 'flex',

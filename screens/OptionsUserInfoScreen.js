@@ -99,6 +99,7 @@ class UserInfoScreen extends Component {
       <Container>
         <Content>
           <Text style={styles.header}>User Info</Text>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Name</Label>
@@ -112,6 +113,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Age</Label>
@@ -121,6 +123,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Height (inches)</Label>
@@ -130,6 +133,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Item fixedLabel style={styles.item}>
               <Label>Weight (lb)</Label>
@@ -139,6 +143,7 @@ class UserInfoScreen extends Component {
               />
             </Item>
           </View>
+          <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
             <Label>Gender</Label>
             <RNPickerSelect
@@ -152,6 +157,7 @@ class UserInfoScreen extends Component {
               ]}
             />
           </View>
+          <View style={styles.viewDivider}></View>
           <Button
             style={{...styles.button, marginTop: 15}}
             onPress={this.updateUserInfo}
@@ -176,11 +182,18 @@ const styles = StyleSheet.create({
   viewPicker: {
     width: '100%',
     margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 5,
     display: 'flex',
     alignItems: 'center'
+  },
+  viewDivider: {
+    width: '100%',
+    // margin: 5,
+    //borderWidth: 1,
+    borderColor: 'gray',
+    borderBottomWidth: 1
   },
   buttons: {
     display: 'flex',
