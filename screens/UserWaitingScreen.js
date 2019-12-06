@@ -40,6 +40,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
 
   useEffect(() => {
     socket.on('start', (proposedStart, followers) => {
+      console.log('start signal received')
       navigation.navigate('StartRoutineScreen', {
         classStart: proposedStart + followers[user.id]
       })
@@ -73,7 +74,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
           <Text>Loading Routine</Text>
         )}
         <Content>
-        <Text style={styles.text}>Please strap your phone</Text>
+          <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>
               to your chest for breathing intervals
@@ -82,17 +83,21 @@ const UserWaitingScreen = ({navigation, socket}) => {
           {routineActivityTypes.includes('cycling') ? (
             <Text style={styles.text}>to your ankle for cycling intervals</Text>
           ) : null}
-          {routineActivityTypes.filter(type=>type!=='breathing'&&type!=='cycling').length ? <Text style={styles.text}>
-            {routineActivityTypes.includes('breathing') ||
-            routineActivityTypes.includes('cycling')
-              ? 'and '
-              : ''}
-            to your wrist{' '}
-            {routineActivityTypes.includes('breathing') ||
-            routineActivityTypes.includes('cycling')
-              ? 'for all other intervals'
-              : ''}
-          </Text>: null}
+          {routineActivityTypes.filter(
+            type => type !== 'breathing' && type !== 'cycling'
+          ).length ? (
+            <Text style={styles.text}>
+              {routineActivityTypes.includes('breathing') ||
+              routineActivityTypes.includes('cycling')
+                ? 'and '
+                : ''}
+              to your wrist{' '}
+              {routineActivityTypes.includes('breathing') ||
+              routineActivityTypes.includes('cycling')
+                ? 'for all other intervals'
+                : ''}
+            </Text>
+          ) : null}
         </Content>
         <Button
           block

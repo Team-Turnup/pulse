@@ -9,6 +9,9 @@ const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
 const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
 const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE'
+const SET_USER_COLOR = 'SET_USER_COLOR'
+const SET_USER_OPACITY = 'SET_USER_OPACITY'
+const INITIALIZE_COLOR_OPACITY = 'INITIALIZE_COLOR_OPACITY'
 
 export const setClass = singleClass => ({
   type: SET_CLASS,
@@ -32,6 +35,23 @@ export const addNewAttendee = attendee => ({
 export const removeAttendee = id => ({
   type: REMOVE_ATTENDEE,
   id
+})
+
+export const setUserColor = (userId, color) => ({
+  type: SET_USER_COLOR,
+  userId,
+  color
+})
+
+export const setUserOpacity = (userId, opacity) => ({
+  type: SET_USER_OPACITY,
+  userId,
+  opacity
+})
+
+export const initializeColorOpacity = attendees => ({
+  type: SET_USER_OPACITY,
+  attendees
 })
 
 export const leaveClass = classId => async dispatch => {
@@ -128,6 +148,25 @@ const classReducer = (state = initialState, action) => {
       return {
         ...state,
         attendees: state.attendees.filter(({id}) => id !== action.id)
+      }
+    case SET_USER_COLOR:
+      return {
+        ...state,
+        userColors: {...userColors, [userId]: action.color}
+      }
+    case SET_USER_OPACITY:
+      return {
+        ...state,
+        userOpacities: {...userColors, [userId]: action.opacity}
+      }
+    case INITIALIZE_COLOR_OPACITY:
+      return {
+        ...state,
+        userColors: action.attendees.reduce(
+          (a, b) => ({...a, [b]: 'rgba(0,0,0,0)'}),
+          {}
+        ),
+        userOpacities: action.attendees.reduce((a, b) => ({...a, [b]: 0.3}), {})
       }
     default:
       return state

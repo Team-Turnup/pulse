@@ -347,7 +347,7 @@ class BuildRoutineScreen extends Component {
                     <Button
                       style={styles.button}
                       onPress={() =>
-                        this.state.intervalType ? this.saveInterval() : {}
+                        this.state.activityType ? this.saveInterval() : {}
                       }
                     >
                       <Text>Save Changes to Current Interval</Text>

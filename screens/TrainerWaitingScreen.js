@@ -31,6 +31,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
+    console.log('starting the class')
     socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
@@ -73,8 +74,10 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
             <Text
               style={{textAlign: 'center', paddingBottom: 20}}
             >{`Routine: ${routine.name}`}</Text>
-            {routine.intervals ? <RoutineBarDisplay routine={routine.intervals} /> : null}
-            {attendees && attendees.length ? 
+            {routine.intervals ? (
+              <RoutineBarDisplay routine={routine.intervals} />
+            ) : null}
+            {attendees && attendees.length ? (
               <UserList
                 attendees={attendees.sort((a, b) =>
                   !a.ready && b.ready
@@ -88,7 +91,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
                     : 0
                 )}
               />
-            : null}
+            ) : null}
           </Fragment>
         ) : (
           <Text>Loading...</Text>

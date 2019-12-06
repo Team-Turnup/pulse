@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, Fragment} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {
   Container,
@@ -7,10 +7,19 @@ import {
   Header,
   Card,
   CardItem,
-  View
+  View,
+  List,
+  ListItem
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
+import {SocketContext} from '../socket'
+import userData from '../assets/images/userData'
+import {
+  setUserColor,
+  setUserOpacity,
+  initializeColorOpacity
+} from '../store/singleClass'
 
 export const OverviewStats = ({
   totalTime,
@@ -71,45 +80,60 @@ export const OverviewStats = ({
 }
 
 const TrainerWorkoutScreen = () => {
-  const {attendees, when, name, ..._class} = useSelector(
-    ({singleClass}) => singleClass
-  )
+  // initialize react-redux data:
+  const dispatch = useDispatch()
+  const {
+    attendees,
+    when,
+    name,
+    userColors,
+    userOpacities,
+    ..._class
+  } = useSelector(({singleClass}) => singleClass)
   const routine = useSelector(({intervals, ...routine}) => routine)
   const userId = useSelector(({user}) => user.id)
 
-  // timekeeping variables
+  // timekeeping variables -- maybe should be on store?
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
 
-  // when the data is live, useInterval might not be necessary
-  // useInterval(() => {
-  //   const timeElapsed = Math.round((Date.now() - classStart) / 1000)
-  //   const intervalElapsed = Math.round((Date.now() - intervalStartTime) / 1000)
-  //   setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
-  //   setIntervalTime(
-  //     intervalElapsed > intervals[currentInterval].duration
-  //       ? intervals[currentInterval].duration
-  //       : intervalElapsed
-  //   )
-  // }, 1000)
-
-  // // update interval whenever interval time is greater than the duration
-  // useEffect(() => {
-  //   if (intervalTime < intervals[currentInterval].duration) {
-  //     /* do nothing - happens whenever interval changes */
-  //   } else {
-  //     setCurrentInterval(currentInterval + 1)
-  //     intervalStartTime = Date.now()
-  //   }
-  // }, [
-  //   currentInterval < intervals.length - 1 &&
-  //     intervalTime >= intervals[currentInterval].duration
-  // ])
+  // set up event listeners for WS
+  useEffect(() => {
+    dispatch(initializeColorOpacity(attendees))
+    socket.on('workoutTimestamp', (userId, workoutTimestamp, color) => {
+      console.log('getting data!', userColors, userOpacities)
+      if (userColors[userId] === 'rgba(0,0,0,0)')
+        dispatch(setUserColors({...userColors, [userId]: color}))
+      dispatch(setUserOpacities({...userOpacities, [userId]: 1}))
+      const wait = setInterval(
+        () => () => {
+          console.log('blink blink!')
+          clearInterval(wait)
+          return dispatch(setUserOpacities({...userOpacities, [userId]: 0.3}))
+        },
+        50
+      )
+    })
+  }, [])
 
   return (
     <Container>
-      {intervals && (
+      <Content>
+        {attendees &&
+        attendees.lenght &&
+        userColors &&
+        Object.keys(userColors).length &&
+        userOpacities &&
+        Object.keys(userOpacities).length
+          ? attendees.map(a => (
+              <Text key={a.id}>
+                {a.name} - {userColors[a.id]} - {userOpacities[a.id]}
+              </Text>
+            ))
+          : null}
+      </Content>
+      {/* {intervals && (
         <Content>
           <OverviewStats
             totalTime={totalTime}
@@ -125,7 +149,7 @@ const TrainerWorkoutScreen = () => {
             workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
           />
         </Content>
-      )}
+      )} */}
     </Container>
   )
 }
