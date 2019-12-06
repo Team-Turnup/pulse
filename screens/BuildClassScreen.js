@@ -8,6 +8,7 @@ import CheckBox from 'react-native-check-box'
 import {createClassThunk} from '../store/singleClass'
 import {setRoutine} from '../store/routine'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
+import {SocketContext} from '../socket'
 
 class BuildClassScreen extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class BuildClassScreen extends Component {
       classPasscode,
       routineId
     })
-    if (new Date(when)-new Date()<10*60*1000) {
+    if (new Date(when) - new Date() < 10 * 60 * 1000) {
       this.props.navigation.navigate('TrainerWaitingScreen')
     } else {
       this.props.navigation.navigate('HomeClassesScreen')
@@ -53,6 +54,7 @@ class BuildClassScreen extends Component {
       setClassPasscode: false,
       classPasscode: ''
     })
+    this.props.socket.emit('classCreated')
   }
 
   handleChange(key, value) {
@@ -232,82 +234,83 @@ class BuildClassScreen extends Component {
               </Text>
             </Button>
           ) : null}
-          
-          {this.state.showRoutineOptions ? 
-          !Object.keys(routine).length ? (
-            <View>
-              <View style={{margin: 15}}>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontWeight: '600',
-                    fontSize: 20,
-                    color: 'rgb(84, 130, 53)'
-                  }}
-                >
-                  Choose Class Routine
-                </Text>
-              </View>
-              <Button
-                style={{
-                  ...styles.button
-                }}
-                onPress={() => {
-                  this.props.setRoutine({})
-                  this.props.navigation.navigate('SelectRoutineScreen', {
-                    isClass: true
-                  })
-                }}
-              >
-                <Text>Select Previous Routine</Text>
-              </Button>
-              <Button
-                style={{
-                  ...styles.button
-                }}
-                onPress={() => {
-                  this.props.setRoutine({})
-                  this.props.navigation.navigate('BuildRoutineScreen', {
-                    isClass: true
-                  })
-                }}
-              >
-                <Text>Create New Routine</Text>
-              </Button>
-            </View>
-          ) : 
-          <View>
-            <View style={{margin: 15}}>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontWeight: '600',
-                    fontSize: 20,
-                    color: 'rgb(84, 130, 53)'
-                  }}
-                >
-                  Class Routine
-                </Text>
+
+          {this.state.showRoutineOptions ? (
+            !Object.keys(routine).length ? (
+              <View>
+                <View style={{margin: 15}}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      fontSize: 20,
+                      color: 'rgb(84, 130, 53)'
+                    }}
+                  >
+                    Choose Class Routine
+                  </Text>
                 </View>
-            <RoutineBarDisplay routine={routine.intervals}/>
-            <Button
-                style={{
-                  ...styles.button
-                }}
-                onPress={()=>this.setState({routine:{}})}
-              >
-                <Text>Choose Different Class Routine</Text>
-              </Button>
-            <Button
-                style={{
-                  ...styles.button
-                }}
-                onPress={this.handleCreateClass}
-              >
-                <Text>Create Class</Text>
-              </Button>
-          </View>
-          : null}
+                <Button
+                  style={{
+                    ...styles.button
+                  }}
+                  onPress={() => {
+                    this.props.setRoutine({})
+                    this.props.navigation.navigate('SelectRoutineScreen', {
+                      isClass: true
+                    })
+                  }}
+                >
+                  <Text>Select Previous Routine</Text>
+                </Button>
+                <Button
+                  style={{
+                    ...styles.button
+                  }}
+                  onPress={() => {
+                    this.props.setRoutine({})
+                    this.props.navigation.navigate('BuildRoutineScreen', {
+                      isClass: true
+                    })
+                  }}
+                >
+                  <Text>Create New Routine</Text>
+                </Button>
+              </View>
+            ) : (
+              <View>
+                <View style={{margin: 15}}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      fontSize: 20,
+                      color: 'rgb(84, 130, 53)'
+                    }}
+                  >
+                    Class Routine
+                  </Text>
+                </View>
+                <RoutineBarDisplay routine={routine.intervals} />
+                <Button
+                  style={{
+                    ...styles.button
+                  }}
+                  onPress={() => this.setState({routine: {}})}
+                >
+                  <Text>Choose Different Class Routine</Text>
+                </Button>
+                <Button
+                  style={{
+                    ...styles.button
+                  }}
+                  onPress={this.handleCreateClass}
+                >
+                  <Text>Create Class</Text>
+                </Button>
+              </View>
+            )
+          ) : null}
         </Content>
       </Container>
     )
@@ -380,4 +383,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {createClassThunk, setRoutine}
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildClassScreen)
+const SocketConnectedBuildClassScreen = props => (
+  <SocketContext.Consumer>
+    {socket => <BuildClassScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SocketConnectedBuildClassScreen)

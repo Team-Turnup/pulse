@@ -19,28 +19,26 @@ import {SocketContext} from '../socket'
 
 const UserWaitingScreen = ({navigation, socket}) => {
   // get user from store
+  const dispatch = useDispatch()
   const user = useSelector(({user}) => user)
-  // get dummy data for class right now
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
+  const color = useSelector(({option}) => option.visualColor)
   const routine = useSelector(({routine}) => routine)
 
   const routineActivityTypes = routine.intervals.map(
     interval => interval.activityType
   )
-
-  const dispatch = useDispatch()
   const [curTime, setCurTime] = useState(Date.now())
 
   useEffect(() => {
-    socket.emit('subscribe', _class.id, user.id, false, Date.now())
+    socket.emit('subscribe', _class.id, user.id, false, Date.now(), color)
     return () => socket.emit('unsubscribe', _class.id, user.id)
   }, [_class.id])
 
   useEffect(() => {
     socket.on('start', (proposedStart, followers) => {
-      console.log('start signal received')
       navigation.navigate('StartRoutineScreen', {
         classStart: proposedStart + followers[user.id]
       })

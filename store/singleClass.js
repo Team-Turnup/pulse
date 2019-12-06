@@ -9,7 +9,7 @@ const REMOVE_CLASS = 'REMOVE_CLASS'
 const SET_READY_ATTENDEES = 'SET_READY_ATTENDEES'
 const ADD_NEW_ATTENDEE = 'ADD_NEW_ATTENDEE'
 const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE'
-const SET_USER_COLOR = 'SET_USER_COLOR'
+const SET_USER_COLORS = 'SET_USER_COLORS'
 const SET_USER_OPACITY = 'SET_USER_OPACITY'
 const INITIALIZE_COLOR_OPACITY = 'INITIALIZE_COLOR_OPACITY'
 
@@ -27,9 +27,10 @@ export const setReadyAttendees = attendees => ({
   attendees
 })
 
-export const addNewAttendee = attendee => ({
+export const addNewAttendee = (attendee, color) => ({
   type: ADD_NEW_ATTENDEE,
-  attendee
+  attendee,
+  color
 })
 
 export const removeAttendee = id => ({
@@ -37,10 +38,9 @@ export const removeAttendee = id => ({
   id
 })
 
-export const setUserColor = (userId, color) => ({
-  type: SET_USER_COLOR,
-  userId,
-  color
+export const setUserColors = userColors => ({
+  type: SET_USER_COLORS,
+  userColors
 })
 
 export const setUserOpacity = (userId, opacity) => ({
@@ -50,7 +50,7 @@ export const setUserOpacity = (userId, opacity) => ({
 })
 
 export const initializeColorOpacity = attendees => ({
-  type: SET_USER_OPACITY,
+  type: INITIALIZE_COLOR_OPACITY,
   attendees
 })
 
@@ -58,6 +58,7 @@ export const leaveClass = classId => async dispatch => {
   try {
     await axios.delete(`${ngrok}/api/classes/${classId}`)
     dispatch(removeClass())
+    dispatch(getMyClassesThunk())
   } catch (error) {
     console.error(error)
   }
@@ -99,6 +100,7 @@ export const createClassThunk = singleClass => async dispatch => {
     _class.when = Date.parse(_class.when)
     dispatch(setClass(_class))
     dispatch(setRoutine(routine))
+    dispatch(getMyClassesThunk())
   } catch (err) {
     console.error(err)
   }
@@ -120,7 +122,9 @@ const initialState = {
   name: '',
   canEnroll: true,
   when: 0,
-  attendees: []
+  attendees: [],
+  userColors: {},
+  userOpacities: {}
 }
 
 const classReducer = (state = initialState, action) => {
@@ -130,7 +134,6 @@ const classReducer = (state = initialState, action) => {
     case REMOVE_CLASS:
       return initialState
     case SET_READY_ATTENDEES:
-      console.log(state.attendees, action)
       return {
         ...state,
         attendees: state.attendees.map(a =>
@@ -142,31 +145,35 @@ const classReducer = (state = initialState, action) => {
     case ADD_NEW_ATTENDEE:
       return {
         ...state,
-        attendees: [...state.attendees, action.attendee]
+        attendees: [...state.attendees, action.attendee],
+        userColors: {...state.userColors, [action.userId]: action.color}
       }
     case REMOVE_ATTENDEE:
       return {
         ...state,
         attendees: state.attendees.filter(({id}) => id !== action.id)
       }
-    case SET_USER_COLOR:
+    case SET_USER_COLORS:
       return {
         ...state,
-        userColors: {...userColors, [userId]: action.color}
+        userColors: action.userColors
       }
     case SET_USER_OPACITY:
       return {
         ...state,
-        userOpacities: {...userColors, [userId]: action.opacity}
+        userOpacities: {...state.userOpacities, [action.userId]: action.opacity}
       }
     case INITIALIZE_COLOR_OPACITY:
       return {
         ...state,
         userColors: action.attendees.reduce(
-          (a, b) => ({...a, [b]: 'rgba(0,0,0,0)'}),
+          (a, {id}) => ({...a, [id]: '#fff'}),
           {}
         ),
-        userOpacities: action.attendees.reduce((a, b) => ({...a, [b]: 0.3}), {})
+        userOpacities: action.attendees.reduce(
+          (a, {id}) => ({...a, [id]: 0.3}),
+          {}
+        )
       }
     default:
       return state

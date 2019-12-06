@@ -21,13 +21,19 @@ module.exports = io => {
 
     socket.on(
       'workoutTimestamp',
-      async (userId, workoutTimestamp, workoutId, classId) => {
+      async (userId, workoutTimestamp, workoutId, classId, color) => {
         const newWorkoutTimestamp = await WorkoutTimestamp.create(
           workoutTimestamp
         )
         newWorkoutTimestamp.setWorkout(workoutId)
         if (classId)
-          informLeader(classId, 'workoutTimestamp', userId, workoutTimestamp)
+          informLeader(
+            classId,
+            'workoutTimestamp',
+            userId,
+            workoutTimestamp,
+            color
+          )
       }
     )
 
@@ -43,28 +49,37 @@ module.exports = io => {
       }
     })
 
-    socket.on('subscribe', (classId, userId, isLeader = false, now) => {
-      if (!classes[classId]) {
-        classes[classId] = {leader: {...initialLeader}, followers: new Map()}
-        console.log(`class ${classId} created`)
+    socket.on(
+      'subscribe',
+      (classId, userId, isLeader = false, now, color = '#ffffff') => {
+        if (!classes[classId]) {
+          classes[classId] = {
+            leader: {...initialLeader},
+            followers: new Map(),
+            colors: new Map()
+          }
+          console.log(`class ${classId} created`)
+        }
+        if (
+          isLeader &&
+          (!classes[classId].leader.userId ||
+            classes[classId].leader.userId === userId)
+        ) {
+          classes[classId].leader.socket = socket.id
+          classes[classId].leader.userId = userId
+        } else {
+          classes[classId].followers.set(userId, now - Date.now())
+          classes[classId].colors.set(userId, color)
+        }
+        socket.join(classId)
+        informLeader(
+          classId,
+          'classList',
+          Array.from(classes[classId].followers.keys()),
+          Object.fromEntries(classes[classId].colors.entries())
+        )
       }
-      if (
-        isLeader &&
-        (!classes[classId].leader.userId ||
-          classes[classId].leader.userId === userId)
-      ) {
-        classes[classId].leader.socket = socket.id
-        classes[classId].leader.userId = userId
-      } else classes[classId].followers.set(userId, now - Date.now())
-      socket.join(classId)
-      console.log(classes[classId].followers)
-      informLeader(
-        classId,
-        'classList',
-        Array.from(classes[classId].followers.keys())
-      )
-    })
-
+    )
     socket.on('joined', (classId, user) => {
       console.log(`${user.name} has joined ${classId}`)
       informLeader(classId, 'joined', user)
@@ -87,6 +102,7 @@ module.exports = io => {
       }
       socket.leave(classId)
       classes[classId].followers.delete(userId)
+      classes[classId].colors.delete(userId)
       informLeader(classId, 'classList', Array.from(classes[classId].followers))
       if (
         !classes[classId].leader.socket &&
@@ -96,6 +112,10 @@ module.exports = io => {
         delete classes[classId]
         console.log(`class ${classId} deleted`)
       }
+    })
+
+    socket.on('classCreated', () => {
+      socket.emit('classCreated')
     })
   })
 }

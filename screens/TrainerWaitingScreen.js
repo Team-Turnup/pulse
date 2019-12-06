@@ -5,7 +5,9 @@ import useInterval from 'use-interval'
 import {
   setReadyAttendees,
   addNewAttendee,
-  removeAttendee
+  removeAttendee,
+  initializeColorOpacity,
+  setUserColors
 } from '../store/singleClass'
 import {SocketContext} from '../socket'
 
@@ -21,9 +23,14 @@ import {
 
 const TrainerWaitingScreen = ({navigation, socket}) => {
   const dispatch = useDispatch()
-  const {attendees, when, name, id: classId, ..._class} = useSelector(
-    ({singleClass}) => singleClass
-  )
+  const {
+    attendees,
+    when,
+    name,
+    id: classId,
+    userColors,
+    ..._class
+  } = useSelector(({singleClass}) => singleClass)
 
   const routine = useSelector(({routine}) => routine)
 
@@ -31,19 +38,22 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   const [curTime, setCurTime] = useState(Date.now())
 
   const _onPress = () => {
-    console.log('starting the class')
     socket.emit('start', classId, userId, Date.now() + 5000)
     navigation.navigate('TrainerWorkoutScreen')
   }
 
   useEffect(() => {
     // listen for socket messages
-    socket.on('classList', attendees => dispatch(setReadyAttendees(attendees)))
-    socket.on('joined', user => dispatch(addNewAttendee(user)))
+    socket.on('joined', (user, color) => dispatch(addNewAttendee(user, color)))
     socket.on('left', id => dispatch(removeAttendee(id)))
+    socket.on('classList', (attendees, userColors) => {
+      dispatch(setReadyAttendees(attendees))
+      dispatch(setUserColors(userColors))
+    })
   }, [])
 
   useEffect(() => {
+    if (attendees) dispatch(initializeColorOpacity(attendees))
     // join/create a class when the component sees a valid classId and unsubscribe on unmount
     if (classId) {
       socket.emit('subscribe', classId, userId, true, Date.now())
@@ -79,6 +89,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
             ) : null}
             {attendees && attendees.length ? (
               <UserList
+                userColors={userColors}
                 attendees={attendees.sort((a, b) =>
                   !a.ready && b.ready
                     ? 1

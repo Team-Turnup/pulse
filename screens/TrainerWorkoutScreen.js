@@ -15,11 +15,7 @@ import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
 import {SocketContext} from '../socket'
 import userData from '../assets/images/userData'
-import {
-  setUserColor,
-  setUserOpacity,
-  initializeColorOpacity
-} from '../store/singleClass'
+import {setUserOpacity} from '../store/singleClass'
 
 export const OverviewStats = ({
   totalTime,
@@ -79,7 +75,7 @@ export const OverviewStats = ({
   )
 }
 
-const TrainerWorkoutScreen = () => {
+const TrainerWorkoutScreen = ({socket}) => {
   // initialize react-redux data:
   const dispatch = useDispatch()
   const {
@@ -100,38 +96,42 @@ const TrainerWorkoutScreen = () => {
 
   // set up event listeners for WS
   useEffect(() => {
-    dispatch(initializeColorOpacity(attendees))
-    socket.on('workoutTimestamp', (userId, workoutTimestamp, color) => {
-      console.log('getting data!', userColors, userOpacities)
-      if (userColors[userId] === 'rgba(0,0,0,0)')
-        dispatch(setUserColors({...userColors, [userId]: color}))
-      dispatch(setUserOpacities({...userOpacities, [userId]: 1}))
-      const wait = setInterval(
-        () => () => {
-          console.log('blink blink!')
-          clearInterval(wait)
-          return dispatch(setUserOpacities({...userOpacities, [userId]: 0.3}))
-        },
-        50
-      )
+    socket.on('workoutTimestamp', (userId, workoutTimestamp) => {
+      dispatch(setUserOpacity(userId, 1))
+      setTimeout(() => dispatch(setUserOpacity(userId, 0.3)), 50)
     })
-  }, [])
+  }, [userOpacities])
 
   return (
     <Container>
       <Content>
-        {attendees &&
-        attendees.lenght &&
-        userColors &&
-        Object.keys(userColors).length &&
-        userOpacities &&
-        Object.keys(userOpacities).length
-          ? attendees.map(a => (
-              <Text key={a.id}>
-                {a.name} - {userColors[a.id]} - {userOpacities[a.id]}
-              </Text>
-            ))
-          : null}
+        <List>
+          <ListItem itemHeader style={styles.listItem}>
+            <Text style={[styles.name, styles.listHeader]}>Name</Text>
+            <Text style={[styles.age, styles.listHeader]}>Age</Text>
+            <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
+          </ListItem>
+          {attendees && attendees.length && userColors && userOpacities
+            ? attendees.map(
+                ({id: userId, name, age, gender, ready = false}) => (
+                  <ListItem
+                    key={userId}
+                    style={[
+                      styles.listItem,
+                      {
+                        backgroundColor: userColors[userId] || '#fff',
+                        opacity: userOpacities[userId] || 1
+                      }
+                    ]}
+                  >
+                    <Text style={styles.name}>{name} </Text>
+                    <Text style={styles.age}>{age}</Text>
+                    <Text style={styles.gender}>{userData[gender].icon}</Text>
+                  </ListItem>
+                )
+              )
+            : null}
+        </List>
       </Content>
       {/* {intervals && (
         <Content>
@@ -174,6 +174,38 @@ const styles = StyleSheet.create({
     height: 150,
     display: 'flex',
     flexDirection: 'row'
+  },
+  listItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  listHeader: {
+    fontWeight: 'bold'
+  },
+  name: {flex: 5, textAlign: 'left'},
+  age: {flex: 1, textAlign: 'center'},
+  gender: {flex: 2, textAlign: 'right'},
+  selected: {
+    backgroundColor: 'rgba(0,255,0,0.25)'
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
+  },
+  button: {
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   }
 })
 
