@@ -107,7 +107,6 @@ class VisualSettingsScreen extends Component {
     // console.log(imageSrc.slice(0,50))
     return (
       <Container>
-        <AppHeader />
         <Content>
           <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>Visual Settings</Text>

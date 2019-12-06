@@ -62,7 +62,6 @@ class UserInfoScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader />
         <Content>
           <AppHeader navigation={this.props.navigation} />
           <Text style={styles.header}>User Info</Text>
