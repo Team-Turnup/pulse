@@ -8,6 +8,7 @@ import CheckBox from 'react-native-check-box'
 import {createClassThunk} from '../store/singleClass'
 import {setRoutine} from '../store/routine'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
+import {SocketContext} from '../socket'
 import AppHeader from '../components/AppHeader'
 
 class BuildClassScreen extends Component {
@@ -54,6 +55,7 @@ class BuildClassScreen extends Component {
       setClassPasscode: false,
       classPasscode: ''
     })
+    this.props.socket.emit('classCreated')
   }
 
   handleChange(key, value) {
@@ -383,4 +385,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {createClassThunk, setRoutine}
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildClassScreen)
+const SocketConnectedBuildClassScreen = props => (
+  <SocketContext.Consumer>
+    {socket => <BuildClassScreen {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SocketConnectedBuildClassScreen)

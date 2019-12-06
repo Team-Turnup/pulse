@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, Fragment} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {
   Container,
@@ -7,12 +7,25 @@ import {
   Header,
   Card,
   CardItem,
-  View
+  View,
+  List,
+  ListItem
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
-//maybe delete socketContext?
 import {SocketContext} from '../socket'
+import userData from '../assets/images/userData'
+import {setUserOpacity, updateTimestamps} from '../store/singleClass'
+
+const cadenceEval = ({cadence, goalCadence}) => {
+  const timeDiff = Math.abs(cadence - goalCadence)
+  const red = goalCadence * 0.15
+  const yellow = goalCadence * 0.075
+
+  if (timeDiff >= red) return '#ff0000'
+  else if (timeDiff >= yellow) return '#ffff00'
+  else return '#00ff00'
+}
 
 export const OverviewStats = ({
   totalTime,
@@ -73,46 +86,71 @@ export const OverviewStats = ({
   )
 }
 
-const TrainerWorkoutScreen = () => {
-  const {attendees, when, name, ..._class} = useSelector(
-    ({singleClass}) => singleClass
-  )
+const TrainerWorkoutScreen = ({socket}) => {
+  // initialize react-redux data:
+  const dispatch = useDispatch()
+  const {
+    attendees,
+    when,
+    name,
+    userColors,
+    userOpacities,
+    userTimestamps,
+    userLatest,
+    ..._class
+  } = useSelector(({singleClass}) => singleClass)
   const routine = useSelector(({intervals, ...routine}) => routine)
   const userId = useSelector(({user}) => user.id)
 
-  // timekeeping variables
+  // timekeeping variables -- maybe should be on store?
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
 
-  // when the data is live, useInterval might not be necessary
-  // useInterval(() => {
-  //   const timeElapsed = Math.round((Date.now() - classStart) / 1000)
-  //   const intervalElapsed = Math.round((Date.now() - intervalStartTime) / 1000)
-  //   setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
-  //   setIntervalTime(
-  //     intervalElapsed > intervals[currentInterval].duration
-  //       ? intervals[currentInterval].duration
-  //       : intervalElapsed
-  //   )
-  // }, 1000)
-
-  // // update interval whenever interval time is greater than the duration
-  // useEffect(() => {
-  //   if (intervalTime < intervals[currentInterval].duration) {
-  //     /* do nothing - happens whenever interval changes */
-  //   } else {
-  //     setCurrentInterval(currentInterval + 1)
-  //     intervalStartTime = Date.now()
-  //   }
-  // }, [
-  //   currentInterval < intervals.length - 1 &&
-  //     intervalTime >= intervals[currentInterval].duration
-  // ])
+  // set up event listeners for WS
+  useEffect(() => {
+    socket.on('workoutTimestamp', (userId, timestamps, latest) => {
+      dispatch(updateTimestamps(userId, timestamps, latest))
+      dispatch(setUserOpacity(userId, 1))
+      setTimeout(() => dispatch(setUserOpacity(userId, 0.3)), 50)
+    })
+    return () => socket.off('workoutTimestamp')
+  }, [userOpacities])
 
   return (
     <Container>
-      {intervals && (
+      <Content>
+        <List>
+          <ListItem itemHeader style={styles.listItem}>
+            <Text style={[styles.name, styles.listHeader]}>Name</Text>
+            <Text style={[styles.age, styles.listHeader]}>Age</Text>
+            <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
+          </ListItem>
+          {attendees && attendees.length && userOpacities
+            ? attendees.map(
+                ({id: userId, name, age, gender, ready = false}) => (
+                  <ListItem
+                    key={userId}
+                    style={[
+                      styles.listItem,
+                      userLatest
+                        ? {
+                            backgroundColor: cadenceEval(userLatest[userId]),
+                            opacity: userOpacities[userId] || 1
+                          }
+                        : {}
+                    ]}
+                  >
+                    <Text style={styles.name}>{name} </Text>
+                    <Text style={styles.age}>{age}</Text>
+                    <Text style={styles.gender}>{userData[gender].icon}</Text>
+                  </ListItem>
+                )
+              )
+            : null}
+        </List>
+      </Content>
+      {/* {intervals && (
         <Content>
           <OverviewStats
             totalTime={totalTime}
@@ -128,7 +166,7 @@ const TrainerWorkoutScreen = () => {
             workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
           />
         </Content>
-      )}
+      )} */}
     </Container>
   )
 }
@@ -153,6 +191,38 @@ const styles = StyleSheet.create({
     height: 150,
     display: 'flex',
     flexDirection: 'row'
+  },
+  listItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  listHeader: {
+    fontWeight: 'bold'
+  },
+  name: {flex: 5, textAlign: 'left'},
+  age: {flex: 1, textAlign: 'center'},
+  gender: {flex: 2, textAlign: 'right'},
+  selected: {
+    backgroundColor: 'rgba(0,255,0,0.25)'
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
+  },
+  button: {
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   }
 })
 

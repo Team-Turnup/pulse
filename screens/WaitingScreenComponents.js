@@ -39,7 +39,7 @@ export const StartButton = ({_onPress}) => (
   </Button>
 )
 
-export const UserList = ({attendees}) => (
+export const UserList = ({attendees, userColors}) => (
   <Fragment>
     <Text style={{textAlign: 'center', paddingTop: 20}}>
       Attendees ({attendees.filter(a => a.ready).length} Waiting /{' '}
@@ -54,15 +54,21 @@ export const UserList = ({attendees}) => (
       {attendees.map(({id: userId, name, age, gender, ready = false}) => (
         <ListItem
           key={userId}
-          style={[styles.listItem, ready ? styles.selected : null]}
+          style={[
+            styles.listItem,
+            userColors && ready
+              ? {backgroundColor: userColors[userId], opacity: 0.3}
+              : {}
+          ]}
         >
           <Text style={styles.name}>{name} </Text>
           <Text style={styles.age}>{age}</Text>
           <Text style={styles.gender}>{userData[gender].icon}</Text>
-        </ListItem>))}
-      </List>
-    </Fragment>
-  )
+        </ListItem>
+      ))}
+    </List>
+  </Fragment>
+)
 
 export const styles = StyleSheet.create({
   listItem: {
@@ -74,8 +80,8 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   name: {flex: 5, textAlign: 'left'},
-  age: {flex: 2, textAlign: 'center'},
-  gender: {flex: 1, textAlign: 'right'},
+  age: {flex: 1, textAlign: 'center'},
+  gender: {flex: 2, textAlign: 'right'},
   activityName: {flex: 2, textAlign: 'left'},
   activityIcon: {flex: 1, textAlign: 'center'},
   cadence: {flex: 2, textAlign: 'center'},
@@ -97,15 +103,15 @@ export const styles = StyleSheet.create({
     color: 'rgb(84, 130, 53)',
     lineHeight: 30
   },
-    button: {
-      marginTop: 7,
-      marginBottom: 7,
-      marginLeft: 15,
-      marginRight: 15,
-      padding: 2,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 10,
-      backgroundColor: 'rgb(84, 130, 53)'
-    }
+  button: {
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
+  }
 })
