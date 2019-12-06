@@ -50,6 +50,11 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
       dispatch(setReadyAttendees(attendees))
       dispatch(setUserColors(userColors))
     })
+    return () => {
+      socket.off('joined')
+      socket.off('left')
+      socket.off('classList')
+    }
   }, [])
 
   useEffect(() => {

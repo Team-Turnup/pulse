@@ -100,6 +100,7 @@ const TrainerWorkoutScreen = ({socket}) => {
       dispatch(setUserOpacity(userId, 1))
       setTimeout(() => dispatch(setUserOpacity(userId, 0.3)), 50)
     })
+    return () => socket.off('workoutTimestamp')
   }, [userOpacities])
 
   return (

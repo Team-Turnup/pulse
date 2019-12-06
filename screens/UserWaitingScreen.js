@@ -49,6 +49,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
       //   }
       // }, 10)
     })
+    return () => socket.off('start')
   }, [])
 
   useInterval(() => setCurTime(Date.now()), 1000)
