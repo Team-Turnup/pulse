@@ -16,6 +16,7 @@ import {StartTime, styles} from './WaitingScreenComponents'
 import RoutineBarDisplay from '../components/RoutineBarDisplay'
 import {leaveClass} from '../store/singleClass'
 import {SocketContext} from '../socket'
+import AppHeader from '../components/AppHeader'
 
 const UserWaitingScreen = ({navigation, socket}) => {
   // get user from store
@@ -57,9 +58,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
 
   return (
     <Container>
-      <Header>
-        <Text style={{fontWeight: 'bold'}}>{name}</Text>
-      </Header>
+      <AppHeader />
       <Content>
         <View style={styles.startView}>
           {when < curTime ? (

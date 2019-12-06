@@ -476,11 +476,6 @@ const styles = StyleSheet.create({
   }
 })
 
-InProgressScreen.navigationOptions = {
-  // title:'👟🏃🏽🏋🏽'
-  header: null
-}
-
 const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   routine,
   option,

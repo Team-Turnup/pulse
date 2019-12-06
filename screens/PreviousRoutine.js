@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import {StyleSheet} from 'react-native'
 import {Container, Button, Text} from 'native-base'
 import RNPickerSelect from 'react-native-picker-select'
+import AppHeader from '../components/AppHeader'
+
 // import {getAllRoutinesThunk} from '../store/routines'
 //import {setRoutine} from '../store/routine'
 // import {getRoutineThunk} from '../store/routine'
@@ -52,6 +54,7 @@ class PreviousRoutine extends Component {
 
     return (
       <Container>
+        <AppHeader />
         <RNPickerSelect
           onValueChange={value => this.handleChange(value)}
           items={[...mappedRoutines]}
