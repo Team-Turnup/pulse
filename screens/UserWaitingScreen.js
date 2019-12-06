@@ -20,23 +20,21 @@ import AppHeader from '../components/AppHeader'
 
 const UserWaitingScreen = ({navigation, socket}) => {
   // get user from store
+  const dispatch = useDispatch()
   const user = useSelector(({user}) => user)
-  // get dummy data for class right now
   const {attendees, when, name, ..._class} = useSelector(
     ({singleClass}) => singleClass
   )
-
+  const color = useSelector(({option}) => option.visualColor)
   const routine = useSelector(({routine}) => routine)
 
   const routineActivityTypes = routine.intervals.map(
     interval => interval.activityType
   )
-
-  const dispatch = useDispatch()
   const [curTime, setCurTime] = useState(Date.now())
 
   useEffect(() => {
-    socket.emit('subscribe', _class.id, user.id, false, Date.now())
+    socket.emit('subscribe', _class.id, user.id, false, Date.now(), color)
     return () => socket.emit('unsubscribe', _class.id, user.id)
   }, [_class.id])
 
@@ -53,6 +51,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
       //   }
       // }, 10)
     })
+    return () => socket.off('start')
   }, [])
 
   // this triggers onPress and sends user to edit this routine so they can save if they want it
