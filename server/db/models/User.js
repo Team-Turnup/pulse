@@ -48,7 +48,10 @@ const User = db.define('user', {
     defaultValue: ''
   },
   age: Sequelize.INTEGER,
-  gender: Sequelize.ENUM(['male', 'female', 'non-binary']),
+  gender: {
+    type: Sequelize.ENUM(['male', 'female', 'non-binary']),
+    defaultValue: 'non-binary'
+  },
   height: Sequelize.INTEGER,
   weight: Sequelize.INTEGER,
   image: Sequelize.BLOB
