@@ -54,7 +54,7 @@ class PreviousRoutine extends Component {
 
     return (
       <Container>
-        <AppHeader />
+        <AppHeader navigation={this.props.navigation} />
         <RNPickerSelect
           onValueChange={value => this.handleChange(value)}
           items={[...mappedRoutines]}

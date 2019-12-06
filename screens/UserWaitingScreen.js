@@ -66,7 +66,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
 
   return (
     <Container>
-      <AppHeader />
+      <AppHeader navigation={this.props.navigation} />
       <Content>
         <View style={styles.startView}>
           <Text style={styles.text}>This is {name}</Text>
