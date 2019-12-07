@@ -18,43 +18,10 @@ import PreviousWorkoutScreen from '../screens/PreviousWorkoutScreen'
 import OptionUserInfoScreen from '../screens/OptionsUserInfoScreen'
 import OptionsCadenceVibrationScreen from '../screens/OptionsCadenceVibrationScreen'
 import OptionsVisualSettingsScreen from '../screens/OptionsVisualSettingsScreen'
-// import TakePhotoScreen from '../screens/TakePhotoScreen'
 const config = Platform.select({
   web: {headerMode: 'screen'},
   default: {}
 })
-
-// const TakePhotoStack = createStackNavigator({TakePhoto: TakePhotoScreen})
-
-// TakePhotoStack.navigationOptions = {
-//   tabBarLabel: 'TakePhoto',
-//   tabBarIcon: ({focused}) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={
-//         Platform.OS === 'ios'
-//           ? `ios-information-circle${focused ? '' : '-outline'}`
-//           : 'md-information-circle'
-//       }
-//     />
-//   )
-// }
-
-// const LoginStack = createStackNavigator({Login: LoginScreen})
-
-// LoginStack.navigationOptions = {
-//   tabBarLabel: 'Login',
-//   tabBarIcon: ({focused}) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={
-//         Platform.OS === 'ios'
-//           ? `ios-information-circle${focused ? '' : '-outline'}`
-//           : 'md-information-circle'
-//       }
-//     />
-//   )
-// }
 
 const HomeWorkoutsStack = createStackNavigator({
   HomeWorkoutsScreen,
@@ -124,12 +91,9 @@ SettingsStack.path = ''
 
 const tabNavigator = createBottomTabNavigator(
   {
-    // LoginStack,
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack
-    // TrainerWorkScreen,
-    // TakePhotoStack
+    SettingsStack,
   },
   {headerMode: 'screen'}
 )
