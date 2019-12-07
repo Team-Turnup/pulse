@@ -9,7 +9,7 @@ import activityTypes from '../assets/images/activityTypes'
 import {DateTime} from 'luxon'
 import AppHeader from '../components/AppHeader'
 
-export default () => {
+export default ({navigation}) => {
   const dispatch = useDispatch()
   const {
     workout: {
@@ -29,7 +29,7 @@ export default () => {
   useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (
     <Container>
-      <AppHeader navigation={this.props.navigation} />
+      <AppHeader navigation={navigation} />
       <View
         style={{
           padding: 20,
