@@ -128,7 +128,7 @@ class UserInfoScreen extends Component {
             style={{...styles.button, marginTop: 15}}
             onPress={this.updateUserInfo}
           >
-            <Text style={styles.buttonText}>Save User Info</Text>
+            <Text>Save User Info</Text>
           </Button>
         </Content>
       </Container>

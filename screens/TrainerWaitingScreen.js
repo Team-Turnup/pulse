@@ -73,7 +73,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   useInterval(() => setCurTime(Date.now()), 1000)
   return (
     <Container>
-      <AppHeader navigation={this.props.navigation} />
+      <AppHeader navigation={navigation} />
       <Content>
         {name && routine && attendees ? (
           <Fragment>

@@ -127,18 +127,6 @@ class VisualSettingsScreen extends Component {
               items={[{label: 'Blink', value: 'blink'}]}
             />
           </View>
-          <View style={styles.viewDivider}></View>
-          <View>
-            <Label>Visual Feedback Color</Label>
-            <Text>(click the center circle to confirm color)</Text>
-          </View>
-          <ColorPicker
-            onColorSelected={color => this.handleVisualColor(color)}
-            onColorChange={color => this.handleChange('visualColor', color)}
-            style={{height: 400, marginBottom: 100}}
-            color={this.state.visualColor}
-            // hideSliders={true}
-          />
           <View>
             <View style={styles.viewDivider}></View>
             <Label>When to Play Visual Feedback</Label>
@@ -154,11 +142,24 @@ class VisualSettingsScreen extends Component {
             />
           </View>
           <View style={styles.viewDivider}></View>
+          <View>
+            <Label>Visual Feedback Color</Label>
+            <Text>(click the center circle to confirm color)</Text>
+          </View>
+          <ColorPicker
+            onColorSelected={color => this.handleVisualColor(color)}
+            onColorChange={color => this.handleChange('visualColor', color)}
+            style={{height: 400}}
+            color={this.state.visualColor}
+            // hideSliders={true}
+          />
+          
+          <View style={styles.viewDivider}></View>
           <Button
             style={{...styles.button, marginTop: 15}}
             onPress={() => this.handleSubmit()}
           >
-            <Text style={styles.buttonText}>Save Visual Settings</Text>
+            <Text>Save Visual Settings</Text>
           </Button>
         </Content>
       </Container>
