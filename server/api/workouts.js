@@ -65,18 +65,44 @@ router.get('/', authenticatedUser, async (req, res, next) => {
 router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {
-      body: {routineId},
+      body: {routineId, classStart},
       user
     } = req
     const workout = await Workout.create()
-    const routine = await Routine.findByPk(routineId)
-
-    // set user and routine, conditionally add classId if provided
+    const routine = await Routine.findByPk(routineId, {include: [Interval]})
     await Promise.all([
       workout.setUser(user),
       workout.setRoutine(routine)
       // ...((classId && workout.setClass(classId)) || [])
     ])
+
+    if (classStart) {
+      const {name, activityType, intervals} = routine
+      let newRoutine = await Routine.create({
+        name,
+        activityType,
+        makePublic: false
+      })
+      await newRoutine.setUser(user.id)
+      if (!newRoutine) throw new Error('Routine not created')
+      await newRoutine.setIntervals(
+        await Promise.all(
+          intervals.map(interval =>
+            Interval.create({
+              cadence: interval.cadence,
+              duration: interval.duration,
+              activityType: interval.activityType
+            })
+          )
+        )
+      )
+            console.log('copyRoutine', newRoutine)
+      routine = await Routine.findByPk(newRoutine.id, {include: [Interval]})
+    }
+
+    // set user and routine, conditionally add classId if provided
+    console.log('workout', workout)
+    console.log('routine', routine)
     res.status(200).json({workout, routine})
   } catch (err) {
     next(err)
