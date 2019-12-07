@@ -29,7 +29,6 @@ const initialState = []
 const myClassesReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_NEW_CLASS:
-      console.log("you're adding a class")
       return [...state, action.newClass]
     case SET_MY_CLASSES:
       return action.myClasses

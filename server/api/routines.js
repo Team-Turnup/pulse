@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:routineId', async (req, res, next) => {
   try {
-    const routine = await Routine.findByPk(req.params.routineId)
+    const routine = await Routine.findByPk(req.params.routineId, {include: [Interval]})
     res.json(routine)
   } catch (err) {
     next(err)

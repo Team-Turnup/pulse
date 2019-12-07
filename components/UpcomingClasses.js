@@ -44,14 +44,37 @@ class UpcomingClasses extends Component {
   }
 
   render() {
-
     const {navigation, myClasses} = this.props
     const sorter = sort => {
-      if (sort === 'dateCreated') {
+      if (sort === 'classNameAZ') {
         return (A, B) => {
-          return A.routine.createdAt < B.routine.createdAt
+          return A.name.toLowerCase() > B.name.toLowerCase()
             ? 1
-            : A.routine.createdAt > B.routine.createdAt
+            : A.name.toLowerCase() < B.name.toLowerCase()
+            ? -1
+            : 0
+        }
+      } else if (sort === 'classNameZA') {
+        return (A, B) => {
+          return A.name.toLowerCase() < B.name.toLowerCase()
+            ? 1
+            : A.name.toLowerCase() > B.name.toLowerCase()
+            ? -1
+            : 0
+        }
+      } else if (sort === 'userAZ') {
+        return (A, B) => {
+          return A.user.name.toLowerCase() > B.user.name.toLowerCase()
+            ? 1
+            : A.user.name.toLowerCase() < B.user.name.toLowerCase()
+            ? -1
+            : 0
+        }
+      } else if (sort === 'userZA') {
+        return (A, B) => {
+          return A.user.name.toLowerCase() < B.user.name.toLowerCase()
+            ? 1
+            : A.user.name.toLowerCase() > B.user.name.toLowerCase()
             ? -1
             : 0
         }
@@ -79,19 +102,19 @@ class UpcomingClasses extends Component {
           )
           return Aduration > Bduration ? 1 : Aduration < Bduration ? -1 : 0
         }
-      } else if (sort === 'ZA') {
+      } else if (sort === 'liveDateRecentRemote') {
         return (A, B) => {
-          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
-            ? -1
-            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
+          return new Date(A.when) < new Date(B.when)
             ? 1
+            : new Date(A.when) > new Date(B.when)
+            ? -1
             : 0
         }
-      } else if (sort === 'AZ') {
+      } else if (sort === 'liveDateRemoteRecent') {
         return (A, B) => {
-          return A.routine.name.toLowerCase() > B.routine.name.toLowerCase()
+          return new Date(A.when) > new Date(B.when)
             ? 1
-            : A.routine.name.toLowerCase() < B.routine.name.toLowerCase()
+            : new Date(A.when) < new Date(B.when)
             ? -1
             : 0
         }
@@ -119,7 +142,6 @@ class UpcomingClasses extends Component {
 
     sort ? futureFilteredClasses.sort(sorter(sort)) : {}
 
-
     let searchedFutureClasses = futureFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
@@ -131,7 +153,6 @@ class UpcomingClasses extends Component {
     )
 
     let viewFutureClasses = [...futureClasses]
-
 
     let futureClassesResults = viewFutureClasses.length
     let futureClassesPages = Math.ceil(futureClassesResults / numPerPage)
@@ -159,8 +180,8 @@ class UpcomingClasses extends Component {
             style={{
               display: 'flex',
               flexDirection: 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-evenly'
+              alignItems: 'center',
+              justifyContent: 'space-between'
             }}
           >
             {futureClassesPage > 1 ? (
@@ -185,10 +206,18 @@ class UpcomingClasses extends Component {
             ) : (
               <View></View>
             )}
+            <View>
+              <Text style={{fontWeight: '600'}}>My Upcoming Classes</Text>
+              <Text style={{fontSize: 12, textAlign: 'center'}}>
+                {viewFutureClasses.length
+                  ? `Showing ${Math.min((futureClassesPage - 1) * numPerPage + 1,futureClassesResults)}-${Math.min(
+                    futureClassesResults,
+                      futureClassesPage * numPerPage
+                    )} of ${futureClassesResults}`
+                  : ''}
+              </Text>
+            </View>
 
-            <Text style={{fontWeight: '600', marginBottom: 10}}>
-              My Upcoming Classes
-            </Text>
             {futureClassesPage < futureClassesPages ? (
               <TouchableOpacity
                 style={{
@@ -236,60 +265,60 @@ class UpcomingClasses extends Component {
             </View>
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
+                width: '30%',
+                margin: 2,
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 5
               }}
             >
-              <View
-                style={{
-                  width: '30%',
-                  margin: 2,
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  borderRadius: 5
-                }}
-              >
-                <RNPickerSelect
-                  placeholder={{label: 'Filter', value: null}}
-                  onValueChange={value =>
-                    this.handleChange('futureFilter', value)
+              <RNPickerSelect
+                placeholder={{label: 'Filter', value: null}}
+                onValueChange={value =>
+                  this.handleChange('futureFilter', value)
+                }
+                value={futureFilter}
+                items={activityTypeSelects}
+                userNativeAndroidPickerStyle={false}
+              />
+            </View>
+            <View
+              style={{
+                width: '30%',
+                margin: 2,
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 5
+              }}
+            >
+              <RNPickerSelect
+                placeholder={{label: 'Sort', value: null}}
+                onValueChange={value => this.handleChange('sort', value)}
+                value={sort}
+                items={[
+                  {label: 'Class Name (A>Z)', value: 'classNameAZ'},
+                  {label: 'Class Name (Z>A)', value: 'classNameZA'},
+                  {label: 'Instructor Name (A>Z)', value: 'userAZ'},
+                  {label: 'Instructor Name (Z>A)', value: 'userZA'},
+                  {
+                    label: 'Live Date (soonest>latest)',
+                    value: 'liveDateRemoteRecent'
+                  },
+                  {
+                    label: 'Live Date (latest>soonest)',
+                    value: 'liveDateRecentRemote'
+                  },
+                  {
+                    label: 'Duration (low>high)',
+                    value: 'durationLowHigh'
+                  },
+                  {
+                    label: 'Duration (high>low)',
+                    value: 'durationHighLow'
                   }
-                  value={futureFilter}
-                  items={activityTypeSelects}
-                  userNativeAndroidPickerStyle={false}
-                />
-              </View>
-              <View
-                style={{
-                  width: '30%',
-                  margin: 2,
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  borderRadius: 5
-                }}
-              >
-                <RNPickerSelect
-                  placeholder={{label: 'Sort', value: null}}
-                  onValueChange={value => this.handleChange('sort', value)}
-                  value={sort}
-                  items={[
-                    {label: 'Date created', value: 'dateCreated'},
-                    {
-                      label: 'Duration (low>high)',
-                      value: 'durationLowHigh'
-                    },
-                    {
-                      label: 'Duration (high>low)',
-                      value: 'durationHighLow'
-                    },
-                    {label: 'Name (A>Z)', value: 'AZ'},
-                    {label: 'Name (Z>A)', value: 'ZA'}
-                  ]}
-                  userNativeAndroidPickerStyle={false}
-                />
-              </View>
+                ]}
+                userNativeAndroidPickerStyle={false}
+              />
             </View>
           </View>
         </View>
@@ -306,7 +335,7 @@ class UpcomingClasses extends Component {
               .split('T')
             let parseTime = parseDate[1].split('.')[0]
             parseDate = parseDate[0].split('-')
-            parseDate = `${parseDate[2]}/${parseDate[1]}/${parseDate[0].slice(
+            parseDate = `${parseDate[1]}/${parseDate[2]}/${parseDate[0].slice(
               2
             )}`
             parseDate = `${parseDate} ${parseTime}`
