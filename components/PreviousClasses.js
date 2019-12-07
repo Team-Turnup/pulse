@@ -143,6 +143,9 @@ class PreviousClasses extends Component {
     let searchedPastClasses = pastFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
+        .includes(this.state.searchPrevious.toLowerCase()) ||
+        aClass.user.name
+        .toLowerCase()
         .includes(this.state.searchPrevious.toLowerCase())
     )
 

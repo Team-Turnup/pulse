@@ -139,7 +139,8 @@ class ClassesScreen extends React.Component {
     let viewClasss = [...this.props.classes]
     viewClasss = search.length
       ? viewClasss.filter(aClass =>
-          aClass.name.toLowerCase().includes(search.toLowerCase())
+          aClass.name.toLowerCase().includes(search.toLowerCase()) ||
+          aClass.user.name.toLowerCase().includes(search.toLowerCase())
         )
       : viewClasss
     viewClasss = filter
