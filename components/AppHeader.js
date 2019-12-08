@@ -41,7 +41,7 @@ class AppHeader extends React.Component {
               fontWeight: '600'
             }}
           >
-            Stride
+            Pulse
           </Text>
         </View>
         <View
@@ -52,11 +52,16 @@ class AppHeader extends React.Component {
               ? this.props.user.name
               : this.props.user.email}
           </Text>
-          <TouchableOpacity onPress={()=>{this.props.logout(); this.props.navigation.navigate('LoginScreen')}}>
-          <Image
-            style={{width: 25, height: 25, margin: 5}}
-            source={require('../assets/images/Logout.png')}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              this.props.logout()
+              this.props.navigation.navigate('LoginScreen')
+            }}
+          >
+            <Image
+              style={{width: 25, height: 25, margin: 5}}
+              source={require('../assets/images/Logout.png')}
+            />
           </TouchableOpacity>
         </View>
       </View>

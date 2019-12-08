@@ -124,7 +124,7 @@ class LoginScreen extends React.Component {
               backgroundColor: 'rgb(84, 130, 53)',
               width: '100%',
               paddingTop: 15,
-              paddingBottom: 15,
+              paddingBottom: 15
             }}
           >
             <Text
@@ -135,7 +135,7 @@ class LoginScreen extends React.Component {
                 textAlign: 'center'
               }}
             >
-              Stride
+              Pulse
             </Text>
           </View>
           <Card transparent style={{margin: 0, padding: 0}}>

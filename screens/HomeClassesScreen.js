@@ -318,15 +318,27 @@ class HomeClassesScreen extends Component {
                         </Text>
                         <Text>
                           Trainer:{' '}
-                          <Text
-                            style={{
-                              color: 'rgb(84, 130, 53)',
-                              fontStyle: 'italic'
-                            }}
-                          >
-                            {aClass.userId === this.props.user.id ? '🧑‍' : ''}
-                            {aClass.user.name.split(' ')[0]}
-                          </Text>
+                          {aClass.userId === this.props.user.id ? (
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                // fontStyle: 'italic',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              👩‍🏫‍
+                              {aClass.user.name.split(' ')[0]}
+                            </Text>
+                          ) : (
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                fontStyle: 'italic'
+                              }}
+                            >
+                              {aClass.user.name.split(' ')[0]}
+                            </Text>
+                          )}
                         </Text>
                       </View>
                       <View
