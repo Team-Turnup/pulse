@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   info: {
     width: '100%',
-    height: 150,
+    height: 75,
     display: 'flex',
     flexDirection: 'row'
   }
