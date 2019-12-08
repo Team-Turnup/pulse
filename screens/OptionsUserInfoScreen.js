@@ -63,7 +63,7 @@ class UserInfoScreen extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text style={styles.header}>User Info</Text>
           <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>

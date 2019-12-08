@@ -28,7 +28,7 @@ class UpcomingClasses extends Component {
       numPerPage: 3,
       futureClassesPages: 0,
       futureFilter: null,
-      sort: null,
+      sort: 'liveDateRemoteRecent',
       searchUpcoming: '',
       classId: null
     }
@@ -137,7 +137,9 @@ class UpcomingClasses extends Component {
     }))
 
     let futureFilteredClasses = futureFilter
-      ? myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
+      ? futureFilter==='instructor' 
+      ? myClasses.filter(aClass=> aClass.user.id===this.props.user.id)
+      : myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
       : myClasses
 
     sort ? futureFilteredClasses.sort(sorter(sort)) : {}
@@ -207,7 +209,9 @@ class UpcomingClasses extends Component {
                 <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
               </TouchableOpacity>
             ) : (
-              <View></View>
+              <View style={{
+                width: 25,
+                height: 35}}></View>
             )}
             <View>
               <Text style={{fontWeight: '600'}}>My Upcoming Classes</Text>
@@ -241,7 +245,9 @@ class UpcomingClasses extends Component {
                 <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
               </TouchableOpacity>
             ) : (
-              <View></View>
+              <View style={{
+                width: 25,
+                height: 35}}></View>
             )}
           </View>
           <View
@@ -281,7 +287,7 @@ class UpcomingClasses extends Component {
                   this.handleChange('futureFilter', value)
                 }
                 value={futureFilter}
-                items={activityTypeSelects}
+                items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
                 userNativeAndroidPickerStyle={false}
               />
             </View>
@@ -355,7 +361,7 @@ class UpcomingClasses extends Component {
                 }}
                 onPress={async () => {
                   await this.props.getClassThunk(aClass.id)
-                  this.props.navigation.navigate(
+                  navigation.navigate(
                     aClass.userId === this.props.user.id
                       ? 'TrainerWaitingScreen'
                       : 'UserWaitingScreen'
@@ -389,7 +395,7 @@ class UpcomingClasses extends Component {
                         fontStyle: 'italic'
                       }}
                     >
-                      {aClass.user.name.split(' ')[0]}
+                      {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
                     </Text>
                   </Text>
                 </View>

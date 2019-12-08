@@ -17,9 +17,9 @@ export const removeWorkout = workoutId => ({
   workoutId
 })
 
-export const createWorkoutThunk = (routineId, classStart) => async dispatch => {
+export const createWorkoutThunk = (routineId, classStart, classId) => async dispatch => {
   try {
-    const response = await axios.post(`${ngrok}/api/workouts/`, {routineId, classStart})
+    const response = await axios.post(`${ngrok}/api/workouts/`, {routineId, classStart, classId})
     const {workout, routine} = response.data
     dispatch(setWorkout(workout))
     const workoutWithRoutine = workout

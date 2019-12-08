@@ -30,7 +30,7 @@ class HomeWorkoutsScreen extends Component {
     const {navigation} = this.props
     return (
       <Content>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={false} />
         <View
           style={{
             // display: 'flex',

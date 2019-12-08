@@ -74,7 +74,7 @@ class CadenceVibrationSettings extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
 
           {/* <Button
           info

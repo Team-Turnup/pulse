@@ -107,7 +107,7 @@ class OptionsScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={false} />
         {/* <Header>
           <Text>
             Settings
@@ -125,7 +125,7 @@ class OptionsScreen extends Component {
             style={styles.button}
             onPress={() => this.props.navigation.navigate('UserInfo')}
           >
-            <Text>User Information Settings</Text>
+            <Text>User Information</Text>
           </Button>
           <Button
             style={styles.button}

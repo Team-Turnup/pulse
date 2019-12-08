@@ -118,12 +118,10 @@ class SelectRoutineScreen extends Component {
 
     const isClass = this.props.navigation.getParam('isClass', false)
 
-    console.log('isClass', isClass)
-
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text
             style={{
               paddingTop: 15,
