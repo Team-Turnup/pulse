@@ -72,7 +72,6 @@ class BuildRoutineScreen extends Component {
       routine,
       makePublic
     })
-    console.log(createdRoutine)
     const isClass = this.props.navigation.getParam('isClass', false)
     if (isClass) {
       this.props.navigation.navigate('BuildClassScreen', {

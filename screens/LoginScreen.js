@@ -104,7 +104,6 @@ class LoginScreen extends React.Component {
           photoUrl: result.user.photoUrl
         })
       } else {
-        console.log('cancelled')
       }
     } catch (err) {
       console.error(err)

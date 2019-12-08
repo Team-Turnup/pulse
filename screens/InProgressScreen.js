@@ -402,7 +402,7 @@ class InProgressScreen extends React.Component {
                 paused={paused}
               />
               <View style={styles.buttonContainer}>
-                {this.state.paused ? (
+                {this.state.paused && !this.props.proposedStart ? (
                   <Button
                     onPress={() => {
                       this._startWorkout()
@@ -413,7 +413,7 @@ class InProgressScreen extends React.Component {
                     <Text>Resume</Text>
                   </Button>
                 ) : null}
-                {!this.state.paused ? (
+                {!this.state.paused && !this.props.proposedStart ? (
                   <Button
                     onPress={() => {
                       this._pauseWorkout()
@@ -424,13 +424,13 @@ class InProgressScreen extends React.Component {
                     <Text>Pause</Text>
                   </Button>
                 ) : null}
-                <Button onPress={this._restartWorkout} style={styles.button}>
+                {!this.props.proposedStart ? <Button onPress={this._restartWorkout} style={styles.button}>
                   <Text>Restart</Text>
-                </Button>
+                </Button> : null}
                 <Button onPress={this._endWorkout} style={styles.button}>
                   <Text>End</Text>
                 </Button>
-              </View>
+              </View> 
             </View>
           </View>
         </View>

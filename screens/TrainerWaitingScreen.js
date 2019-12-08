@@ -71,7 +71,6 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
 
   // tick
   useInterval(() => setCurTime(Date.now()), 1000)
-  console.log('////////rendering trainer waitin screen')
   return (
     <Container>
       <AppHeader navigation={navigation} hideNotification={true} />

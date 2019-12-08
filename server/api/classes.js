@@ -87,7 +87,6 @@ router.get('/', authenticatedUser, async (req, res, next) => {
         }
       })
     })
-    console.log('classes', classes)
     res.json(classes).status(200)
   } catch (err) {
     next(err)
@@ -199,7 +198,6 @@ router.post('/', authenticatedUser, (req, res, next) => {
       })
     )
     .then(currentClass => {
-      console.log('currentClass', currentClass)
       res.status(200).json(currentClass)
     })
     .catch(e => next(e))
