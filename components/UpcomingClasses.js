@@ -28,7 +28,7 @@ class UpcomingClasses extends Component {
       numPerPage: 3,
       futureClassesPages: 0,
       futureFilter: null,
-      sort: null,
+      sort: 'liveDateRemoteRecent',
       searchUpcoming: '',
       classId: null
     }
