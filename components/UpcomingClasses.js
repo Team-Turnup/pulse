@@ -145,6 +145,9 @@ class UpcomingClasses extends Component {
     let searchedFutureClasses = futureFilteredClasses.filter(aClass =>
       aClass.name
         .toLowerCase()
+        .includes(this.state.searchUpcoming.toLowerCase()) ||
+      aClass.user.name
+        .toLowerCase()
         .includes(this.state.searchUpcoming.toLowerCase())
     )
 

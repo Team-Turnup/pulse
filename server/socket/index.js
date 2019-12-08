@@ -1,9 +1,11 @@
-const {WorkoutTimestamp, Class} = require('../db/models')
+const {WorkoutTimestamp, Workout, Class} = require('../db/models')
 
-const _generateTimestamp = async (workoutId, workoutTimestamp) => {
+const _generateTimestamp = async (workoutId, workoutTimestamp, currentStepCount) => {
   try {
     const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
     await newWorkoutTimestamp.setWorkout(workoutId)
+    const workout = await Workout.findByPk(workoutId)
+    await workout.update({...workoutTimestamp, currentStepCount})
   } catch (err) {
     console.error('Failed to create timestamp', err)
   }
@@ -29,7 +31,7 @@ module.exports = io => {
 
     socket.on(
       'workoutTimestamp',
-      (userId, workoutTimestamp, workoutId, classId) => {
+      (userId, workoutTimestamp, workoutId, classId, currentStepCount) => {
         // workout data is coming over from the followers
         if (classId) {
           const _class = classes[classId]
@@ -51,7 +53,7 @@ module.exports = io => {
             workoutTimestamp
           )
         }
-        _generateTimestamp(workoutId, workoutTimestamp)
+        _generateTimestamp(workoutId, workoutTimestamp, currentStepCount)
       }
     )
 

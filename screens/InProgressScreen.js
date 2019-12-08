@@ -5,7 +5,7 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
-import {setWorkout} from '../store/workout'
+import {setWorkout, fetchWorkoutThunk} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {SocketContext} from '../socket'
@@ -88,7 +88,8 @@ class InProgressScreen extends React.Component {
           goalCadence: this.state.intervals[this.state.currentInterval].cadence
         },
         this.props.workout.id,
-        this.props.singleClass.id || null
+        this.props.singleClass.id || null,
+        currentStepCount
       )
     })
 
@@ -252,6 +253,7 @@ class InProgressScreen extends React.Component {
     this._unsubscribe()
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)
+    this.props.fetchWorkoutThunk(this.props.workout.id)
     this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
@@ -484,7 +486,7 @@ const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   singleClass
 })
 
-const mapDispatchToProps = {setWorkout}
+const mapDispatchToProps = {setWorkout, fetchWorkoutThunk}
 
 const SocketConnectedInProgressScreen = props => (
   <SocketContext.Consumer>

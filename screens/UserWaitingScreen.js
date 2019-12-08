@@ -68,7 +68,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
       <AppHeader navigation={navigation} />
       <Content>
         <View style={styles.startView}>
-          <Text style={styles.text}>This is {name}</Text>
+          <Text style={styles.text}>Class Name: {name}</Text>
           {/* below is displaying logged in user name not trainer name */}
           {/* <Text style={styles.text}>The Trainer is: {user.name}</Text> */}
           {when < curTime ? (
@@ -86,7 +86,7 @@ const UserWaitingScreen = ({navigation, socket}) => {
           <Text
             onPress={() => navigateRoutine()}
             style={{textAlign: 'center', paddingBottom: 20}}
-          >{`Routine: ${routine.name}`}</Text>
+          >{`Routine Name: ${routine.name}`}</Text>
           <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>

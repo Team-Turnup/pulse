@@ -21,7 +21,7 @@ class HomeClassesScreen extends Component {
     const {navigation} = this.props
     return (
       <Content>
-        <AppHeader/>
+        <AppHeader navigation={navigation}/>
         <View
           style={{
             display: 'flex',
