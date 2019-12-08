@@ -8,7 +8,7 @@ import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
-import {setRoutine} from '../store/routine'
+import {setRoutine, getRoutineThunk} from '../store/routine'
 
 //this.props.routines is an array of objects, each object has intervals
 
@@ -118,12 +118,10 @@ class SelectRoutineScreen extends Component {
 
     const isClass = this.props.navigation.getParam('isClass', false)
 
-    console.log('isClass', isClass)
-
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text
             style={{
               paddingTop: 15,
@@ -469,6 +467,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({routines}) => ({routines})
-const mapDispatchToProps = {getMyRoutinesThunk, setRoutine}
+const mapDispatchToProps = {getMyRoutinesThunk, setRoutine, getRoutineThunk}
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectRoutineScreen)

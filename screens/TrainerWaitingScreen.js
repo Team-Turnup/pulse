@@ -73,12 +73,12 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
   useInterval(() => setCurTime(Date.now()), 1000)
   return (
     <Container>
-      <AppHeader navigation={this.props.navigation} />
+      <AppHeader navigation={navigation} hideNotification={true} />
       <Content>
         {name && routine && attendees ? (
           <Fragment>
             <View style={styles.startView}>
-              <Text style={styles.text}>This is {name}</Text>
+              <Text style={styles.text}>Class Name: {name}</Text>
               <Text style={styles.text}>
                 You are the Trainer for this Class
               </Text>
@@ -92,7 +92,7 @@ const TrainerWaitingScreen = ({navigation, socket}) => {
             </View>
             <Text
               style={{textAlign: 'center', paddingBottom: 20}}
-            >{`Routine: ${routine.name}`}</Text>
+            >{`Routine Name: ${routine.name}`}</Text>
             {routine.intervals ? (
               <RoutineBarDisplay routine={routine.intervals} />
             ) : null}

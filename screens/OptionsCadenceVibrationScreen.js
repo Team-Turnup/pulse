@@ -74,7 +74,7 @@ class CadenceVibrationSettings extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
 
           {/* <Button
           info
@@ -119,7 +119,7 @@ class CadenceVibrationSettings extends Component {
             style={{...styles.button, marginTop: 15}}
             onPress={() => this.handleSubmit()}
           >
-            <Text style={styles.buttonText}>Save Vibration Settings</Text>
+            <Text>Save Vibration Settings</Text>
           </Button>
         </Content>
       </Container>

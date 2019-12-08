@@ -34,7 +34,7 @@ export const StartTime = ({when}) => {
 }
 
 export const StartButton = ({_onPress}) => (
-  <Button onPress={_onPress}>
+  <Button style={styles.button} onPress={_onPress}>
     <Text>Start Class</Text>
   </Button>
 )

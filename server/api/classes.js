@@ -6,30 +6,34 @@ const {leaderValidate, authenticatedUser} = require('./authFunctions')
 
 // POST - Enrolling in a class
 router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
+  let enrolledClass
   try {
     const {
       user,
       params: {classId}
     } = req
+    enrolledClass = await Class.findByPk(classId, {
+    attributes: ['id', 'name', 'canEnroll', 'when'],
+    include: [
+      {
+        model: Routine,
+        attributes: ['id', 'name', 'activityType'],
+        include: [
+          {
+            model: Interval,
+            attributes: ['id', 'activityType', 'cadence', 'duration']
+          }
+        ]
+      }
+    ]
+  })
     await user.addAttendee(classId)
-    const enrolledClass = await Class.findByPk(classId, {
-      attributes: ['id', 'name', 'canEnroll', 'when'],
-      include: [
-        {
-          model: Routine,
-          attributes: ['id', 'name', 'activityType'],
-          include: [
-            {
-              model: Interval,
-              attributes: ['id', 'activityType', 'cadence', 'duration']
-            }
-          ]
-        }
-      ]
-    })
     res.status(200).json(enrolledClass)
   } catch (error) {
     console.error(error)
+    if (error.name==='SequelizeUniqueConstraintError') {
+      res.status(200).json(enrolledClass)
+    }
   }
 })
 // DELETE - leaving class
@@ -83,7 +87,6 @@ router.get('/', authenticatedUser, async (req, res, next) => {
         }
       })
     })
-    console.log('classes', classes)
     res.json(classes).status(200)
   } catch (err) {
     next(err)
@@ -195,7 +198,6 @@ router.post('/', authenticatedUser, (req, res, next) => {
       })
     )
     .then(currentClass => {
-      console.log('currentClass', currentClass)
       res.status(200).json(currentClass)
     })
     .catch(e => next(e))

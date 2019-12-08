@@ -63,7 +63,7 @@ class UserInfoScreen extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text style={styles.header}>User Info</Text>
           <View style={styles.viewDivider}></View>
           <View style={styles.viewPicker}>
@@ -128,7 +128,7 @@ class UserInfoScreen extends Component {
             style={{...styles.button, marginTop: 15}}
             onPress={this.updateUserInfo}
           >
-            <Text style={styles.buttonText}>Save User Info</Text>
+            <Text>Save User Info</Text>
           </Button>
         </Content>
       </Container>

@@ -5,7 +5,7 @@ import {Pedometer} from 'expo-sensors'
 import {haptic} from '../assets/options/haptics'
 import WorkoutGraph from './WorkoutGraph'
 import {connect} from 'react-redux'
-import {setWorkout} from '../store/workout'
+import {setWorkout, fetchWorkoutThunk} from '../store/workout'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {SocketContext} from '../socket'
@@ -88,7 +88,8 @@ class InProgressScreen extends React.Component {
           goalCadence: this.state.intervals[this.state.currentInterval].cadence
         },
         this.props.workout.id,
-        this.props.singleClass.id || null
+        this.props.singleClass.id || null,
+        currentStepCount
       )
     })
 
@@ -252,6 +253,7 @@ class InProgressScreen extends React.Component {
     this._unsubscribe()
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)
+    this.props.fetchWorkoutThunk(this.props.workout.id)
     this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
@@ -318,9 +320,9 @@ class InProgressScreen extends React.Component {
               <Text style={{textAlign: 'center'}}>
                 Activity Type:{' '}
                 <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                  {this.state.routineType !== 'combo'
+                  {this.props.routine.activityType
                     ? activityTypes[this.props.routine.activityType].icon
-                    : 'Combo'}
+                    : ''}
                 </Text>
               </Text>
             </View>
@@ -400,7 +402,7 @@ class InProgressScreen extends React.Component {
                 paused={paused}
               />
               <View style={styles.buttonContainer}>
-                {this.state.paused ? (
+                {this.state.paused && !this.props.proposedStart ? (
                   <Button
                     onPress={() => {
                       this._startWorkout()
@@ -411,7 +413,7 @@ class InProgressScreen extends React.Component {
                     <Text>Resume</Text>
                   </Button>
                 ) : null}
-                {!this.state.paused ? (
+                {!this.state.paused && !this.props.proposedStart ? (
                   <Button
                     onPress={() => {
                       this._pauseWorkout()
@@ -422,13 +424,13 @@ class InProgressScreen extends React.Component {
                     <Text>Pause</Text>
                   </Button>
                 ) : null}
-                <Button onPress={this._restartWorkout} style={styles.button}>
+                {!this.props.proposedStart ? <Button onPress={this._restartWorkout} style={styles.button}>
                   <Text>Restart</Text>
-                </Button>
+                </Button> : null}
                 <Button onPress={this._endWorkout} style={styles.button}>
                   <Text>End</Text>
                 </Button>
-              </View>
+              </View> 
             </View>
           </View>
         </View>
@@ -484,7 +486,7 @@ const mapStateToProps = ({routine, option, user, workout, singleClass}) => ({
   singleClass
 })
 
-const mapDispatchToProps = {setWorkout}
+const mapDispatchToProps = {setWorkout, fetchWorkoutThunk}
 
 const SocketConnectedInProgressScreen = props => (
   <SocketContext.Consumer>

@@ -42,7 +42,8 @@ const UserWaitingScreen = ({navigation, socket}) => {
     socket.on('start', (proposedStart, followers) => {
       console.log('start signal received')
       navigation.navigate('StartRoutineScreen', {
-        classStart: proposedStart + followers[user.id]
+        classStart: proposedStart + followers[user.id],
+        classId: _class.id
       })
       // const startCheck = setInterval(() => {
       //   console.log(Platform.OS, 'func Calls', ++funcCalls, 'date', Date.now())
@@ -55,20 +56,20 @@ const UserWaitingScreen = ({navigation, socket}) => {
   }, [])
 
   // this triggers onPress and sends user to edit this routine so they can save if they want it
-  const navigateRoutine = () => {
-    navigation.navigate('BuildRoutineScreen', {
-      routine: routine
-    })
-  }
+  // const navigateRoutine = () => {
+  //   navigation.navigate('BuildRoutineScreen', {
+  //     routine: routine
+  //   })
+  // }
 
   useInterval(() => setCurTime(Date.now()), 1000)
 
   return (
     <Container>
-      <AppHeader navigation={this.props.navigation} />
+      <AppHeader navigation={navigation} hideNotification={true} />
       <Content>
         <View style={styles.startView}>
-          <Text style={styles.text}>This is {name}</Text>
+          <Text style={styles.text}>Class Name: {name}</Text>
           {/* below is displaying logged in user name not trainer name */}
           {/* <Text style={styles.text}>The Trainer is: {user.name}</Text> */}
           {when < curTime ? (
@@ -84,9 +85,9 @@ const UserWaitingScreen = ({navigation, socket}) => {
         )}
         <Content>
           <Text
-            onPress={() => navigateRoutine()}
+            // onPress={() => navigateRoutine()}
             style={{textAlign: 'center', paddingBottom: 20}}
-          >{`Routine: ${routine.name}`}</Text>
+          >{`Routine Name: ${routine.name}`}</Text>
           <Text style={styles.text}>Please strap your phone</Text>
           {routineActivityTypes.includes('breathing') ? (
             <Text style={styles.text}>
