@@ -49,7 +49,6 @@ class BuildRoutineScreen extends Component {
   }
   //this is new, meant to try to use for other users to get a copy of class's routine
   componentDidMount() {
-    console.log('this.props.routine', this.props.routine)
     getRoutineThunk(this.props.routine)
   }
 
@@ -153,7 +152,7 @@ class BuildRoutineScreen extends Component {
 
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={false} />
         <View style={{margin: 15}}>
           <Text
             style={{

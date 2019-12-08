@@ -144,8 +144,10 @@ class ClassesScreen extends React.Component {
         )
       : viewClasss
     viewClasss = filter
-      ? viewClasss.filter(aClass => aClass.routine.activityType === filter)
-      : viewClasss
+    ? filter==='instructor' 
+    ? viewClasss.filter(aClass=> aClass.user.id===this.props.user.id)
+    : viewClasss.filter(aClass => aClass.routine.activityType === futureFilter)
+    : viewClasss
 
     sort ? viewClasss.sort(sorter(sort)) : {}
     const numResults = viewClasss.length
@@ -154,7 +156,7 @@ class ClassesScreen extends React.Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text
             style={{
               paddingTop: 15,
@@ -290,7 +292,7 @@ class ClassesScreen extends React.Component {
                         this.handleChange('filter', value)
                       }
                       value={filter}
-                      items={activityTypeSelects}
+                      items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
                       userNativeAndroidPickerStyle={false}
                     />
                   </View>
@@ -404,7 +406,7 @@ class ClassesScreen extends React.Component {
                                   fontStyle: 'italic'
                                 }}
                               >
-                                {aClass.user.name.split(' ')[0]}
+                                {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
                               </Text>
                             </Text>
                           </View>

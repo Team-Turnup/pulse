@@ -135,7 +135,7 @@ class LoginScreen extends React.Component {
                 textAlign: 'center'
               }}
             >
-              Stride
+              Pulse
             </Text>
           </View>
           <Card transparent style={{margin: 0, padding: 0}}>

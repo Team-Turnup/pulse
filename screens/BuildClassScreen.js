@@ -76,7 +76,7 @@ class BuildClassScreen extends Component {
     const {routine} = this.state
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={false} />
         <Content>
           <View style={{margin: 15}}>
             <Text

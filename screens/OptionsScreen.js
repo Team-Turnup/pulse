@@ -107,7 +107,7 @@ class OptionsScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={false} />
         {/* <Header>
           <Text>
             Settings

@@ -320,9 +320,9 @@ class InProgressScreen extends React.Component {
               <Text style={{textAlign: 'center'}}>
                 Activity Type:{' '}
                 <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                  {this.state.routineType !== 'combo'
+                  {this.props.routine.activityType
                     ? activityTypes[this.props.routine.activityType].icon
-                    : 'Combo'}
+                    : ''}
                 </Text>
               </Text>
             </View>

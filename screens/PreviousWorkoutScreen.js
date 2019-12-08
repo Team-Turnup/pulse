@@ -32,7 +32,7 @@ export default ({navigation}) => {
   useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (
     <Container>
-      <AppHeader navigation={navigation} />
+      <AppHeader navigation={navigation} hideNotification={false}/>
       <View
         style={{
           padding: 20,
