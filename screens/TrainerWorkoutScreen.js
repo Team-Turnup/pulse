@@ -1,5 +1,6 @@
-import React, {useEffect, useState, Fragment} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
+import useInterval from 'use-interval'
 import {
   Container,
   Text,
@@ -13,6 +14,7 @@ import {
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import WorkoutGraph from './WorkoutGraph'
+import faker from 'faker'
 import {SocketContext} from '../socket'
 import userData from '../assets/images/userData'
 import {setUserOpacity, updateTimestamps} from '../store/singleClass'
@@ -27,18 +29,35 @@ const cadenceEval = ({cadence, goalCadence}) => {
   else return '#00ff00'
 }
 
+// const fakeUserTimestamps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce(
+//   (a, b) => ({
+//     ...a,
+//     [b]: Array.from({length: 60}, (_, i) => ({
+//       cadence: faker.random.number({min: 100, max: 110}),
+//       timestamp: i * 1000 + Math.random() * 4000
+//     }))
+//   }),
+//   {}
+// )
+
+const generateWorkoutData = (userTimestamps = {}) => {
+  // currently aggregates all workout data as a single array of data, potentially
+  // change this so that it is some kind of binned average?
+  let workoutData = []
+  for (let timestamps of Object.values(userTimestamps))
+    workoutData.push(...timestamps)
+  return workoutData
+}
+
 export const OverviewStats = ({
   totalTime,
   totalTimeElapsed,
   intervals,
   currentInterval,
   intervalTime,
-  workoutData
+  workoutData,
+  userLatest
 }) => {
-  useEffect(() => {
-    console.log('I sense a change')
-  }, [workoutData])
-  console.log('intervals', intervals)
   return (
     <View style={styles.info}>
       <View style={styles.col}>
@@ -72,15 +91,18 @@ export const OverviewStats = ({
         <Card transparent style={styles.card}>
           <CardItem>
             <Text>Average Cadence:</Text>
-            <Text>Hello</Text>
+            <Text>
+              {Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
+                Object.values(userLatest).length}
+            </Text>
           </CardItem>
         </Card>
-        <Card transparent style={styles.card}>
+        {/* <Card transparent style={styles.card}>
           <CardItem>
             <Text>Total Steps:</Text>
-            <Text>World</Text>
+            <Text>Hello</Text>
           </CardItem>
-        </Card>
+        </Card> */}
       </View>
     </View>
   )
@@ -99,13 +121,22 @@ const TrainerWorkoutScreen = ({socket}) => {
     userLatest,
     ..._class
   } = useSelector(({singleClass}) => singleClass)
-  const routine = useSelector(({intervals, ...routine}) => routine)
+  const {intervals, routine} = useSelector(({routine}) => ({
+    intervals,
+    ...routine
+  }))
   const userId = useSelector(({user}) => user.id)
 
   // timekeeping variables -- maybe should be on store?
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
+
+  const totalTime = intervals.reduce(
+    (sum, interval) => sum + interval.duration,
+    0
+  )
+  const workoutData = generateWorkoutData(fakeUserTimestamps)
 
   // set up event listeners for WS
   useEffect(() => {
@@ -116,6 +147,29 @@ const TrainerWorkoutScreen = ({socket}) => {
     })
     return () => socket.off('workoutTimestamp')
   }, [userOpacities])
+
+  useInterval(() => {
+    const timeElapsed = Math.round((Date.now() - when) / 1000)
+    const intervalElapsed = timeElapsed - totalTimeElapsed
+    setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
+    setIntervalTime(
+      intervalElapsed > intervals[currentInterval].duration
+        ? intervals[currentInterval].duration
+        : intervalElapsed
+    )
+  }, 1000)
+
+  // update interval whenever interval time is greater than the duration
+  useEffect(() => {
+    if (intervalTime < intervals[currentInterval].duration) {
+      /* do nothing - happens whenever interval changes */
+    } else {
+      setCurrentInterval(currentInterval + 1)
+    }
+  }, [
+    currentInterval < intervals.length - 1 &&
+      intervalTime >= intervals[currentInterval].duration
+  ])
 
   return (
     <Container>
@@ -150,23 +204,24 @@ const TrainerWorkoutScreen = ({socket}) => {
             : null}
         </List>
       </Content>
-      {/* {intervals && (
-        <Content>
+      {intervals && intervals.length ? (
+        <View>
           <OverviewStats
             totalTime={totalTime}
             totalTimeElapsed={totalTimeElapsed}
             intervals={intervals}
             currentInterval={currentInterval}
             intervalTime={intervalTime}
-            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+            workoutData={generateWorkoutData(userTimestamps)}
+            userLatest={userLatest}
           />
           <WorkoutGraph
-            startTime={classStart}
             intervals={intervals}
-            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+            workoutData={generateWorkoutData(userTimestamps)}
+            totalTimeElapsed={totalTimeElapsed}
           />
-        </Content>
-      )} */}
+        </View>
+      ) : null}
     </Container>
   )
 }
