@@ -17,11 +17,12 @@ router.get('/:workoutId', async (req, res, next) => {
       params: {workoutId}
     } = req
     const workout = await Workout.findByPk(workoutId, {
-      attributes: ['id', 'timestamp'],
+      attributes: ['id', 'timestamp', 'currentStepCount'],
       include: [
         {
           model: WorkoutTimestamp,
-          attributes: ['id', 'timestamp', 'cadence', 'goalCadence']
+          attributes: ['id', 'timestamp', 'cadence', 'goalCadence'],
+          orderBy: [['timestamp', 'ASC']]
         },
         {
           model: Routine,
@@ -96,13 +97,10 @@ router.post('/', authenticatedUser, async (req, res, next) => {
           )
         )
       )
-            console.log('copyRoutine', newRoutine)
       routine = await Routine.findByPk(newRoutine.id, {include: [Interval]})
     }
 
     // set user and routine, conditionally add classId if provided
-    console.log('workout', workout)
-    console.log('routine', routine)
     res.status(200).json({workout, routine})
   } catch (err) {
     next(err)

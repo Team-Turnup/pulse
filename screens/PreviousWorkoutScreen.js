@@ -16,7 +16,8 @@ export default ({navigation}) => {
       id = null,
       timestamp: startTime = null,
       workoutTimestamps = [],
-      class: _class
+      class: _class,
+      currentStepCount = 0
     },
     routine: {name: routineName = null, activityType = null, intervals = []}
   } = useSelector(({workout, routine}) => ({workout, routine}))
@@ -25,6 +26,8 @@ export default ({navigation}) => {
       intervals.reduce((sum, interval) => sum + interval.duration, 0)) ||
     0
   const className = (_class && _class.name) || null
+
+  const workoutTime = workoutTimestamps[workoutTimestamps.length-1].timestamp/1000
 
   useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (
@@ -95,10 +98,14 @@ export default ({navigation}) => {
                 <Card transparent style={styles.card}>
                   <Text style={{fontSize: 12}}>Routine Length:</Text>
                   <Text style={{color: 'rgb(84, 130, 53)'}}>
-                    {Math.floor(totalTime / 60)
-                      ? `${Math.floor(totalTime / 60)}m`
+                  {Math.floor(workoutTime / 60)
+                      ? `${Math.floor(workoutTime / 60)}m`
                       : ''}{' '}
-                    {totalTime % 60 ? `${totalTime % 60}s` : ''}
+                    {Math.floor(workoutTime % 60) ? `${Math.floor(workoutTime % 60)}s` : ''} </Text>
+                  <Text style={{color: 'rgb(84, 130, 53)'}}><Text style={{color:'black'}}>/</Text> {Math.floor(totalTime / 60)
+                      ? `${Math.floor(totalTime / 60)}m`
+                      : ''}
+                    {totalTime % 60 ? `${totalTime % 60}s` : ''} <Text style={{color:'black', fontStyle:'italic'}}>total</Text>
                   </Text>
                 </Card>
               </View>
@@ -106,7 +113,7 @@ export default ({navigation}) => {
                 <Card transparent style={styles.card}>
                   <Text style={{fontSize: 12}}>Total Steps:</Text>
                   <Text style={{color: 'rgb(84, 130, 53)'}}>
-                    {workoutTimestamps.length} steps
+                    {currentStepCount} steps
                   </Text>
                 </Card>
               </View>
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
   },
   col: {
     width: '50%',
-    height: 35,
+    height: 80,
     display: 'flex',
     flexDirection: 'column'
   },
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
   },
   info: {
     width: '100%',
-    height: 105,
+    height: 150,
     display: 'flex',
     flexDirection: 'row'
   }
