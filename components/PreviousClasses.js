@@ -203,7 +203,9 @@ class PreviousClasses extends Component {
                   <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
                 </TouchableOpacity>
               ) : (
-                <View></View>
+                <View style={{
+                  width: 25,
+                  height: 35}}></View>
               )}
 
               <View>
