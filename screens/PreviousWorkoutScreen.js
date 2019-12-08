@@ -27,7 +27,7 @@ export default ({navigation}) => {
     0
   const className = (_class && _class.name) || null
 
-  const workoutTime = workoutTimestamps[workoutTimestamps.length-1].timestamp/1000
+  const workoutTime = workoutTimestamps.length ? workoutTimestamps[workoutTimestamps.length-1].timestamp/1000 : 0
 
   useEffect(() => () => dispatch(removeWorkout(id)), [])
   return (

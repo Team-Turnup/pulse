@@ -125,7 +125,7 @@ class OptionsScreen extends Component {
             style={styles.button}
             onPress={() => this.props.navigation.navigate('UserInfo')}
           >
-            <Text>User Information Settings</Text>
+            <Text>User Information</Text>
           </Button>
           <Button
             style={styles.button}
