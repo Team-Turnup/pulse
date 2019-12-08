@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Fragment} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {
   Container,
@@ -12,6 +12,7 @@ import {
   ListItem
 } from 'native-base'
 import {StyleSheet} from 'react-native'
+import AppHeader from '../components/AppHeader'
 import WorkoutGraph from './WorkoutGraph'
 import {SocketContext} from '../socket'
 import userData from '../assets/images/userData'
@@ -27,6 +28,11 @@ const cadenceEval = ({cadence, goalCadence}) => {
   else return '#00ff00'
 }
 
+const generateWorkoutData = userTimestamps => {
+  for (let [userId, timestamps] of Object.entries(userTimestamps)) {
+  }
+}
+
 export const OverviewStats = ({
   totalTime,
   totalTimeElapsed,
@@ -38,7 +44,6 @@ export const OverviewStats = ({
   useEffect(() => {
     console.log('I sense a change')
   }, [workoutData])
-  console.log('intervals', intervals)
   return (
     <View style={styles.info}>
       <View style={styles.col}>
@@ -119,6 +124,7 @@ const TrainerWorkoutScreen = ({socket}) => {
 
   return (
     <Container>
+      <AppHeader navigation={navigation} />
       <Content>
         <List>
           <ListItem itemHeader style={styles.listItem}>
@@ -150,23 +156,21 @@ const TrainerWorkoutScreen = ({socket}) => {
             : null}
         </List>
       </Content>
-      {/* {intervals && (
-        <Content>
-          <OverviewStats
-            totalTime={totalTime}
-            totalTimeElapsed={totalTimeElapsed}
-            intervals={intervals}
-            currentInterval={currentInterval}
-            intervalTime={intervalTime}
-            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
-          />
-          <WorkoutGraph
-            startTime={classStart}
-            intervals={intervals}
-            workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
-          />
-        </Content>
-      )} */}
+      {intervals && (
+        // <OverviewStats
+        //   totalTime={totalTime}
+        //   totalTimeElapsed={totalTimeElapsed}
+        //   intervals={intervals}
+        //   currentInterval={currentInterval}
+        //   intervalTime={intervalTime}
+        //   workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+        // />
+        <WorkoutGraph
+          startTime={classStart}
+          intervals={intervals}
+          workoutData={fakeWorkout.filter(d => Date.now() > d.timestamp)}
+        />
+      )}
     </Container>
   )
 }
