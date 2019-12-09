@@ -55,6 +55,7 @@ export default ({
             Math.floor(t % 60) ? `${Math.floor(t % 60)}s` : ''
           }`
         }
+        tickCount={4}
       />
       <VictoryAxis
         dependentAxis
