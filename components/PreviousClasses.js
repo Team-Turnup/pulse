@@ -26,7 +26,7 @@ class PreviousClasses extends Component {
       numPerPage: 3,
       pastClassesPages: 0,
       pastFilter: null,
-      sort: '',
+      sort: 'liveDateRemoteRecent',
       searchPrevious: '',
       classId: null
     }
