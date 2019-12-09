@@ -254,6 +254,7 @@ class InProgressScreen extends React.Component {
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)
     this.props.fetchWorkoutThunk(this.props.workout.id)
+    //below line is still being called long after workout finishes and you navigate back to HomeWorkout
     this.props.navigation.navigate('PreviousWorkoutScreen')
   }
 
@@ -424,13 +425,15 @@ class InProgressScreen extends React.Component {
                     <Text>Pause</Text>
                   </Button>
                 ) : null}
-                {!this.props.proposedStart ? <Button onPress={this._restartWorkout} style={styles.button}>
-                  <Text>Restart</Text>
-                </Button> : null}
+                {!this.props.proposedStart ? (
+                  <Button onPress={this._restartWorkout} style={styles.button}>
+                    <Text>Restart</Text>
+                  </Button>
+                ) : null}
                 <Button onPress={this._endWorkout} style={styles.button}>
                   <Text>End</Text>
                 </Button>
-              </View> 
+              </View>
             </View>
           </View>
         </View>

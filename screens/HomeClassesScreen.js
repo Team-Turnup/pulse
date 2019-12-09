@@ -1,11 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet} from 'react-native'
-import {
-  Button,
-  Text,
-  Content,
-} from 'native-base'
+import {Button, Text, Content} from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
 import {getClassThunk, setClass} from '../store/singleClass'
@@ -21,7 +17,7 @@ class HomeClassesScreen extends Component {
     const {navigation} = this.props
     return (
       <Content>
-        <AppHeader navigation={navigation} hideNotification={false}/>
+        <AppHeader navigation={navigation} hideNotification={false} />
         <View
           style={{
             display: 'flex',
@@ -50,8 +46,8 @@ class HomeClassesScreen extends Component {
             <Text>Create Class</Text>
           </Button>
           <Content style={{margin: 15}}>
-            <UpcomingClasses navigation={navigation}/>
-            <PreviousClasses navigation={navigation}/>
+            <UpcomingClasses navigation={navigation} />
+            <PreviousClasses navigation={navigation} />
           </Content>
         </View>
       </Content>
