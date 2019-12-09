@@ -9,7 +9,7 @@ const _generateTimestamp = async (
     const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
     await newWorkoutTimestamp.setWorkout(workoutId)
     const workout = await Workout.findByPk(workoutId)
-    await workout.update({...workoutTimestamp, currentStepCount})
+    await workout.update({currentStepCount})
   } catch (err) {
     console.error('Failed to create timestamp', err)
   }
@@ -37,7 +37,7 @@ module.exports = io => {
       'workoutTimestamp',
       (userId, workoutTimestamp, workoutId, classId, currentStepCount) => {
         // workout data is coming over from the followers
-        if (classId) {
+        if (classId && classes[classId]) {
           const _class = classes[classId]
           const timestamps = _class.userTimestamps.get(userId)
 

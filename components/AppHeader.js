@@ -17,44 +17,54 @@ import {getMyClassesThunk} from '../store/myClasses'
 import {getClassThunk} from '../store/singleClass'
 
 class AppHeader extends React.Component {
-  // constructor() {
-  //   super()
+  // constructor(props) {
+  //   super(props)
   //   this.state = {
   //     upcomingClasses: [],
   //     index: 0,
   //     timer: '',
   //     clearIndex: null,
   //     clearCheckDate: null,
-  //     clearTimer: null
+  //     clearTimer: null,
+  //     hideNotification: props.hideNotification || false
   //   }
   // }
 
   // async componentWillReceiveProps(newProps) {
-  //   const {myClasses} = newProps
-  //   let {clearIndex, clearCheckDate, clearTimer, index} = this.state
-  //   let upcomingClasses = myClasses.filter(aClass => {
-  //     const time = new Date(aClass.when) - new Date()
-  //     return time < 10 * 60 * 1000 && time>0
-  //   })
-  //   await this.setState({upcomingClasses})
-  //   console.log(upcomingClasses)
-
-  //   if(upcomingClasses.length) {
-  //     this.startTimer()
+  //   if (!newProps.hideNotification) {
+  //     const {myClasses} = newProps
+  //     let {clearCheckDate} = this.state
+  //     let upcomingClasses = myClasses.filter(aClass => {
+  //       const time = new Date(aClass.when) - new Date()
+  //       return time < 10 * 60 * 1000 && time>0
+  //     })
+  //     await this.setState({upcomingClasses})
+  
+  //     if(upcomingClasses.length) {
+  //       this.stopTimer()
+  //       this.startTimer()
+  //     }
+  
+  //     if (upcomingClasses.length>1){
+  //       this.stopIndex()
+  //       this.startIndex()
+  //     }
+  
+  //     clearInterval(clearCheckDate)
+  //     this.startCheckDate()
+  //   } else {
+  //     let {clearCheckDate} = this.state
+  //     clearInterval(clearCheckDate)
+  //     this.stopIndex()
+  //     this.stopTimer()
   //   }
-
-  //   if (upcomingClasses.length>1){
-  //     this.startIndex()
-  //   }
-
-  //   clearInterval(clearCheckDate)
-  //   this.startCheckDate()
+  //   this.setState({hideNotification: newProps.hideNotification})
   // }
 
   // startTimer() {
   //   let clearTimer = setInterval(() => {
   //     let {upcomingClasses, index} = this.state
-  //     const timeToStart = (new Date(upcomingClasses[index].when)-new Date())/1000
+  //     const timeToStart = (new Date(upcomingClasses[Math.min(index,upcomingClasses.length-1)].when)-new Date())/1000
   //     const minToStart = Math.floor(timeToStart/60)
   //     const secToStart = Math.floor(timeToStart%60)
   //     this.setState({timer:timeToStart<0?'in progress...':`${minToStart ? `${minToStart}m` : ''} ${secToStart ? `${secToStart}s` : ''}`})
@@ -104,10 +114,11 @@ class AppHeader extends React.Component {
   // }
 
   // componentDidMount() {
-  //   this.props.getMyClassesThunk()
+  //   if (this.state.showNotification) this.props.getMyClassesThunk()
   // }
 
   // componentWillUnmount() {
+  //   console.log('component unmounting')
   //   const {clearIndex, clearCheckDate, clearTimer} = this.state
   //   clearInterval(clearIndex)
   //   clearInterval(clearCheckDate)
@@ -115,6 +126,7 @@ class AppHeader extends React.Component {
   // }
 
   render() {
+    // const {upcomingClasses, index, timer, hideNotification} = this.state
     return (
       <View
         style={{
@@ -153,7 +165,7 @@ class AppHeader extends React.Component {
                 fontWeight: '600'
               }}
             >
-              Stride
+              Pulse
             </Text>
           </View>
           <View
@@ -181,7 +193,7 @@ class AppHeader extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-        {/* {upcomingClasses.length ? <View
+        {/* {upcomingClasses.length && !hideNotification ? <View
           style={{
             borderBottomWidth: 2,
             borderLeftWidth: 2,
@@ -198,7 +210,7 @@ class AppHeader extends React.Component {
           }}
         >
           <Text style={{color: 'rgb(84, 130, 53)'}}>
-            {upcomingClasses[index].name} {timer==='in progress...' ? timer : `starting in ${timer}`}
+            {upcomingClasses[Math.min(index,upcomingClasses.length-1)].name} {timer==='in progress...' ? timer : `starting in ${timer}`}
           </Text>
           <TouchableOpacity
             style={{
@@ -208,10 +220,9 @@ class AppHeader extends React.Component {
               borderRadius: 5
             }}
             onPress={async () => {
-              console.log('hey')
-              await this.props.getClassThunk(upcomingClasses[index].id)
+              await this.props.getClassThunk(upcomingClasses[Math.min(index,upcomingClasses.length-1)].id)
               this.props.navigation.navigate(
-                upcomingClasses[index].userId === this.props.user.id
+                upcomingClasses[Math.min(index,upcomingClasses.length-1)].userId === this.props.user.id
                   ? 'TrainerWaitingScreen'
                   : 'UserWaitingScreen'
               )

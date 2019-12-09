@@ -21,7 +21,7 @@ class HomeClassesScreen extends Component {
     const {navigation} = this.props
     return (
       <Content>
-        <AppHeader navigation={navigation}/>
+        <AppHeader navigation={navigation} hideNotification={false}/>
         <View
           style={{
             display: 'flex',
@@ -50,8 +50,8 @@ class HomeClassesScreen extends Component {
             <Text>Create Class</Text>
           </Button>
           <Content style={{margin: 15}}>
-            <UpcomingClasses />
-            <PreviousClasses />
+            <UpcomingClasses navigation={navigation}/>
+            <PreviousClasses navigation={navigation}/>
           </Content>
         </View>
       </Content>

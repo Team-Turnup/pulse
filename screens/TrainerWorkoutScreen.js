@@ -13,6 +13,7 @@ import {
   ListItem
 } from 'native-base'
 import {StyleSheet} from 'react-native'
+import AppHeader from '../components/AppHeader'
 import WorkoutGraph from './WorkoutGraph'
 import faker from 'faker'
 import {SocketContext} from '../socket'
@@ -172,6 +173,7 @@ const TrainerWorkoutScreen = ({socket}) => {
 
   return (
     <Container>
+      <AppHeader navigation={navigation} />
       <Content>
         <List>
           <ListItem itemHeader style={styles.listItem}>

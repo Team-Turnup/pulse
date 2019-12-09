@@ -108,7 +108,7 @@ class VisualSettingsScreen extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} />
+          <AppHeader navigation={this.props.navigation} hideNotification={false} />
           <Text style={styles.header}>Visual Settings</Text>
           {/* <View
           style={{

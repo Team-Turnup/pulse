@@ -66,11 +66,11 @@ router.get('/', authenticatedUser, async (req, res, next) => {
 router.post('/', authenticatedUser, async (req, res, next) => {
   try {
     const {
-      body: {routineId, classStart},
+      body: {routineId, classStart, classId},
       user
     } = req
     const workout = await Workout.create()
-    const routine = await Routine.findByPk(routineId, {include: [Interval]})
+    let routine = await Routine.findByPk(routineId, {include: [Interval]})
     await Promise.all([
       workout.setUser(user),
       workout.setRoutine(routine)
@@ -78,6 +78,8 @@ router.post('/', authenticatedUser, async (req, res, next) => {
     ])
 
     if (classStart) {
+      const _class = await Class.findByPk(classId)
+      await workout.setClass(_class)
       const {name, activityType, intervals} = routine
       let newRoutine = await Routine.create({
         name,

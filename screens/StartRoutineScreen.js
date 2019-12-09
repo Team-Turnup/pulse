@@ -13,18 +13,20 @@ class StartRoutineScreen extends Component {
     this.state = {count: 4, clearCountdown: null, startPressed: false}
     this.handleStart = this.handleStart.bind(this)
     this.classStart = this.props.navigation.getParam('classStart', null)
+    this.classId = this.props.navigation.getParam('classId', null)
   }
 
   componentDidMount() {
     if (this.classStart) {
       this.setState({startPressed: true, count: 'Go!'})
+      this.props.createWorkoutThunk(this.props.routine.id, this.classStart, this.classId)
       // const clearCountdown = setInterval(() => {
       //   if (Date.now() >= this.classStart)
       //     this.setState({startPressed: true, count: 'Go!'})
       // }, 10)
       // this.setState({clearCountdown})
     }
-    // this.props.createWorkoutThunk(this.props.routine.id)
+    // this.props.Thunk(this.props.routine.id)
     //     const clearCountdown = setInterval(() => {
     //         let {count} = this.state
     //         if (count>1) {
@@ -39,8 +41,7 @@ class StartRoutineScreen extends Component {
   }
   handleStart() {
     this.setState({startPressed: true})
-    console.log(this.props.routine.id, this.classStart)
-    this.props.createWorkoutThunk(this.props.routine.id, this.classStart)
+    this.props.createWorkoutThunk(this.props.routine.id, this.classStart, this.classId)
     const clearCountdown = setInterval(() => {
       let {count} = this.state
       if (count > 1) {
@@ -57,7 +58,7 @@ class StartRoutineScreen extends Component {
   render() {
     return (
       <Container>
-        <AppHeader navigation={this.props.navigation} />
+        <AppHeader navigation={this.props.navigation} hideNotification={true} />
         {!this.state.startPressed ? (
           <Container style={{marginTop: 75, marginBottom: 75, margin: 15}}>
             <PrepStartRoutine navigation={this.props.navigation} />

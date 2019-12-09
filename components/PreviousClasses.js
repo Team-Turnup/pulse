@@ -135,8 +135,10 @@ class PreviousClasses extends Component {
     }))
 
     let pastFilteredClasses = pastFilter
-      ? myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
-      : myClasses
+    ? pastFilter==='instructor' 
+    ? myClasses.filter(aClass=> aClass.user.id===this.props.user.id)
+    : myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
+    : myClasses
 
     sort ? pastFilteredClasses.sort(sorter(sort)) : {}
 
@@ -201,7 +203,9 @@ class PreviousClasses extends Component {
                   <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
                 </TouchableOpacity>
               ) : (
-                <View></View>
+                <View style={{
+                  width: 25,
+                  height: 35}}></View>
               )}
 
               <View>
@@ -284,7 +288,7 @@ class PreviousClasses extends Component {
                     this.handleChange('pastFilter', value)
                   }
                   value={pastFilter}
-                  items={activityTypeSelects}
+                  items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
                   userNativeAndroidPickerStyle={false}
                 />
               </View>
@@ -385,7 +389,7 @@ class PreviousClasses extends Component {
                             fontStyle: 'italic'
                           }}
                         >
-                          {aClass.user.name.split(' ')[0]}
+                          {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
                         </Text>
                       </Text>
                     </View>
