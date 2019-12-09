@@ -479,6 +479,7 @@ class ClassesScreen extends React.Component {
                                   return
                                 }
                                 await this.props.enrollClass(aClass.id)
+                                console.log('classId', aClass.id)
                                 this.props.socket.emit(
                                   'joined',
                                   aClass.id,
