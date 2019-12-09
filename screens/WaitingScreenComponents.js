@@ -56,9 +56,7 @@ export const UserList = ({attendees, userColors}) => (
           key={userId}
           style={[
             styles.listItem,
-            userColors && ready
-              ? {backgroundColor: userColors[userId], opacity: 0.3}
-              : {}
+            userColors && ready ? {backgroundColor: userColors[userId]} : {}
           ]}
         >
           <Text style={[styles.name, {color: 'black'}]}>{name} </Text>

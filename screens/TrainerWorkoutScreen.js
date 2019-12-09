@@ -49,7 +49,9 @@ const generateWorkoutData = (userTimestamps = {}) => {
   // change this so that it is some kind of binned average?
   let workoutData = []
   for (let timestamps of Object.values(userTimestamps))
-    workoutData.push(...timestamps)
+    if (timestamps.length) {
+      timestamps.forEach()
+    }
   return workoutData
 }
 
@@ -149,9 +151,7 @@ const TrainerWorkoutScreen = ({socket, navigation}) => {
 
   // keeping time
   useInterval(() => {
-    const timeElapsed = Math.round((Date.now() - when) / 1000)
-    const intervalElapsed = timeElapsed - totalTimeElapsed
-    setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
+    setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : tim)
     setIntervalTime(
       intervalElapsed > intervals[currentInterval].duration
         ? intervals[currentInterval].duration
@@ -198,7 +198,7 @@ const TrainerWorkoutScreen = ({socket, navigation}) => {
                   <ListItem
                     key={userId}
                     button
-                    onPress={userId => handlePress(userId)}
+                    onPress={() => handlePress(userId)}
                     style={[
                       styles.listItem,
                       userLatest
