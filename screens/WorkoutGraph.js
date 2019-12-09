@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {
-  VictoryLine,
-  VictoryArea,
-  VictoryChart,
-  VictoryAxis
-} from 'victory-native'
+import {VictoryLine, VictoryChart, VictoryAxis} from 'victory-native'
 import {Text} from 'native-base'
 // import {Defs, Stop, LinearGradient} from 'react-native-svg'
 // import {scaleLinear} from 'd3-scale'
@@ -12,7 +7,6 @@ import {Text} from 'native-base'
 export default ({
   workoutHistory = false,
   timeWindow = 30,
-  totalTime,
   intervals = [],
   workoutData = [],
   totalTimeElapsed,

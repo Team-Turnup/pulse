@@ -1,5 +1,12 @@
 const router = require('express').Router()
-const {Class, Routine, User, Interval, Attendees} = require('../db/models')
+const {
+  Class,
+  Routine,
+  User,
+  Interval,
+  Workout,
+  WorkoutTimestamp
+} = require('../db/models')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const {leaderValidate, authenticatedUser} = require('./authFunctions')
@@ -13,25 +20,25 @@ router.post(`/:classId`, authenticatedUser, async (req, res, next) => {
       params: {classId}
     } = req
     enrolledClass = await Class.findByPk(classId, {
-    attributes: ['id', 'name', 'canEnroll', 'when'],
-    include: [
-      {
-        model: Routine,
-        attributes: ['id', 'name', 'activityType'],
-        include: [
-          {
-            model: Interval,
-            attributes: ['id', 'activityType', 'cadence', 'duration']
-          }
-        ]
-      }
-    ]
-  })
+      attributes: ['id', 'name', 'canEnroll', 'when'],
+      include: [
+        {
+          model: Routine,
+          attributes: ['id', 'name', 'activityType'],
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'activityType', 'cadence', 'duration']
+            }
+          ]
+        }
+      ]
+    })
     await user.addAttendee(classId)
     res.status(200).json(enrolledClass)
   } catch (error) {
     console.error(error)
-    if (error.name==='SequelizeUniqueConstraintError') {
+    if (error.name === 'SequelizeUniqueConstraintError') {
       res.status(200).json(enrolledClass)
     }
   }
@@ -55,7 +62,6 @@ router.delete(`/:classId`, authenticatedUser, async (req, res, next) => {
 // GET all classes at /api/class (for populating the class list for search)
 router.get('/', authenticatedUser, async (req, res, next) => {
   try {
-    // are we using req.query with React Native?
     const {
       query: {search}
     } = req
@@ -93,8 +99,50 @@ router.get('/', authenticatedUser, async (req, res, next) => {
   }
 })
 
+// GET get class history and display for the leader
+router.get('/:classId/history', authenticatedUser, async (req, res, next) => {
+  try {
+    const {
+      params: {classId},
+      user
+    } = req
+    if (await user.hasClass(classId)) {
+      const currentClass = await Class.findByPk(classId, {
+        include: [
+          {
+            model: Routine,
+            attributes: ['id', 'name', 'activityType'],
+            include: [
+              {
+                model: Interval,
+                attributes: ['id', 'activityType', 'cadence', 'duration']
+              }
+            ]
+          },
+          {
+            model: User,
+            as: 'attendees',
+            attributes: ['id', 'name', 'age', 'gender'],
+            through: {
+              attributes: []
+            }
+          },
+          {
+            model: Workout,
+            include: [WorkoutTimestamp]
+          }
+        ],
+        attributes: ['id', 'name', 'canEnroll', 'when']
+      })
+      if (!currentClass) throw new Error(`Class with id ${classId} not found.`)
+      res.status(200).json(currentClass)
+    } else throw new Error(`User is not the leader of ${classId}`)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // GET single class /api/class/:classId (for populating class data)
-// Currently assuming live class and that attendees and leaders don't need different data
 router.get('/:classId', authenticatedUser, async (req, res, next) => {
   try {
     const {
