@@ -59,8 +59,7 @@ export const OverviewStats = ({
   intervals,
   currentInterval,
   intervalTime,
-  workoutData,
-  userLatest
+  userLatest = {}
 }) => {
   return (
     <View style={styles.info}>
@@ -97,7 +96,7 @@ export const OverviewStats = ({
             <Text>Average Cadence:</Text>
             <Text>
               {Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
-                Object.values(userLatest).length}
+                Object.values(userLatest).length || 0}
             </Text>
           </CardItem>
         </Card>
