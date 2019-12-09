@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react'
-import {VictoryLine, VictoryChart, VictoryAxis} from 'victory-native'
+import {
+  VictoryLine,
+  VictoryArea,
+  VictoryChart,
+  VictoryAxis
+} from 'victory-native'
 import {Text} from 'native-base'
+// import {Defs, Stop, LinearGradient} from 'react-native-svg'
+// import {scaleLinear} from 'd3-scale'
 
 export default ({
   workoutHistory = false,
@@ -9,6 +16,7 @@ export default ({
   intervals = [],
   workoutData = [],
   totalTimeElapsed,
+  lineColor = 'green',
   paused
 }) => {
   const [domain, setDomain] = useState([0, 30])
@@ -67,7 +75,12 @@ export default ({
           data={workoutData.filter(d => d.timestamp / 1000 < totalTimeElapsed)}
           x={d => d.timestamp / 1000}
           y={d => d.cadence}
-          style={{data: {stroke: 'red', strokeWidth: 1}}}
+          style={{
+            data: {
+              stroke: lineColor,
+              strokeWidth: 1
+            }
+          }}
         />
       ) : null}
       {/* VictoryAxis gives an error re: children without a key prop when I use tickValues?

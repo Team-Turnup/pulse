@@ -132,6 +132,7 @@ const TrainerWorkoutScreen = ({socket}) => {
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0)
   const [currentInterval, setCurrentInterval] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
+  const [selectedUser, setSelectedUser] = useState(-1)
 
   const totalTime = intervals.reduce(
     (sum, interval) => sum + interval.duration,
@@ -171,6 +172,11 @@ const TrainerWorkoutScreen = ({socket}) => {
       intervalTime >= intervals[currentInterval].duration
   ])
 
+  const handlePress = id => {
+    if (id === selectedUser) setSelectedUser(-1)
+    else setSelectedUser(id)
+  }
+
   return (
     <Container>
       <AppHeader navigation={navigation} />
@@ -186,6 +192,8 @@ const TrainerWorkoutScreen = ({socket}) => {
                 ({id: userId, name, age, gender, ready = false}) => (
                   <ListItem
                     key={userId}
+                    button
+                    onPress={userId => handlePress(userId)}
                     style={[
                       styles.listItem,
                       userLatest
@@ -218,7 +226,12 @@ const TrainerWorkoutScreen = ({socket}) => {
           />
           <WorkoutGraph
             intervals={intervals}
-            workoutData={generateWorkoutData(userTimestamps)}
+            workoutData={
+              selectedUser > 0
+                ? userTimestamps[selectedUser]
+                : generateWorkoutData(userTimestamps)
+            }
+            lineColor={selectedUser > 0 ? userColors[selectedUser] : 'green'}
             totalTimeElapsed={totalTimeElapsed}
           />
         </View>
