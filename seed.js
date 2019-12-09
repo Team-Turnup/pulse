@@ -77,6 +77,7 @@ const createInterval = () => {
 const createWorkout = () => {
   return Workout.create({
     timestamp: new Date(),
+    currentStepCount: faker.random.number({min: 80, max: 300}),
     duration: faker.random.arrayElement([30, 60, 90])
   })
 }
@@ -134,7 +135,8 @@ async function seed() {
             {length: faker.random.number({min: 5, max: 9})},
             (d, i) => faker.random.number({min: 1, max: 9}) + 10 * i
           )
-        ).catch(e => console.error(e))
+        )
+        return d
       })
     )
   )
@@ -142,9 +144,10 @@ async function seed() {
   const workouts = await Promise.all(
     Array.from({length: workoutCount}, () =>
       createWorkout().then(d => {
-        d.setClass(faker.random.arrayElement([...classes, null]))
+        d.setClass(faker.random.arrayElement(classes))
         d.setRoutine(faker.random.arrayElement(routines))
         d.setUser(faker.random.arrayElement(users))
+        return d
       })
     )
   )
