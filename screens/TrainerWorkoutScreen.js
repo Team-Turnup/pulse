@@ -23,14 +23,17 @@ import {
   endClassThunk
 } from '../store/singleClass'
 
-const cadenceEval = ({cadence, goalCadence}) => {
-  const timeDiff = Math.abs(cadence - goalCadence)
-  const red = goalCadence * 0.15
-  const yellow = goalCadence * 0.075
-
-  if (timeDiff >= red) return '#ff0000'
-  else if (timeDiff >= yellow) return '#ffff00'
-  else return '#00ff00'
+const cadenceEval = (data={}) => {
+  if (data.cadence && data.goalCadence){
+    const {cadence, goalCadence} = data
+    const timeDiff = Math.abs(cadence - goalCadence)
+    const red = goalCadence * 0.15
+    const yellow = goalCadence * 0.075
+  
+    if (timeDiff >= red) return '#ff0000'
+    else if (timeDiff >= yellow) return '#ffff00'
+    else return '#00ff00'
+  }
 }
 
 // const fakeUserTimestamps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce(
@@ -48,9 +51,11 @@ const generateWorkoutData = (userTimestamps = {}) => {
   // currently aggregates all workout data as a single array of data, potentially
   // change this so that it is some kind of binned average?
   let workoutData = []
-  for (let timestamps of Object.values(userTimestamps))
-    workoutData.push(...timestamps)
+  for (let timestamps of Object.values(userTimestamps)) {
+  console.log('timestamps', timestamps)
+    if (timestamps) workoutData.push(...timestamps)
   return workoutData
+  }
 }
 
 export const OverviewStats = ({
@@ -66,12 +71,18 @@ export const OverviewStats = ({
       <View style={styles.col}>
         <Card transparent style={styles.card}>
           <Text style={{fontSize: 12}}>Total Time Elapsed:</Text>
-          <Text style={{color: 'rgb(84, 130, 53)'}}>{totalTimeElapsed}</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>{Math.floor(totalTimeElapsed / 60)
+                        ? `${Math.floor(totalTimeElapsed / 60)}m`
+                        : ''}{' '}
+                      {totalTimeElapsed % 60 ? `${totalTimeElapsed % 60}s` : ''}</Text>
         </Card>
         <Card transparent style={styles.card}>
           <Text style={{fontSize: 12}}>Total Time Left:</Text>
           <Text style={{color: 'rgb(84, 130, 53)'}}>
-            {totalTime - totalTimeElapsed}
+          {Math.floor((totalTime-totalTimeElapsed) / 60)
+                        ? `${Math.floor((totalTime-totalTimeElapsed) / 60)}m`
+                        : ''}{' '}
+                      {(totalTime-totalTimeElapsed) % 60 ? `${(totalTime-totalTimeElapsed) % 60}s` : ''}
           </Text>
         </Card>
         {/* <Card transparent style={styles.card}>
@@ -92,8 +103,9 @@ export const OverviewStats = ({
         <Card transparent style={styles.card}>
           <Text style={{fontSize: 12}}>Average Cadence:</Text>
           <Text style={{color: 'rgb(84, 130, 53)'}}>
-            {Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
-              Object.values(userLatest).length || 0}
+            {!isNaN(Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
+              Object.values(userLatest).length) ? (Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
+              Object.values(userLatest).length).toFixed(0) : 0}
           </Text>
         </Card>
         {/* <Card transparent style={styles.card}>
@@ -149,7 +161,7 @@ const TrainerWorkoutScreen = ({socket, navigation}) => {
 
   // keeping time
   useInterval(() => {
-    const timeElapsed = Math.round((Date.now() - when) / 1000)
+    const timeElapsed = totalTimeElapsed + 1
     const intervalElapsed = timeElapsed - totalTimeElapsed
     setTotalTimeElapsed(timeElapsed > totalTime ? totalTime : timeElapsed)
     setIntervalTime(
