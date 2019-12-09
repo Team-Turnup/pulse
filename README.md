@@ -19,7 +19,7 @@ To ensure that the app can connect to the server, you must also run
 ```bash
 ngrok http 8080
 ```
-and copy the ngrok tunnel's URL into a file named **ngrok.js** 
+and copy the ngrok tunnel's URL into a file in the root folder named **ngrok.js** 
 #### **`ngrok.js`**
 ```javascript
 export const ngrok = '[your ngrok tunnel URL goes here]'
