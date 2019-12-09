@@ -93,7 +93,7 @@ const tabNavigator = createBottomTabNavigator(
   {
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack,
+    SettingsStack
   },
   {headerMode: 'screen'}
 )

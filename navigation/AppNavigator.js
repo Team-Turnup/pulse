@@ -18,8 +18,6 @@ export default createAppContainer(
       ScreenNavigator,
       LoginScreen
     },
-    // {
-      {initialRouteName: 'LoginScreen'}
-    // }
+    {initialRouteName: 'LoginScreen'}
   )
 )

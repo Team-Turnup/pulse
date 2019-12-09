@@ -137,20 +137,23 @@ class UpcomingClasses extends Component {
     }))
 
     let futureFilteredClasses = futureFilter
-      ? futureFilter==='instructor' 
-      ? myClasses.filter(aClass=> aClass.user.id===this.props.user.id)
-      : myClasses.filter(aClass => aClass.routine.activityType === futureFilter)
+      ? futureFilter === 'instructor'
+        ? myClasses.filter(aClass => aClass.user.id === this.props.user.id)
+        : myClasses.filter(
+            aClass => aClass.routine.activityType === futureFilter
+          )
       : myClasses
 
     sort ? futureFilteredClasses.sort(sorter(sort)) : {}
 
-    let searchedFutureClasses = futureFilteredClasses.filter(aClass =>
-      aClass.name
-        .toLowerCase()
-        .includes(this.state.searchUpcoming.toLowerCase()) ||
-      aClass.user.name
-        .toLowerCase()
-        .includes(this.state.searchUpcoming.toLowerCase())
+    let searchedFutureClasses = futureFilteredClasses.filter(
+      aClass =>
+        aClass.name
+          .toLowerCase()
+          .includes(this.state.searchUpcoming.toLowerCase()) ||
+        aClass.user.name
+          .toLowerCase()
+          .includes(this.state.searchUpcoming.toLowerCase())
     )
 
     let futureClasses = searchedFutureClasses.filter(
@@ -209,16 +212,22 @@ class UpcomingClasses extends Component {
                 <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
               </TouchableOpacity>
             ) : (
-              <View style={{
-                width: 25,
-                height: 35}}></View>
+              <View
+                style={{
+                  width: 25,
+                  height: 35
+                }}
+              ></View>
             )}
             <View>
               <Text style={{fontWeight: '600'}}>My Upcoming Classes</Text>
               <Text style={{fontSize: 12, textAlign: 'center'}}>
                 {viewFutureClasses.length
-                  ? `Showing ${Math.min((futureClassesPage - 1) * numPerPage + 1,futureClassesResults)}-${Math.min(
-                    futureClassesResults,
+                  ? `Showing ${Math.min(
+                      (futureClassesPage - 1) * numPerPage + 1,
+                      futureClassesResults
+                    )}-${Math.min(
+                      futureClassesResults,
                       futureClassesPage * numPerPage
                     )} of ${futureClassesResults}`
                   : ''}
@@ -245,9 +254,12 @@ class UpcomingClasses extends Component {
                 <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
               </TouchableOpacity>
             ) : (
-              <View style={{
-                width: 25,
-                height: 35}}></View>
+              <View
+                style={{
+                  width: 25,
+                  height: 35
+                }}
+              ></View>
             )}
           </View>
           <View
@@ -287,7 +299,10 @@ class UpcomingClasses extends Component {
                   this.handleChange('futureFilter', value)
                 }
                 value={futureFilter}
-                items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
+                items={[
+                  {label: 'I am instructor', value: 'instructor'},
+                  ...activityTypeSelects
+                ]}
                 userNativeAndroidPickerStyle={false}
               />
             </View>
@@ -395,7 +410,9 @@ class UpcomingClasses extends Component {
                         fontStyle: 'italic'
                       }}
                     >
-                      {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
+                      {aClass.user.id === this.props.user.id
+                        ? 'Me'
+                        : aClass.user.name.split(' ')[0]}
                     </Text>
                   </Text>
                 </View>
