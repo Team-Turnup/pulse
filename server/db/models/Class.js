@@ -16,6 +16,10 @@ const Class = db.define('class', {
   classPasscode: {
     type: Sequelize.STRING,
     defaultValue: ''
+  },
+  workoutTime: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 })
 

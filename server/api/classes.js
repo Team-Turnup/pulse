@@ -111,7 +111,7 @@ router.get('/:classId/history', authenticatedUser, async (req, res, next) => {
         include: [
           {
             model: Routine,
-            attributes: ['id', 'name', 'activityType'],
+            attributes: ['id', 'name', 'activityType', 'workoutTime'],
             include: [
               {
                 model: Interval,
@@ -249,6 +249,23 @@ router.post('/', authenticatedUser, (req, res, next) => {
       res.status(200).json(currentClass)
     })
     .catch(e => next(e))
+})
+
+router.put('/:classId', authenticatedUser, async (req, res, next) => {
+  try {
+    const {
+      params: {classId},
+      user,
+      body
+    } = req
+    if (await user.hasClass(classId)) {
+      const updatedClass = await Class.update(body, {where: {id: classId}})
+      if (!updatedClass) throw new Error(`Class with id ${classId} not found.`)
+      res.status(200).json(updatedClass)
+    } else throw new Error(`User is not the leader of ${classId}`)
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = router

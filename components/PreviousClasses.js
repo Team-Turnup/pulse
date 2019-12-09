@@ -135,20 +135,21 @@ class PreviousClasses extends Component {
     }))
 
     let pastFilteredClasses = pastFilter
-    ? pastFilter==='instructor' 
-    ? myClasses.filter(aClass=> aClass.user.id===this.props.user.id)
-    : myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
-    : myClasses
+      ? pastFilter === 'instructor'
+        ? myClasses.filter(aClass => aClass.user.id === this.props.user.id)
+        : myClasses.filter(aClass => aClass.routine.activityType === pastFilter)
+      : myClasses
 
     sort ? pastFilteredClasses.sort(sorter(sort)) : {}
 
-    let searchedPastClasses = pastFilteredClasses.filter(aClass =>
-      aClass.name
-        .toLowerCase()
-        .includes(this.state.searchPrevious.toLowerCase()) ||
+    let searchedPastClasses = pastFilteredClasses.filter(
+      aClass =>
+        aClass.name
+          .toLowerCase()
+          .includes(this.state.searchPrevious.toLowerCase()) ||
         aClass.user.name
-        .toLowerCase()
-        .includes(this.state.searchPrevious.toLowerCase())
+          .toLowerCase()
+          .includes(this.state.searchPrevious.toLowerCase())
     )
 
     let pastClasses = searchedPastClasses.filter(
@@ -203,17 +204,23 @@ class PreviousClasses extends Component {
                   <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
                 </TouchableOpacity>
               ) : (
-                <View style={{
-                  width: 25,
-                  height: 35}}></View>
+                <View
+                  style={{
+                    width: 25,
+                    height: 35
+                  }}
+                ></View>
               )}
 
               <View>
                 <Text style={{fontWeight: '600'}}>My Previous Classes</Text>
                 <Text style={{fontSize: 12, textAlign: 'center'}}>
                   {viewPastClasses.length
-                    ? `Showing ${Math.min((pastClassesPage - 1) * numPerPage + 1, pastClassesResults)}-${Math.min(
-                      pastClassesResults,
+                    ? `Showing ${Math.min(
+                        (pastClassesPage - 1) * numPerPage + 1,
+                        pastClassesResults
+                      )}-${Math.min(
+                        pastClassesResults,
                         pastClassesPage * numPerPage
                       )} of ${pastClassesResults}`
                     : ''}
@@ -288,7 +295,10 @@ class PreviousClasses extends Component {
                     this.handleChange('pastFilter', value)
                   }
                   value={pastFilter}
-                  items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
+                  items={[
+                    {label: 'I am instructor', value: 'instructor'},
+                    ...activityTypeSelects
+                  ]}
                   userNativeAndroidPickerStyle={false}
                 />
               </View>
@@ -361,6 +371,14 @@ class PreviousClasses extends Component {
                       borderRadius: 10,
                       overflow: 'hidden'
                     }}
+                    onPress={async () => {
+                      await this.props.getClassThunk(aClass.id)
+                      navigation.navigate(
+                        aClass.userId === this.props.user.id
+                          ? 'PreviousClassScreen'
+                          : 'PreviousWorkoutScreen'
+                      )
+                    }}
                   >
                     <View
                       style={{
@@ -389,7 +407,9 @@ class PreviousClasses extends Component {
                             fontStyle: 'italic'
                           }}
                         >
-                          {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
+                          {aClass.user.id === this.props.user.id
+                            ? 'Me'
+                            : aClass.user.name.split(' ')[0]}
                         </Text>
                       </Text>
                     </View>

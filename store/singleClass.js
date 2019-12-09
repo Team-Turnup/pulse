@@ -138,6 +138,15 @@ export const getHistoryThunk = classId => async dispatch => {
   }
 }
 
+export const endClassThunk = (classId, totalTimeElapsed) => async dispatch => {
+  try {
+    await axios.put(`${ngrok}/api/classes/${id}`, {totalTimeElapsed})
+    dispatch(getHistoryThunk(classId))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const initialState = {
   id: 0,
   name: '',

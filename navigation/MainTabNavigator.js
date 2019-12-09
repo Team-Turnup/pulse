@@ -15,6 +15,7 @@ import TrainerWaitingScreen from '../screens/TrainerWaitingScreen'
 import TrainerWorkoutScreen from '../screens/TrainerWorkoutScreen'
 import StartRoutineScreen from '../screens/StartRoutineScreen'
 import PreviousWorkoutScreen from '../screens/PreviousWorkoutScreen'
+import PreviousClassScreen from '../screens/PreviousClassScreen'
 import OptionUserInfoScreen from '../screens/OptionsUserInfoScreen'
 import OptionsCadenceVibrationScreen from '../screens/OptionsCadenceVibrationScreen'
 import OptionsVisualSettingsScreen from '../screens/OptionsVisualSettingsScreen'
@@ -52,7 +53,9 @@ const HomeClassesStack = createStackNavigator({
   BuildClassScreen,
   TrainerWaitingScreen,
   BuildRoutineScreen,
-  SelectRoutineScreen
+  SelectRoutineScreen,
+  PreviousWorkoutScreen,
+  PreviousClassScreen
 })
 
 HomeClassesStack.navigationOptions = {
@@ -93,7 +96,7 @@ const tabNavigator = createBottomTabNavigator(
   {
     HomeWorkoutsStack,
     HomeClassesStack,
-    SettingsStack,
+    SettingsStack
   },
   {headerMode: 'screen'}
 )

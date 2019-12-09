@@ -5,7 +5,6 @@ import {
   Container,
   Text,
   Content,
-  Header,
   Card,
   CardItem,
   View,
@@ -15,10 +14,13 @@ import {
 import {StyleSheet} from 'react-native'
 import AppHeader from '../components/AppHeader'
 import WorkoutGraph from './WorkoutGraph'
-import faker from 'faker'
 import {SocketContext} from '../socket'
 import userData from '../assets/images/userData'
-import {setUserOpacity, updateTimestamps} from '../store/singleClass'
+import {
+  setUserOpacity,
+  updateTimestamps,
+  endClassThunk
+} from '../store/singleClass'
 
 const cadenceEval = ({cadence, goalCadence}) => {
   const timeDiff = Math.abs(cadence - goalCadence)
@@ -149,6 +151,7 @@ const TrainerWorkoutScreen = ({socket}) => {
     return () => socket.off('workoutTimestamp')
   }, [userOpacities])
 
+  // keeping time
   useInterval(() => {
     const timeElapsed = Math.round((Date.now() - when) / 1000)
     const intervalElapsed = timeElapsed - totalTimeElapsed
@@ -158,6 +161,7 @@ const TrainerWorkoutScreen = ({socket}) => {
         ? intervals[currentInterval].duration
         : intervalElapsed
     )
+    if (timeElapsed >= totalTime) endWorkout()
   }, 1000)
 
   // update interval whenever interval time is greater than the duration
@@ -175,6 +179,11 @@ const TrainerWorkoutScreen = ({socket}) => {
   const handlePress = id => {
     if (id === selectedUser) setSelectedUser(-1)
     else setSelectedUser(id)
+  }
+
+  const endWorkout = () => {
+    dispatch(endClassThunk(_class.id, totalTimeElapsed))
+    navigation.navigate('PreviousClassScreen')
   }
 
   return (
@@ -234,6 +243,36 @@ const TrainerWorkoutScreen = ({socket}) => {
             lineColor={selectedUser > 0 ? userColors[selectedUser] : 'green'}
             totalTimeElapsed={totalTimeElapsed}
           />
+          <View style={styles.buttonContainer}>
+            {/* {this.state.paused && !this.props.proposedStart ? (
+                  <Button
+                    onPress={() => {
+                      this._startWorkout()
+                      this.setState({paused: false})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Resume</Text>
+                  </Button>
+                ) : null}
+                {!this.state.paused && !this.props.proposedStart ? (
+                  <Button
+                    onPress={() => {
+                      this._pauseWorkout()
+                      this.setState({paused: true})
+                    }}
+                    style={styles.button}
+                  >
+                    <Text>Pause</Text>
+                  </Button>
+                ) : null}
+                {!this.props.proposedStart ? <Button onPress={this._restartWorkout} style={styles.button}>
+                  <Text>Restart</Text>
+                </Button> : null} */}
+            <Button onPress={this.endWorkout} style={styles.button}>
+              <Text>End Workout</Text>
+            </Button>
+          </View>
         </View>
       ) : null}
     </Container>
