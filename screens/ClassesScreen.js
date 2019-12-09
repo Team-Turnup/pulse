@@ -514,6 +514,7 @@ class ClassesScreen extends React.Component {
                               <View style={{width: '30%', margin: 2}}>
                                 <Input
                                   placeholder={this.state.passcodeMessage}
+                                  autoCapitalize="none"
                                   autoCorrect={false}
                                   value={this.state.classPasscode}
                                   onChangeText={classPasscode =>
