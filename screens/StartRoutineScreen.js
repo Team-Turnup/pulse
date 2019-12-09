@@ -19,6 +19,7 @@ class StartRoutineScreen extends Component {
   componentDidMount() {
     if (this.classStart) {
       this.setState({startPressed: true, count: 'Go!'})
+      this.props.createWorkoutThunk(this.props.routine.id, this.classStart, this.classId)
       // const clearCountdown = setInterval(() => {
       //   if (Date.now() >= this.classStart)
       //     this.setState({startPressed: true, count: 'Go!'})

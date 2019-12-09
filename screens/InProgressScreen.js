@@ -246,10 +246,10 @@ class InProgressScreen extends React.Component {
   }
 
   _endWorkout = () => {
-    this.props.setWorkout({
-      ...this.props.workout,
-      workoutTimestamps: this.state.avgCadences
-    })
+    // this.props.setWorkout({
+    //   ...this.props.workout,
+    //   workoutTimestamps: this.state.avgCadences
+    // })
     this._unsubscribe()
     clearInterval(this.state.clearCadence)
     clearInterval(this.state.pauseTime)

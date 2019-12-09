@@ -59,8 +59,12 @@ module.exports = io => {
 
     socket.on('start', (classId, userId, proposedStart) => {
       // the leader starts the class
+      console.log('received emission')
       const when = Date.now()
-      if (classes[classId] && classes[classId].leader.userId === userId) {
+      if (classes[classId] 
+        && classes[classId].leader.userId === userId
+        ) {
+        console.log('sending emission')
         socket
           .to(classId)
           .emit(

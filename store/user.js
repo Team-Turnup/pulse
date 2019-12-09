@@ -62,6 +62,7 @@ export const auth = (user, method) => async dispatch => {
   try {
     dispatch(getUser(res.data.user))
     dispatch(getOption(res.data.option))
+    console.log(res.data.user)
     return res.data.user
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
