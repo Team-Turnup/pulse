@@ -12,7 +12,7 @@ import {
 } from 'native-base'
 import {getMyClassesThunk} from '../store/myClasses'
 import {getMyWorkoutsThunk} from '../store/workouts'
-import {getClassThunk, setClass} from '../store/singleClass'
+import {getClassThunk, setClass, getHistoryThunk} from '../store/singleClass'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import activityTypes from '../assets/images/activityTypes'
 import RoutineBarMini from '../components/RoutineBarMini'
@@ -372,12 +372,13 @@ class PreviousClasses extends Component {
                       overflow: 'hidden'
                     }}
                     onPress={async () => {
-                      await this.props.getClassThunk(aClass.id)
-                      navigation.navigate(
-                        aClass.userId === this.props.user.id
-                          ? 'PreviousClassScreen'
-                          : 'PreviousWorkoutScreen'
-                      )
+                      if (aClass.userId === this.props.userId) {
+                        await this.props.getHistoryThunk(aClass.id)
+                        navigation.navigate('PreviousClassScreen')
+                      } else {
+                        await this.props.getClassThunk(aClass.id)
+                        navigation.navigate('PreviousWorkoutScreen')
+                      }
                     }}
                   >
                     <View
@@ -486,6 +487,7 @@ const mapDispatchToProps = {
   getMyClassesThunk,
   getMyWorkoutsThunk,
   getClassThunk,
+  getHistoryThunk,
   setClass
 }
 

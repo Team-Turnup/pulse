@@ -51,10 +51,8 @@ export default ({
         crossAxis
         label="Workout Time"
         tickFormat={t =>
-          `${Math.floor(t / 60) ? `${Math.floor(t / 60)}m` : null} ${
-            Math.floor(workoutTime % 60)
-              ? `${Math.floor(workoutTime % 60)}s`
-              : null
+          `${Math.floor(t / 60) ? `${Math.floor(t / 60)}m` : ''} ${
+            Math.floor(t % 60) ? `${Math.floor(t % 60)}s` : ''
           }`
         }
       />

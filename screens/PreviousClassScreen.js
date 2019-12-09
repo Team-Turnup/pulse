@@ -21,18 +21,15 @@ export default ({navigation}) => {
   //   const dispatch = useDispatch()
   const {
     attendees = [],
-    when = null,
-    name: className = null,
+    when,
+    name: className,
     userOpacities = {},
     userTimestamps = {},
     userLatest = {},
-    workoutTime = null,
+    workoutTime,
     ..._class
   } = useSelector(({singleClass}) => singleClass)
-  const {
-    intervals = [],
-    routine: {name: routineName = null, activityType = null}
-  } = useSelector(({routine}) => ({
+  const {intervals, routine} = useSelector(({routine}) => ({
     intervals,
     ...routine
   }))
@@ -63,113 +60,117 @@ export default ({navigation}) => {
           height: '70%'
         }}
       >
-        <View
-          style={{
-            backgroundColor: 'white',
-            width: '100%',
-            height: '100%',
-            borderRadius: 10,
-            opacity: 1
-          }}
-        >
-          <View>
-            <Text style={{textAlign: 'center'}}>
-              Class {name} On:{' '}
-              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                {DateTime.fromMillis(Date.parse(when)).toLocaleString(
-                  DateTime.DATE_SHORT
-                )}
+        {_class && routine ? (
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '100%',
+              height: '100%',
+              borderRadius: 10,
+              opacity: 1
+            }}
+          >
+            <View>
+              <Text style={{textAlign: 'center'}}>
+                Class {className ? className : ''} On:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {DateTime.fromMillis(Date.parse(when)).toLocaleString(
+                    DateTime.DATE_SHORT
+                  )}
+                </Text>
               </Text>
-            </Text>
-            <Text style={{textAlign: 'center'}}>
-              Routine Name:{' '}
-              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                {routineName}
+              <Text style={{textAlign: 'center'}}>
+                Routine Name:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {routine ? routine.name : ''}
+                </Text>
               </Text>
-            </Text>
-            <Text style={{textAlign: 'center'}}>
-              Activity Type:{' '}
-              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                {activityType !== 'combo'
-                  ? activityTypes[activityType].icon
-                  : 'Combo'}
+              <Text style={{textAlign: 'center'}}>
+                Activity Type:{' '}
+                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                  {routine && routine.activityType !== 'combo'
+                    ? activityTypes[routine.activityType].icon
+                    : 'Combo'}
+                </Text>
               </Text>
-            </Text>
-          </View>
-          <RoutineBarGraphic
-            routine={intervals}
-            changeIndex={() => {}}
-            removeInterval={() => {}}
-            finished={true}
-            routineType={activityType}
-          />
-          <View>
-            <View style={styles.info}>
-              <View style={styles.col}>
-                <Card transparent style={styles.card}>
-                  <Text style={{fontSize: 12}}>Routine Length:</Text>
-                  <Text style={{color: 'rgb(84, 130, 53)'}}>
-                    {Math.floor(workoutTime / 60)
-                      ? `${Math.floor(workoutTime / 60)}m`
-                      : ''}{' '}
-                    {Math.floor(workoutTime % 60)
-                      ? `${Math.floor(workoutTime % 60)}s`
-                      : ''}{' '}
-                  </Text>
-                  <Text style={{color: 'rgb(84, 130, 53)'}}>
-                    <Text style={{color: 'black'}}>/</Text>{' '}
-                    {Math.floor(totalTime / 60)
-                      ? `${Math.floor(totalTime / 60)}m`
-                      : ''}
-                    {totalTime % 60 ? `${totalTime % 60}s` : ''}{' '}
-                    <Text style={{color: 'black', fontStyle: 'italic'}}>
-                      total
+            </View>
+            <RoutineBarGraphic
+              routine={intervals}
+              changeIndex={() => {}}
+              removeInterval={() => {}}
+              finished={true}
+              routineType={routine.activityType}
+            />
+            <View>
+              <View style={styles.info}>
+                <View style={styles.col}>
+                  <Card transparent style={styles.card}>
+                    <Text style={{fontSize: 12}}>Routine Length:</Text>
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      {Math.floor(workoutTime / 60)
+                        ? `${Math.floor(workoutTime / 60)}m`
+                        : ''}{' '}
+                      {Math.floor(workoutTime % 60)
+                        ? `${Math.floor(workoutTime % 60)}s`
+                        : ''}{' '}
                     </Text>
-                  </Text>
-                </Card>
-              </View>
-              <View>
-                <List>
-                  <ListItem itemHeader style={styles.listItem}>
-                    <Text style={[styles.name, styles.listHeader]}>Name</Text>
-                    <Text style={[styles.age, styles.listHeader]}>Age</Text>
-                    <Text style={[styles.gender, styles.listHeader]}>
-                      Gender
+                    <Text style={{color: 'rgb(84, 130, 53)'}}>
+                      <Text style={{color: 'black'}}>/</Text>{' '}
+                      {Math.floor(totalTime / 60)
+                        ? `${Math.floor(totalTime / 60)}m`
+                        : ''}
+                      {totalTime % 60 ? `${totalTime % 60}s` : ''}{' '}
+                      <Text style={{color: 'black', fontStyle: 'italic'}}>
+                        total
+                      </Text>
                     </Text>
-                  </ListItem>
-                  {attendees && attendees.length && userOpacities
-                    ? attendees.map(
-                        ({id: userId, name, age, gender, ready = false}) => (
-                          <ListItem
-                            key={userId}
-                            button
-                            onPress={userId => handlePress(userId)}
-                            style={styles.listItem}
-                          >
-                            <Text style={styles.name}>{name} </Text>
-                            <Text style={styles.age}>{age}</Text>
-                            <Text style={styles.gender}>
-                              {userData[gender].icon}
-                            </Text>
-                          </ListItem>
+                  </Card>
+                </View>
+                <View>
+                  <List>
+                    <ListItem itemHeader style={styles.listItem}>
+                      <Text style={[styles.name, styles.listHeader]}>Name</Text>
+                      <Text style={[styles.age, styles.listHeader]}>Age</Text>
+                      <Text style={[styles.gender, styles.listHeader]}>
+                        Gender
+                      </Text>
+                    </ListItem>
+                    {attendees && attendees.length && userOpacities
+                      ? attendees.map(
+                          ({id: userId, name, age, gender, ready = false}) => (
+                            <ListItem
+                              key={userId}
+                              button
+                              onPress={userId => handlePress(userId)}
+                              style={styles.listItem}
+                            >
+                              <Text style={styles.name}>{name} </Text>
+                              <Text style={styles.age}>{age}</Text>
+                              <Text style={styles.gender}>
+                                {userData[gender].icon}
+                              </Text>
+                            </ListItem>
+                          )
                         )
-                      )
-                    : null}
-                </List>
+                      : null}
+                  </List>
+                </View>
+                <WorkoutGraph
+                  workoutHistory={true}
+                  intervals={intervals}
+                  workoutData={
+                    selectedUser > 0
+                      ? userTimestamps[selectedUser]
+                      : generateWorkoutData(userTimestamps)
+                  }
+                  totalTimeElapsed={workoutTime}
+                />
               </View>
-              <WorkoutGraph
-                workoutHistory={true}
-                intervals={intervals}
-                workoutData={
-                  selectedUser > 0
-                    ? userTimestamps[selectedUser]
-                    : generateWorkoutData(userTimestamps)
-                }
-                totalTimeElapsed={workoutTime}
-              />
             </View>
           </View>
-        </View>
+        ) : (
+          <Text>Loading</Text>
+        )}
       </View>
     </Container>
   )
