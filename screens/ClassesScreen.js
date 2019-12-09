@@ -35,7 +35,7 @@ class ClassesScreen extends React.Component {
       numPerPage: 4,
       numPages: 0,
       filter: null,
-      sort: null,
+      sort: 'liveDateRemoteRecent',
       search: '',
       classId: null,
       classPasscode: '',
@@ -147,9 +147,7 @@ class ClassesScreen extends React.Component {
     viewClasss = filter
       ? filter === 'instructor'
         ? viewClasss.filter(aClass => aClass.user.id === this.props.user.id)
-        : viewClasss.filter(
-            aClass => aClass.routine.activityType === futureFilter
-          )
+        : viewClasss.filter(aClass => aClass.activityType === futureFilter)
       : viewClasss
 
     sort ? viewClasss.sort(sorter(sort)) : {}
