@@ -111,7 +111,7 @@ export const OverviewStats = ({
   )
 }
 
-const TrainerWorkoutScreen = ({socket}) => {
+const TrainerWorkoutScreen = ({socket, navigation}) => {
   // initialize react-redux data:
   const dispatch = useDispatch()
   const {
