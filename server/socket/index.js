@@ -1,6 +1,10 @@
 const {WorkoutTimestamp, Workout, Class} = require('../db/models')
 
-const _generateTimestamp = async (workoutId, workoutTimestamp, currentStepCount) => {
+const _generateTimestamp = async (
+  workoutId,
+  workoutTimestamp,
+  currentStepCount
+) => {
   try {
     const newWorkoutTimestamp = await WorkoutTimestamp.create(workoutTimestamp)
     await newWorkoutTimestamp.setWorkout(workoutId)
@@ -58,13 +62,10 @@ module.exports = io => {
     )
 
     socket.on('start', (classId, userId, proposedStart) => {
-      // the leader starts the class
-      console.log('received emission')
+      // the leader starts the class, sends an update to the db, and then emits
+      // start signal to the rest of the room
       const when = Date.now()
-      if (classes[classId] 
-        && classes[classId].leader.userId === userId
-        ) {
-        console.log('sending emission')
+      if (classes[classId] && classes[classId].leader.userId === userId) {
         socket
           .to(classId)
           .emit(
@@ -116,7 +117,9 @@ module.exports = io => {
         )
       }
     )
+
     socket.on('joined', (classId, user) => {
+      // a new follower has enrolled in the class
       console.log(`${user.name} has joined ${classId}`)
       informLeader(classId, 'joined', user)
       if (classes[classId] && classes[classId].followers.has(user.id))
@@ -134,13 +137,14 @@ module.exports = io => {
     })
 
     socket.on('unsubscribe', (classId, userId, isLeader = false) => {
-      // a client has unmounted from the waiting for workout screen
+      // a client has unmounted from the waiting for workout screen and should
+      // inform the leader that they are no longer there
       if (isLeader && classes[classId].leader.socket === socket.id) {
         classes[classId].leader = initialLeader
       }
       socket.leave(classId)
-      classes[classId].followers.delete(userId)
-      classes[classId].colors.delete(userId)
+      if (classes[classId] && classes[classId].followers)
+        classes[classId].followers.delete(userId)
       informLeader(classId, 'classList', Array.from(classes[classId].followers))
       if (
         !classes[classId].leader.socket &&
@@ -153,7 +157,7 @@ module.exports = io => {
     })
 
     socket.on('classCreated', () => {
-      // inform all other clients that the class has been created
+      // inform all connected clients that a new class has been created
       socket.emit('classCreated')
     })
   })
