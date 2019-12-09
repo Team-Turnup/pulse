@@ -93,7 +93,8 @@ const createClass = () => {
   return Class.create({
     name: `Class # ${faker.random.number()}`,
     canEnroll: true,
-    when: faker.date.recent(-3)
+    when: faker.date.recent(2),
+    workoutTime: faker.random.number({min: 60, max: 240})
   })
 }
 
