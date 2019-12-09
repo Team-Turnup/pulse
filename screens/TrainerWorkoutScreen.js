@@ -136,7 +136,6 @@ const TrainerWorkoutScreen = ({socket}) => {
     (sum, interval) => sum + interval.duration,
     0
   )
-  const workoutData = generateWorkoutData(fakeUserTimestamps)
 
   // set up event listeners for WS
   useEffect(() => {
