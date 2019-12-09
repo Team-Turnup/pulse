@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import useInterval from 'use-interval'
+import {Alert} from 'react-native'
 import {
   Container,
   Button,
@@ -120,7 +121,20 @@ const UserWaitingScreen = ({navigation, socket}) => {
           onPress={() => {
             socket.emit('left', _class.id, user.id)
             dispatch(leaveClass(_class.id, user.id))
-            navigation.navigate('HomeClassesScreen')
+            Alert.alert(
+              'Done',
+              `You have left class: ${name}!`,
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('HomeClassesScreen')
+                }
+              ],
+              {
+                cancelable: false
+              }
+            )
+            //navigation.navigate('HomeClassesScreen')
           }}
         >
           <Text>Leave Class</Text>
