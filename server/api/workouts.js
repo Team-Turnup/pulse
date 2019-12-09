@@ -70,7 +70,7 @@ router.post('/', authenticatedUser, async (req, res, next) => {
       user
     } = req
     const workout = await Workout.create()
-    const routine = await Routine.findByPk(routineId, {include: [Interval]})
+    let routine = await Routine.findByPk(routineId, {include: [Interval]})
     await Promise.all([
       workout.setUser(user),
       workout.setRoutine(routine)
