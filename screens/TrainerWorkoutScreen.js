@@ -9,7 +9,8 @@ import {
   CardItem,
   View,
   List,
-  ListItem
+  ListItem,
+  Button
 } from 'native-base'
 import {StyleSheet} from 'react-native'
 import AppHeader from '../components/AppHeader'
@@ -321,15 +322,18 @@ const styles = StyleSheet.create({
     color: 'rgb(84, 130, 53)',
     lineHeight: 30
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
   button: {
-    marginTop: 7,
-    marginBottom: 7,
-    marginLeft: 15,
-    marginRight: 15,
-    padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    backgroundColor: '#eee',
+    padding: 5,
+    height: 30,
+    width: '30%',
     backgroundColor: 'rgb(84, 130, 53)'
   }
 })
