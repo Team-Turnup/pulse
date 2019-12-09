@@ -488,7 +488,6 @@ class ClassesScreen extends React.Component {
                                   return
                                 }
                                 await this.props.enrollClass(aClass.id)
-                                console.log('classId', aClass.id)
                                 this.props.socket.emit(
                                   'joined',
                                   aClass.id,
@@ -515,6 +514,7 @@ class ClassesScreen extends React.Component {
                                 <Input
                                   placeholder={this.state.passcodeMessage}
                                   autoCorrect={false}
+                                  autoCapitalize="none"
                                   value={this.state.classPasscode}
                                   onChangeText={classPasscode =>
                                     this.setState({classPasscode})

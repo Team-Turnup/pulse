@@ -310,9 +310,7 @@ class MyPreviousWorkouts extends React.Component {
                             justifyContent: 'space-between'
                           }}
                         >
-                          <Text
-                          //style={{width: 100}}
-                          >
+                          <Text style={{width: 150}}>
                             Name:{' '}
                             <Text
                               style={{
