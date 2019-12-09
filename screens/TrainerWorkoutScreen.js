@@ -9,9 +9,10 @@ import {
   CardItem,
   View,
   List,
-  ListItem
+  ListItem,
+  Button
 } from 'native-base'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, ScrollView} from 'react-native'
 import AppHeader from '../components/AppHeader'
 import WorkoutGraph from './WorkoutGraph'
 import {SocketContext} from '../socket'
@@ -58,47 +59,42 @@ export const OverviewStats = ({
   intervals,
   currentInterval,
   intervalTime,
-  workoutData,
-  userLatest
+  userLatest = {}
 }) => {
   return (
     <View style={styles.info}>
       <View style={styles.col}>
         <Card transparent style={styles.card}>
-          <CardItem>
-            <Text>Total Time Elapsed:</Text>
-            <Text>{totalTimeElapsed}</Text>
-          </CardItem>
+          <Text style={{fontSize: 12}}>Total Time Elapsed:</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>{totalTimeElapsed}</Text>
         </Card>
         <Card transparent style={styles.card}>
-          <CardItem>
-            <Text>Total Time Left:</Text>
-            <Text>{totalTime - totalTimeElapsed}</Text>
-          </CardItem>
+          <Text style={{fontSize: 12}}>Total Time Left:</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>
+            {totalTime - totalTimeElapsed}
+          </Text>
         </Card>
-        <Card transparent style={styles.card}>
-          <CardItem>
-            <Text>Time Left in Interval:</Text>
-            <Text>{intervals[currentInterval].duration - intervalTime}</Text>
-          </CardItem>
-        </Card>
+        {/* <Card transparent style={styles.card}>
+          <Text style={{fontSize: 12}}>Time Left in Interval:</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>
+            {intervals[currentInterval].duration - intervalTime}
+          </Text>
+        </Card> */}
       </View>
 
       <View style={styles.col}>
         <Card transparent style={styles.card}>
-          <CardItem>
-            <Text>Goal Cadence:</Text>
-            <Text>{intervals[currentInterval].cadence}</Text>
-          </CardItem>
+          <Text style={{fontSize: 12}}>Goal Cadence:</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>
+            {intervals[currentInterval].cadence}
+          </Text>
         </Card>
         <Card transparent style={styles.card}>
-          <CardItem>
-            <Text>Average Cadence:</Text>
-            <Text>
-              {Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
-                Object.values(userLatest).length}
-            </Text>
-          </CardItem>
+          <Text style={{fontSize: 12}}>Average Cadence:</Text>
+          <Text style={{color: 'rgb(84, 130, 53)'}}>
+            {Object.values(userLatest).reduce((a, b) => a + b.cadence, 0) /
+              Object.values(userLatest).length || 0}
+          </Text>
         </Card>
         {/* <Card transparent style={styles.card}>
           <CardItem>
@@ -111,7 +107,7 @@ export const OverviewStats = ({
   )
 }
 
-const TrainerWorkoutScreen = ({socket}) => {
+const TrainerWorkoutScreen = ({socket, navigation}) => {
   // initialize react-redux data:
   const dispatch = useDispatch()
   const {
@@ -189,7 +185,7 @@ const TrainerWorkoutScreen = ({socket}) => {
   return (
     <Container>
       <AppHeader navigation={navigation} />
-      <Content>
+      <ScrollView>
         <List>
           <ListItem itemHeader style={styles.listItem}>
             <Text style={[styles.name, styles.listHeader]}>Name</Text>
@@ -221,30 +217,29 @@ const TrainerWorkoutScreen = ({socket}) => {
               )
             : null}
         </List>
-      </Content>
-      {intervals && intervals.length ? (
-        <View>
-          <OverviewStats
-            totalTime={totalTime}
-            totalTimeElapsed={totalTimeElapsed}
-            intervals={intervals}
-            currentInterval={currentInterval}
-            intervalTime={intervalTime}
-            workoutData={generateWorkoutData(userTimestamps)}
-            userLatest={userLatest}
-          />
-          <WorkoutGraph
-            intervals={intervals}
-            workoutData={
-              selectedUser > 0
-                ? userTimestamps[selectedUser]
-                : generateWorkoutData(userTimestamps)
-            }
-            lineColor={selectedUser > 0 ? userColors[selectedUser] : 'green'}
-            totalTimeElapsed={totalTimeElapsed}
-          />
-          <View style={styles.buttonContainer}>
-            {/* {this.state.paused && !this.props.proposedStart ? (
+        {intervals && intervals.length ? (
+          <View>
+            <OverviewStats
+              totalTime={totalTime}
+              totalTimeElapsed={totalTimeElapsed}
+              intervals={intervals}
+              currentInterval={currentInterval}
+              intervalTime={intervalTime}
+              workoutData={generateWorkoutData(userTimestamps)}
+              userLatest={userLatest}
+            />
+            <WorkoutGraph
+              intervals={intervals}
+              workoutData={
+                selectedUser > 0
+                  ? userTimestamps[selectedUser]
+                  : generateWorkoutData(userTimestamps)
+              }
+              lineColor={selectedUser > 0 ? userColors[selectedUser] : 'green'}
+              totalTimeElapsed={totalTimeElapsed}
+            />
+            <View style={styles.buttonContainer}>
+              {/* {this.state.paused && !this.props.proposedStart ? (
                   <Button
                     onPress={() => {
                       this._startWorkout()
@@ -269,12 +264,13 @@ const TrainerWorkoutScreen = ({socket}) => {
                 {!this.props.proposedStart ? <Button onPress={this._restartWorkout} style={styles.button}>
                   <Text>Restart</Text>
                 </Button> : null} */}
-            <Button onPress={this.endWorkout} style={styles.button}>
-              <Text>End Workout</Text>
-            </Button>
+              <Button onPress={this.endWorkout} style={styles.button}>
+                <Text>End</Text>
+              </Button>
+            </View>
           </View>
-        </View>
-      ) : null}
+        ) : null}
+      </ScrollView>
     </Container>
   )
 }
@@ -286,17 +282,23 @@ const styles = StyleSheet.create({
   },
   col: {
     width: '50%',
-    height: 50,
+    height: 35,
     display: 'flex',
     flexDirection: 'column'
   },
   card: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    display: 'flex',
+    margin: 0,
+    padding: 0,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   info: {
     width: '100%',
-    height: 150,
+    height: 105,
     display: 'flex',
     flexDirection: 'row'
   },
@@ -321,15 +323,18 @@ const styles = StyleSheet.create({
     color: 'rgb(84, 130, 53)',
     lineHeight: 30
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
   button: {
-    marginTop: 7,
-    marginBottom: 7,
-    marginLeft: 15,
-    marginRight: 15,
-    padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    backgroundColor: '#eee',
+    padding: 5,
+    height: 30,
+    width: '30%',
     backgroundColor: 'rgb(84, 130, 53)'
   }
 })

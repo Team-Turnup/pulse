@@ -123,7 +123,7 @@ class LoginScreen extends React.Component {
               backgroundColor: 'rgb(84, 130, 53)',
               width: '100%',
               paddingTop: 15,
-              paddingBottom: 15,
+              paddingBottom: 15
             }}
           >
             <Text

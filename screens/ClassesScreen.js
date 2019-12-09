@@ -35,7 +35,7 @@ class ClassesScreen extends React.Component {
       numPerPage: 4,
       numPages: 0,
       filter: null,
-      sort: null,
+      sort: 'liveDateRemoteRecent',
       search: '',
       classId: null,
       classPasscode: '',
@@ -138,16 +138,17 @@ class ClassesScreen extends React.Component {
 
     let viewClasss = [...this.props.classes]
     viewClasss = search.length
-      ? viewClasss.filter(aClass =>
-          aClass.name.toLowerCase().includes(search.toLowerCase()) ||
-          aClass.user.name.toLowerCase().includes(search.toLowerCase())
+      ? viewClasss.filter(
+          aClass =>
+            aClass.name.toLowerCase().includes(search.toLowerCase()) ||
+            aClass.user.name.toLowerCase().includes(search.toLowerCase())
         )
       : viewClasss
     viewClasss = filter
-    ? filter==='instructor' 
-    ? viewClasss.filter(aClass=> aClass.user.id===this.props.user.id)
-    : viewClasss.filter(aClass => aClass.routine.activityType === futureFilter)
-    : viewClasss
+      ? filter === 'instructor'
+        ? viewClasss.filter(aClass => aClass.user.id === this.props.user.id)
+        : viewClasss.filter(aClass => aClass.activityType === futureFilter)
+      : viewClasss
 
     sort ? viewClasss.sort(sorter(sort)) : {}
     const numResults = viewClasss.length
@@ -156,7 +157,10 @@ class ClassesScreen extends React.Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} hideNotification={false} />
+          <AppHeader
+            navigation={this.props.navigation}
+            hideNotification={false}
+          />
           <Text
             style={{
               paddingTop: 15,
@@ -213,22 +217,22 @@ class ClassesScreen extends React.Component {
                     ></View>
                   )}
                   <View>
-                  <Text style={{fontWeight: '600'}}>
-                    Select a Class to Enroll in
-                  </Text>
-                  <Text style={{fontSize: 12, textAlign: 'center'}}>
-                  {viewClasss.length
-                    ? `Showing ${Math.min(
-                        (page - 1) * numPerPage + 1,
-                        numResults
-                      )}-${Math.min(
-                        numResults,
-                        page * numPerPage
-                      )} of ${numResults}`
-                    : ''}
-                </Text>
+                    <Text style={{fontWeight: '600'}}>
+                      Select a Class to Enroll in
+                    </Text>
+                    <Text style={{fontSize: 12, textAlign: 'center'}}>
+                      {viewClasss.length
+                        ? `Showing ${Math.min(
+                            (page - 1) * numPerPage + 1,
+                            numResults
+                          )}-${Math.min(
+                            numResults,
+                            page * numPerPage
+                          )} of ${numResults}`
+                        : ''}
+                    </Text>
                   </View>
-                  
+
                   {page < numPages ? (
                     <TouchableOpacity
                       style={{
@@ -292,7 +296,10 @@ class ClassesScreen extends React.Component {
                         this.handleChange('filter', value)
                       }
                       value={filter}
-                      items={[{label: "I am instructor", value: 'instructor'},...activityTypeSelects]}
+                      items={[
+                        {label: 'I am instructor', value: 'instructor'},
+                        ...activityTypeSelects
+                      ]}
                       userNativeAndroidPickerStyle={false}
                     />
                   </View>
@@ -335,7 +342,7 @@ class ClassesScreen extends React.Component {
                     />
                   </View>
                 </View>
-                
+
                 {viewClasss.length ? (
                   viewClasss.map((aClass, i) => {
                     const duration = aClass.routine.intervals
@@ -406,7 +413,9 @@ class ClassesScreen extends React.Component {
                                   fontStyle: 'italic'
                                 }}
                               >
-                                {aClass.user.id===this.props.user.id ? 'Me' : aClass.user.name.split(' ')[0]}
+                                {aClass.user.id === this.props.user.id
+                                  ? 'Me'
+                                  : aClass.user.name.split(' ')[0]}
                               </Text>
                             </Text>
                           </View>

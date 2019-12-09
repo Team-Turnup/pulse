@@ -33,7 +33,7 @@ const createUser = () => {
 
 const createRoutine = () => {
   return Routine.create({
-    name: faker.name.firstName(),
+    name: `Routine # ${faker.random.number()}`,
     activityType: faker.random.arrayElement([
       'running',
       'walking',

@@ -61,9 +61,11 @@ export const UserList = ({attendees, userColors}) => (
               : {}
           ]}
         >
-          <Text style={styles.name}>{name} </Text>
-          <Text style={styles.age}>{age}</Text>
-          <Text style={styles.gender}>{userData[gender].icon}</Text>
+          <Text style={[styles.name, {color: 'black'}]}>{name} </Text>
+          <Text style={([styles.age], {color: 'black'})}>{age}</Text>
+          <Text style={[styles.gender, {color: 'black'}]}>
+            {userData[gender].icon}
+          </Text>
         </ListItem>
       ))}
     </List>

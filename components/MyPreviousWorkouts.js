@@ -122,7 +122,11 @@ class MyPreviousWorkouts extends React.Component {
       page * numPerPage
     )
     return (
-      <View style={{height: 415}}>
+      <Container
+        style={{
+          height: 415
+        }}
+      >
         <Content style={{marginTop: 0, marginBottom: 5}}>
           <Card
             style={{
@@ -130,8 +134,8 @@ class MyPreviousWorkouts extends React.Component {
               overflow: 'hidden',
               padding: 15,
               margin: 15,
-              // height: 650
-              height: 405
+              height: 650
+              //height: 405 for iOS
             }}
           >
             <ScrollView>
@@ -169,9 +173,7 @@ class MyPreviousWorkouts extends React.Component {
                   ></View>
                 )}
                 <View>
-                  <Text style={{fontWeight: '600'}}>
-                    My Previous Workouts
-                  </Text>
+                  <Text style={{fontWeight: '600'}}>My Previous Workouts</Text>
                   <Text style={{fontSize: 12, textAlign: 'center'}}>
                     {viewWorkouts.length
                       ? `Showing ${Math.min(
@@ -382,7 +384,7 @@ class MyPreviousWorkouts extends React.Component {
             </ScrollView>
           </Card>
         </Content>
-      </View>
+      </Container>
     )
   }
 }

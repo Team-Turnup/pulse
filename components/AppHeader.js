@@ -39,17 +39,17 @@ class AppHeader extends React.Component {
   //       return time < 10 * 60 * 1000 && time>0
   //     })
   //     await this.setState({upcomingClasses})
-  
+
   //     if(upcomingClasses.length) {
   //       this.stopTimer()
   //       this.startTimer()
   //     }
-  
+
   //     if (upcomingClasses.length>1){
   //       this.stopIndex()
   //       this.startIndex()
   //     }
-  
+
   //     clearInterval(clearCheckDate)
   //     this.startCheckDate()
   //   } else {
