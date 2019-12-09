@@ -372,7 +372,7 @@ class PreviousClasses extends Component {
                       overflow: 'hidden'
                     }}
                     onPress={async () => {
-                      if (aClass.userId === this.props.userId) {
+                      if (aClass.userId === this.props.user.id) {
                         await this.props.getHistoryThunk(aClass.id)
                         navigation.navigate('PreviousClassScreen')
                       } else {

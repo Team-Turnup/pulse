@@ -1,11 +1,20 @@
 import React, {useEffect, useState} from 'react'
-import {View, StyleSheet} from 'react-native'
-import {Container, Text, Content, Card, CardItem} from 'native-base'
+import {View, ScrollView, StyleSheet} from 'react-native'
+import {
+  Container,
+  Text,
+  Content,
+  Card,
+  CardItem,
+  List,
+  ListItem
+} from 'native-base'
 import WorkoutGraph from './WorkoutGraph'
 import {useSelector, useDispatch} from 'react-redux'
 import RoutineBarGraphic from '../components/RoutineBarGraphic'
 import activityTypes from '../assets/images/activityTypes'
 import {DateTime} from 'luxon'
+import userData from '../assets/images/userData'
 import AppHeader from '../components/AppHeader'
 
 const generateWorkoutData = (userTimestamps = {}) => {
@@ -29,10 +38,12 @@ export default ({navigation}) => {
     workoutTime,
     ..._class
   } = useSelector(({singleClass}) => singleClass)
-  const {intervals, routine} = useSelector(({routine}) => ({
-    intervals,
-    ...routine
-  }))
+  const {intervals, routine} = useSelector(
+    ({routine: {intervals, ...routine}}) => ({
+      intervals,
+      routine
+    })
+  )
 
   const [selectedUser, setSelectedUser] = useState(-1)
 
@@ -46,171 +57,161 @@ export default ({navigation}) => {
     else setSelectedUser(id)
   }
 
+  console.log(
+    userTimestamps && selectedUser ? userTimestamps[selectedUser] : 'all data'
+  )
   return (
     <Container>
       <AppHeader navigation={navigation} hideNotification={false} />
-      <View
-        style={{
-          padding: 20,
-          // backgroundColor: this.hexToRgb(
-          //   this.props.option.visualColor,
-          //   this.state.opacity
-          // ),
-          width: '100%',
-          height: '70%'
-        }}
-      >
-        {_class && routine ? (
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '100%',
-              height: '100%',
-              borderRadius: 10,
-              opacity: 1
-            }}
-          >
-            <View>
-              <Text style={{textAlign: 'center'}}>
-                Class {className ? className : ''} On:{' '}
-                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                  {DateTime.fromMillis(Date.parse(when)).toLocaleString(
-                    DateTime.DATE_SHORT
-                  )}
-                </Text>
+
+      {_class && routine ? (
+        <ScrollView
+          style={{
+            backgroundColor: 'white',
+            width: '100%',
+            height: '100%',
+            borderRadius: 10,
+            opacity: 1
+          }}
+        >
+          <View>
+            <Text style={{textAlign: 'center'}}>
+              Class {className ? className : ''} On:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {DateTime.fromMillis(Date.parse(when)).toLocaleString(
+                  DateTime.DATE_SHORT
+                )}
               </Text>
-              <Text style={{textAlign: 'center'}}>
-                Routine Name:{' '}
-                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                  {routine ? routine.name : ''}
-                </Text>
+            </Text>
+            <Text style={{textAlign: 'center'}}>
+              Routine Name:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {routine ? routine.name : ''}
               </Text>
-              <Text style={{textAlign: 'center'}}>
-                Activity Type:{' '}
-                <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
-                  {routine && routine.activityType !== 'combo'
-                    ? activityTypes[routine.activityType].icon
-                    : 'Combo'}
-                </Text>
+            </Text>
+            <Text style={{textAlign: 'center'}}>
+              Activity Type:{' '}
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {routine && routine.activityType !== 'combo'
+                  ? activityTypes[routine.activityType].icon
+                  : 'Combo'}
               </Text>
-            </View>
-            <RoutineBarGraphic
-              routine={intervals}
-              changeIndex={() => {}}
-              removeInterval={() => {}}
-              finished={true}
-              routineType={routine.activityType}
-            />
-            <View>
-              <View style={styles.info}>
-                <View style={styles.col}>
-                  <Card transparent style={styles.card}>
-                    <Text style={{fontSize: 12}}>Routine Length:</Text>
-                    <Text style={{color: 'rgb(84, 130, 53)'}}>
-                      {Math.floor(workoutTime / 60)
-                        ? `${Math.floor(workoutTime / 60)}m`
-                        : ''}{' '}
-                      {Math.floor(workoutTime % 60)
-                        ? `${Math.floor(workoutTime % 60)}s`
-                        : ''}{' '}
-                    </Text>
-                    <Text style={{color: 'rgb(84, 130, 53)'}}>
-                      <Text style={{color: 'black'}}>/</Text>{' '}
-                      {Math.floor(totalTime / 60)
-                        ? `${Math.floor(totalTime / 60)}m`
-                        : ''}
-                      {totalTime % 60 ? `${totalTime % 60}s` : ''}{' '}
-                      <Text style={{color: 'black', fontStyle: 'italic'}}>
-                        total
-                      </Text>
-                    </Text>
-                  </Card>
-                </View>
-                <View>
-                  <List>
-                    <ListItem itemHeader style={styles.listItem}>
-                      <Text style={[styles.name, styles.listHeader]}>Name</Text>
-                      <Text style={[styles.age, styles.listHeader]}>Age</Text>
-                      <Text style={[styles.gender, styles.listHeader]}>
-                        Gender
-                      </Text>
-                    </ListItem>
-                    {attendees && attendees.length && userOpacities
-                      ? attendees.map(
-                          ({id: userId, name, age, gender, ready = false}) => (
-                            <ListItem
-                              key={userId}
-                              button
-                              onPress={userId => handlePress(userId)}
-                              style={styles.listItem}
-                            >
-                              <Text style={styles.name}>{name} </Text>
-                              <Text style={styles.age}>{age}</Text>
-                              <Text style={styles.gender}>
-                                {userData[gender].icon}
-                              </Text>
-                            </ListItem>
-                          )
-                        )
-                      : null}
-                  </List>
-                </View>
-                <WorkoutGraph
-                  workoutHistory={true}
-                  intervals={intervals}
-                  workoutData={
-                    selectedUser > 0
-                      ? userTimestamps[selectedUser]
-                      : generateWorkoutData(userTimestamps)
-                  }
-                  totalTimeElapsed={workoutTime}
-                />
-              </View>
-            </View>
+            </Text>
+            <Text style={{textAlign: 'center'}}>
+              Routine Length:
+              <Text style={{color: 'rgb(84, 130, 53)', fontWeight: '600'}}>
+                {Math.floor(workoutTime / 60)
+                  ? `${Math.floor(workoutTime / 60)}m`
+                  : ''}
+                {workoutTime % 60 ? `${workoutTime % 60}s` : ''}{' '}
+              </Text>
+            </Text>
           </View>
-        ) : (
-          <Text>Loading</Text>
-        )}
-      </View>
+          <RoutineBarGraphic
+            routine={intervals}
+            changeIndex={() => {}}
+            removeInterval={() => {}}
+            finished={true}
+            routineType={routine.activityType}
+          />
+          <View>
+            <List>
+              <ListItem itemHeader style={styles.listItem}>
+                <Text style={[styles.name, styles.listHeader]}>Name</Text>
+                <Text style={[styles.age, styles.listHeader]}>Age</Text>
+                <Text style={[styles.gender, styles.listHeader]}>Gender</Text>
+              </ListItem>
+              {attendees && attendees.length && userOpacities
+                ? attendees.map(
+                    ({id: userId, name, age, gender, ready = false}) => (
+                      <ListItem
+                        key={userId}
+                        button
+                        onPress={() => handlePress(userId)}
+                        style={styles.listItem}
+                      >
+                        <Text style={styles.name}>{name} </Text>
+                        <Text style={styles.age}>{age}</Text>
+                        <Text style={styles.gender}>
+                          {userData[gender].icon}
+                        </Text>
+                      </ListItem>
+                    )
+                  )
+                : null}
+            </List>
+            <WorkoutGraph
+              workoutHistory={true}
+              intervals={intervals}
+              workoutData={
+                selectedUser > 0
+                  ? userTimestamps[selectedUser]
+                  : generateWorkoutData(userTimestamps)
+              }
+              totalTimeElapsed={workoutTime}
+            />
+          </View>
+        </ScrollView>
+      ) : (
+        <Text>Loading</Text>
+      )}
     </Container>
   )
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
-  },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#eee',
-    padding: 5,
-    height: 30,
-    width: '30%',
-    backgroundColor: 'rgb(84, 130, 53)'
+  visual: {
+    width: '100%',
+    height: 200
   },
   col: {
     width: '50%',
-    height: 80,
+    height: 50,
     display: 'flex',
     flexDirection: 'column'
   },
   card: {
     width: '100%',
-    height: '100%',
+    height: '100%'
+  },
+  info: {
+    width: '100%',
+    height: 150,
     display: 'flex',
-    margin: 0,
-    padding: 0,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  info: {
-    width: '100%',
-    height: 75,
+  listItem: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  listHeader: {
+    fontWeight: 'bold'
+  },
+  name: {flex: 5, textAlign: 'left'},
+  age: {flex: 1, textAlign: 'center'},
+  gender: {flex: 2, textAlign: 'right'},
+  selected: {
+    backgroundColor: 'rgba(0,255,0,0.25)'
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 20,
+    color: 'rgb(84, 130, 53)',
+    lineHeight: 30
+  },
+  button: {
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgb(84, 130, 53)'
   }
 })

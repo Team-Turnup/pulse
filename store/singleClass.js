@@ -13,7 +13,7 @@ const SET_USER_OPACITY = 'SET_USER_OPACITY'
 const INITIALIZE_COLOR_OPACITY = 'INITIALIZE_COLOR_OPACITY'
 const UPDATE_START_TIME = 'UPDATE_START_TIME'
 const UPDATE_TIMESTAMPS = 'UPDATE_TIMESTAMPS'
-const SET_WORKOUTS = 'SET_WORKOUTS'
+const SET_WORKOUT_HISTORY = 'SET_WORKOUT_HISTORY'
 
 export const setClass = singleClass => ({
   type: SET_CLASS,
@@ -69,7 +69,7 @@ export const updateTimestamps = (userId, timestamps, latest) => ({
 })
 
 export const setWorkouts = workouts => ({
-  type: SET_WORKOUTS,
+  type: SET_WORKOUT_HISTORY,
   workouts
 })
 
@@ -129,8 +129,9 @@ export const getHistoryThunk = classId => async dispatch => {
   try {
     const {
       data: {routine, workouts, ..._class}
-    } = axios.get(`${ngrok}/api/classes/${id}/history`)
+    } = await axios.get(`${ngrok}/api/classes/${classId}/history`)
     dispatch(setClass(_class))
+    console.log(routine)
     dispatch(setRoutine(routine))
     dispatch(setWorkouts(workouts))
   } catch (err) {
@@ -220,21 +221,17 @@ const classReducer = (state = initialState, action) => {
         },
         userLatest: {...state.userLatest, [action.userId]: action.latest}
       }
-    case SET_WORKOUTS:
+    case SET_WORKOUT_HISTORY:
       return {
         ...state,
         userTimestamps: {
           ...state.userTimestamps,
-          ...action.workouts.reduce(
-            (
-              a,
-              {userId, workoutTimestamps: {cadence, goalCadence, timestamp}}
-            ) => ({
+          ...action.workouts.reduce((a, {userId, workoutTimestamps}) => {
+            return {
               ...a,
-              [userId]: {cadence, goalCadence, timestamp}
-            }),
-            {}
-          )
+              [userId]: workoutTimestamps
+            }
+          }, {})
         }
       }
     default:

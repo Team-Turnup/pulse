@@ -99,6 +99,47 @@ router.get('/', authenticatedUser, async (req, res, next) => {
   }
 })
 
+router.get('/:classId/history', async (req, res, next) => {
+  try {
+    const {
+      params: {classId},
+      user
+    } = req
+
+    const currentClass = await Class.findByPk(classId, {
+      include: [
+        {
+          model: Routine,
+          attributes: ['id', 'name', 'activityType'],
+          include: [
+            {
+              model: Interval,
+              attributes: ['id', 'activityType', 'cadence', 'duration']
+            }
+          ]
+        },
+        {
+          model: User,
+          as: 'attendees',
+          attributes: ['id', 'name', 'age', 'gender'],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          model: Workout,
+          include: [WorkoutTimestamp]
+        }
+      ],
+      attributes: ['id', 'name', 'canEnroll', 'when', 'workoutTime']
+    })
+    if (!currentClass) throw new Error(`Class with id ${classId} not found.`)
+    res.status(200).json(currentClass)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // GET get class history and display for the leader
 router.get('/:classId/history', authenticatedUser, async (req, res, next) => {
   try {
