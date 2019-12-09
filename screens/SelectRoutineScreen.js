@@ -121,7 +121,10 @@ class SelectRoutineScreen extends Component {
     return (
       <Container>
         <Content>
-          <AppHeader navigation={this.props.navigation} hideNotification={false} />
+          <AppHeader
+            navigation={this.props.navigation}
+            hideNotification={false}
+          />
           <Text
             style={{
               paddingTop: 15,
@@ -133,308 +136,315 @@ class SelectRoutineScreen extends Component {
           >
             {!isClass ? 'Start New Solo Workout' : 'Create Class'}
           </Text>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            {page > 1 ? (
-              <TouchableOpacity
-                style={{
-                  width: 25,
-                  height: 35,
-                  backgroundColor: 'rgb(84, 130, 53)',
-                  borderRadius: 5,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onPress={() =>
-                  this.setState(prevState => ({page: prevState.page - 1}))
-                }
-              >
-                <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View
-                style={{
-                  width: 25,
-                  height: 35
-                }}
-              ></View>
-            )}
-            <Content style={{marginTop: 0, marginBottom: 5}}>
-              <Card
-                style={{
-                  borderRadius: 10,
-                  overflow: 'hidden',
-                  padding: 15,
-                  margin: 15,
-                  height: 435
-                }}
-              >
-                <ScrollView>
-                  <Text style={{fontWeight: '600', marginBottom: 10}}>
-                    Select One of Your Previous Routines
-                  </Text>
+          <Content style={{marginTop: 0, marginBottom: 5}}>
+            <Card
+              style={{
+                borderRadius: 10,
+                overflow: 'hidden',
+                padding: 15,
+                margin: 15,
+                height: 435
+              }}
+            >
+              <ScrollView>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  {page > 1 ? (
+                    <TouchableOpacity
+                      style={{
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      onPress={() =>
+                        this.setState(prevState => ({page: prevState.page - 1}))
+                      }
+                    >
+                      <Text style={{color: 'white', fontSize: 25}}>{'<'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View
+                      style={{
+                        width: 25,
+                        height: 35
+                      }}
+                    ></View>
+                  )}
+                  <View>
+                    <Text style={{fontWeight: '600'}}>
+                      Select Previous Routine
+                    </Text>
+                    <Text style={{fontSize: 12, textAlign: 'center'}}>
+                      {viewRoutines.length
+                        ? `Showing ${(page - 1) * numPerPage + 1}-${Math.min(
+                            numResults,
+                            page * numPerPage
+                          )} of ${numResults}`
+                        : ''}
+                    </Text>
+                  </View>
+                  {page < numPages ? (
+                    <TouchableOpacity
+                      style={{
+                        width: 25,
+                        height: 35,
+                        backgroundColor: 'rgb(84, 130, 53)',
+                        borderRadius: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      onPress={() =>
+                        this.setState(prevState => ({page: prevState.page + 1}))
+                      }
+                    >
+                      <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View
+                      style={{
+                        width: 25,
+                        height: 35
+                      }}
+                    ></View>
+                  )}
+                </View>
+
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <View style={{width: '30%', margin: 2}}>
+                    <Input
+                      placeholder="Search"
+                      autoCorrect={false}
+                      value={search}
+                      onChangeText={search => this.setState({search})}
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 1,
+                        fontSize: 14,
+                        height: 16
+                      }}
+                    />
+                  </View>
                   <View
                     style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
+                      width: '30%',
+                      margin: 2,
+                      borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 5
                     }}
                   >
-                    <View style={{width: '30%', margin: 2}}>
-                      <Input
-                        placeholder="Search"
-                        autoCorrect={false}
-                        value={search}
-                        onChangeText={search => this.setState({search})}
-                        style={{
-                          borderBottomColor: 'gray',
-                          borderBottomWidth: 1,
-                          fontSize: 14,
-                          height: 16
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: '30%',
-                        margin: 2,
-                        borderWidth: 1,
-                        borderColor: 'gray',
-                        borderRadius: 5
-                      }}
-                    >
-                      <RNPickerSelect
-                        placeholder={{label: 'Filter', value: null}}
-                        onValueChange={value =>
-                          this.handleChange('filter', value)
-                        }
-                        value={filter}
-                        items={activityTypeSelects}
-                        userNativeAndroidPickerStyle={false}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: '30%',
-                        margin: 2,
-                        borderWidth: 1,
-                        borderColor: 'gray',
-                        borderRadius: 5
-                      }}
-                    >
-                      <RNPickerSelect
-                        placeholder={{label: 'Sort', value: null}}
-                        onValueChange={value =>
-                          this.handleChange('sort', value)
-                        }
-                        value={sort}
-                        items={[
-                          {label: 'Date created', value: 'dateCreated'},
-                          {
-                            label: 'Duration (low>high)',
-                            value: 'durationLowHigh'
-                          },
-                          {
-                            label: 'Duration (high>low)',
-                            value: 'durationHighLow'
-                          },
-                          {label: 'Name (A>Z)', value: 'AZ'},
-                          {label: 'Name (Z>A)', value: 'ZA'}
-                          // {label:'Most used', value:'mostUsed'}
-                        ]}
-                        userNativeAndroidPickerStyle={false}
-                      />
-                    </View>
+                    <RNPickerSelect
+                      placeholder={{label: 'Filter', value: null}}
+                      onValueChange={value =>
+                        this.handleChange('filter', value)
+                      }
+                      value={filter}
+                      items={activityTypeSelects}
+                      userNativeAndroidPickerStyle={false}
+                    />
                   </View>
-                  <Text style={{fontSize: 12, textAlign: 'center'}}>
-                    {viewRoutines.length
-                      ? `Showing ${(page - 1) * numPerPage + 1}-${Math.min(
-                          numResults,
-                          page * numPerPage
-                        )} of ${numResults}`
-                      : ''}
-                  </Text>
-                  {viewRoutines.length ? (
-                    viewRoutines.map((routine, i) => {
-                      const duration = routine.intervals.reduce(
-                        (sum, interval) => sum + interval.duration,
-                        0
-                      )
-                      return (
-                        <View key={i}>
-                          <TouchableOpacity
+                  <View
+                    style={{
+                      width: '30%',
+                      margin: 2,
+                      borderWidth: 1,
+                      borderColor: 'gray',
+                      borderRadius: 5
+                    }}
+                  >
+                    <RNPickerSelect
+                      placeholder={{label: 'Sort', value: null}}
+                      onValueChange={value => this.handleChange('sort', value)}
+                      value={sort}
+                      items={[
+                        {label: 'Date created', value: 'dateCreated'},
+                        {
+                          label: 'Duration (low>high)',
+                          value: 'durationLowHigh'
+                        },
+                        {
+                          label: 'Duration (high>low)',
+                          value: 'durationHighLow'
+                        },
+                        {label: 'Name (A>Z)', value: 'AZ'},
+                        {label: 'Name (Z>A)', value: 'ZA'}
+                        // {label:'Most used', value:'mostUsed'}
+                      ]}
+                      userNativeAndroidPickerStyle={false}
+                    />
+                  </View>
+                </View>
+                {viewRoutines.length ? (
+                  viewRoutines.map((routine, i) => {
+                    const duration = routine.intervals.reduce(
+                      (sum, interval) => sum + interval.duration,
+                      0
+                    )
+                    return (
+                      <View key={i}>
+                        <TouchableOpacity
+                          style={{
+                            marginTop: 5,
+                            marginBottom: 5,
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            overflow: 'hidden'
+                          }}
+                          onPress={() =>
+                            this.setState(prevState => ({
+                              routineId:
+                                prevState.routineId === routine.id
+                                  ? null
+                                  : routine.id
+                            }))
+                          }
+                        >
+                          <Text style={{textAlign: 'center'}}>
+                            Name:{' '}
+                            <Text
+                              style={{
+                                color: 'rgb(84, 130, 53)',
+                                fontWeight: '600',
+                                fontSize: 18
+                              }}
+                            >
+                              {routine.name}
+                            </Text>
+                          </Text>
+                          <View
                             style={{
-                              marginTop: 5,
-                              marginBottom: 5,
-                              borderColor: 'gray',
-                              borderWidth: 1,
-                              borderRadius: 10,
-                              overflow: 'hidden'
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-evenly'
                             }}
-                            onPress={() =>
-                              this.setState(prevState => ({
-                                routineId:
-                                  prevState.routineId === routine.id
-                                    ? null
-                                    : routine.id
-                              }))
-                            }
                           >
-                            <Text style={{textAlign: 'center'}}>
-                              Name:{' '}
+                            <Text>
+                              Activity:{' '}
                               <Text
                                 style={{
                                   color: 'rgb(84, 130, 53)',
-                                  fontWeight: '600',
-                                  fontSize: 18
+                                  fontStyle: 'italic'
                                 }}
                               >
-                                {routine.name}
+                                {activityTypes[routine.activityType].icon}
                               </Text>
                             </Text>
-                            <View
+                            <Text>
+                              Duration:{' '}
+                              <Text
+                                style={{
+                                  color: 'rgb(84, 130, 53)',
+                                  fontStyle: 'italic'
+                                }}
+                              >
+                                {Math.floor(duration / 60)
+                                  ? `${Math.floor(duration / 60)}m`
+                                  : ''}{' '}
+                                {duration % 60 ? `${duration % 60}s` : ''}
+                              </Text>
+                            </Text>
+                          </View>
+                          <RoutineBarMini
+                            routine={routine.intervals}
+                            totalDuration={duration}
+                            activityType={routine.activityType}
+                          />
+                        </TouchableOpacity>
+                        {routineId === routine.id ? (
+                          <View style={{display: 'flex', flexDirection: 'row'}}>
+                            <Button
+                              onPress={() => {
+                                selectRoutine = routines.find(
+                                  routine => routine.id === routineId
+                                )
+                                this.props.setRoutine(selectRoutine)
+                                this.props.navigation.navigate(
+                                  !isClass
+                                    ? 'StartRoutineScreen'
+                                    : 'BuildClassScreen',
+                                  {routine: selectRoutine}
+                                )
+                              }}
                               style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-evenly'
+                                ...styles.button,
+                                width: '47%',
+                                marginLeft: 5,
+                                marginRight: 5
                               }}
                             >
                               <Text>
-                                Activity:{' '}
-                                <Text
-                                  style={{
-                                    color: 'rgb(84, 130, 53)',
-                                    fontStyle: 'italic'
-                                  }}
-                                >
-                                  {activityTypes[routine.activityType].icon}
-                                </Text>
+                                {!isClass ? 'Start Workout' : 'Select Routine'}
                               </Text>
-                              <Text>
-                                Duration:{' '}
-                                <Text
-                                  style={{
-                                    color: 'rgb(84, 130, 53)',
-                                    fontStyle: 'italic'
-                                  }}
-                                >
-                                  {Math.floor(duration / 60)
-                                    ? `${Math.floor(duration / 60)}m`
-                                    : ''}{' '}
-                                  {duration % 60 ? `${duration % 60}s` : ''}
-                                </Text>
-                              </Text>
-                            </View>
-                            <RoutineBarMini
-                              routine={routine.intervals}
-                              totalDuration={duration}
-                              activityType={routine.activityType}
-                            />
-                          </TouchableOpacity>
-                          {routineId === routine.id ? (
-                            <View
-                              style={{display: 'flex', flexDirection: 'row'}}
-                            >
-                              <Button
-                                onPress={() => {
-                                  selectRoutine = routines.find(
+                            </Button>
+                            <Button
+                              onPress={() => {
+                                this.props.setRoutine(
+                                  routines.find(
                                     routine => routine.id === routineId
                                   )
-                                  this.props.setRoutine(
-                                    selectRoutine
-                                  )
-                                  this.props.navigation.navigate(!isClass ? 
-                                    'StartRoutineScreen' : 'BuildClassScreen', {routine: selectRoutine}
-                                  )
-                                }}
-                                style={{
-                                  ...styles.button,
-                                  width: '47%',
-                                  marginLeft: 5,
-                                  marginRight: 5
-                                }}
-                              >
-                                <Text>{!isClass ? 'Start Workout' : 'Select Routine'}</Text>
-                              </Button>
-                              <Button
-                                onPress={() => {
-                                  this.props.setRoutine(
-                                    routines.find(
-                                      routine => routine.id === routineId
-                                    )
-                                  )
-                                  this.props.navigation.navigate(
-                                    'BuildRoutineScreen', {isClass}
-                                  )
-                                }}
-                                style={{
-                                  ...styles.button,
-                                  width: '47%',
-                                  marginLeft: 5,
-                                  marginRight: 5
-                                }}
-                              >
-                                <Text>Edit Routine</Text>
-                              </Button>
-                            </View>
-                          ) : null}
-                        </View>
-                      )
-                    })
-                  ) : (
-                    <Text>- No routines</Text>
-                  )}
-                </ScrollView>
-              </Card>
-            </Content>
-            {page < numPages ? (
-              <TouchableOpacity
-                style={{
-                  width: 25,
-                  height: 35,
-                  backgroundColor: 'rgb(84, 130, 53)',
-                  borderRadius: 5,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onPress={() =>
-                  this.setState(prevState => ({page: prevState.page + 1}))
-                }
-              >
-                <Text style={{color: 'white', fontSize: 25}}>{'>'}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View
-                style={{
-                  width: 25,
-                  height: 35
-                }}
-              ></View>
-            )}
-          </View>
-          {!isClass ? <Text
-            style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
-          >
-            or
-          </Text> : null}
-         {!isClass ? <Button
-            style={styles.button}
-            onPress={() => {
-              this.props.setRoutine({})
-              this.props.navigation.navigate('BuildRoutineScreen')
-            }}
-          >
-            <Text>Create New Routine</Text>
-          </Button> : null}
+                                )
+                                this.props.navigation.navigate(
+                                  'BuildRoutineScreen',
+                                  {isClass}
+                                )
+                              }}
+                              style={{
+                                ...styles.button,
+                                width: '47%',
+                                marginLeft: 5,
+                                marginRight: 5
+                              }}
+                            >
+                              <Text>Edit Routine</Text>
+                            </Button>
+                          </View>
+                        ) : null}
+                      </View>
+                    )
+                  })
+                ) : (
+                  <Text>- No routines</Text>
+                )}
+              </ScrollView>
+            </Card>
+          </Content>
+          {!isClass ? (
+            <Text
+              style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
+            >
+              or
+            </Text>
+          ) : null}
+          {!isClass ? (
+            <Button
+              style={styles.button}
+              onPress={() => {
+                this.props.setRoutine({})
+                this.props.navigation.navigate('BuildRoutineScreen')
+              }}
+            >
+              <Text>Create New Routine</Text>
+            </Button>
+          ) : null}
           {/* <Text
             style={{textAlign: 'center', fontStyle: 'italic', fontSize: 13}}
           >
